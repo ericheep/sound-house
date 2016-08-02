@@ -36,21 +36,16 @@ First we'll have to install some depnedencies.
     sudo apt-get install bison flex
     sudo apt-get install alsa-base libasound2-dev libasndfile1-dev
 
-Clone to the ChucK repository to a suitable directory.
+Clone the ChucK repository to a suitable directory.
 
     git clone https://github.com/ccrma/chuck
 
-And switch to the Raspberry Pi branch of the repo, make sure you're inside the cloned repo when you do this.
+Now we can change to the `chuck/src` directory and build the makefile.
 
-    cd chuck
-    git checkout rpi
-
-Now we can build the makefile.
-
-    cd src
+    cd chuck/src
     sudo make linux-alsa
 
-This will build the makefile for ChucK, then we install it.
+After it is built, install it.
 
     sudo make install linux-alsa
 
