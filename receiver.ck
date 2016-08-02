@@ -10,7 +10,7 @@ in.listenAll();
 while (true) {
     in => now;
     while (in.recv(msg)) {
-        if (msg.address == "/a") {
+        if (msg.address == "/b") {
             for (0 => int i; i < BUFFER_SIZE; i++) {
                 msg.getFloat(i) => st.next;
                 1::samp => now;
