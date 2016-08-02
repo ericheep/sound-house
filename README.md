@@ -37,9 +37,8 @@ cd into chuck/src
 
 Now we'll have to install the depnedencies.
 
-    sudo apt-get install alsa-base
-    sudo apt-get install libaosound2-dev
-    sudo apt-get install libasndfile1-dev
+    sudo apt-get install bison, flex
+    sudo apt-get install alsa-base, libaosound2-dev, libasndfile1-dev
 
 There may be others, will confirm.
 
