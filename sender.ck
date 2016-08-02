@@ -7,7 +7,7 @@
 
 // ip addresses
 ["127.0.0.1",
- "127.0.0.1"] @=> string IP[];
+ "192.168.1.71"] @=> string IP[];
 
 // ports, might as well not change these
 [12345,
@@ -39,13 +39,24 @@ fun void send() {
         for (0 => int i; i < NUM_PIS; i++) {
             out[i].add(mic[i].last());
         }
-        1::samp => now;
+        2::samp => now;
     }
 
     for (0 => int i; i < NUM_PIS; i++) {
         out[i].send();
     }
 }
+
+fun void init() {
+    for (0 => int i; i < NUM_PIS; i++) {
+        out[i].start("/bufferSize");
+        out[i].add(BUFFER_SIZE);
+        out[i].send();
+    }
+}
+
+// updates buffer size
+init();
 
 // loop it
 while (true) {
