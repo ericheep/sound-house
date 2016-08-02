@@ -1,12 +1,17 @@
+// receiver.ck
+// Eric Heep
+
 OscIn in;
 OscMsg msg;
 Step st => dac;
 
+// constant
 512 => int BUFFER_SIZE;
 
 12345 => in.port;
 in.listenAll();
 
+// loop it
 while (true) {
     in => now;
     while (in.recv(msg)) {
