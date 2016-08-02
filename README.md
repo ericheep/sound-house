@@ -1,12 +1,12 @@
-# rpi-walls
-Work in progress for an Automata installation, with John Eagle, Cassia Streb, and Janie Geiser.
+# rpi-sound-house
+Work in progress for an installation at Automata, with John Eagle, Cassia Streb, and Janie Geiser.
 
 First install Raspian onto your Raspberry Pi.
 
 To enable wireless on your Raspberry Pi:
 ----------------------------------------
 
-Either plug an ethernet cable into your Pi, or use the following to enable wireless internet.
+We'll have to access the interfaces file, and edit it using the built in editor. Use the following command to open the interfaces file for editing.
 
     sudo nano /etc/network/interfaces
 
@@ -24,34 +24,35 @@ Then edit your interfaces file to this.
         wpa-ssid "your network"
         wpa-psk "your passkey"
 
-**Note:** this will change! Eventually it'll be safer to use static IPs, then we don't have to worry about the IPs changing throughout the installlation.
+To save, press `ctrl-x`, when it asks to save, press `y`. Then press `enter` to finish.
+
+**Note:** This will change! Eventually it'll be safer to use static IPs, then we don't have to worry about the IPs changing throughout the installlation. For now it's a quick way to get up and running.
 
 To install ChucK on a Raspberry Pi:
 -----------------------------------
 
-After installing Raspbian onto your Pi and enabling with wireless or an ethernet internet connecton, install ChucK with the following command.
+First we'll have to install some depnedencies.
+
+    sudo apt-get install bison flex
+    sudo apt-get install alsa-base libasound2-dev libasndfile1-dev
+
+Clone to the ChucK repository to a suitable directory.
 
     git clone https://github.com/ccrma/chuck
 
-cd into chuck/src
+And switch to the Raspberry Pi branch of the repo, make sure you're inside the cloned repo when you do this.
 
-Now we'll have to install the depnedencies.
+    cd chuck
+    git checkout rpi
 
-    sudo apt-get install bison, flex
-    sudo apt-get install alsa-base, libaosound2-dev, libasndfile1-dev
+Now we can build the makefile.
 
-There may be others, will confirm.
-
-Now to build the make file.
-
+    cd src
     sudo make linux-alsa
 
-This will build the makefile for ChucK, now we install it.
+This will build the makefile for ChucK, then we install it.
 
     sudo make install linux-alsa
-
-This moves the built makefile into the proper directory. This should be all we need to install ChucK.
-
 
 Then run this script, or set to run in rc.local:
 ------------------------------------------------
