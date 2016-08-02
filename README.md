@@ -1,11 +1,9 @@
 # rpi-sound-house
 Work in progress for an installation at Automata, with John Eagle, Cassia Streb, and Janie Geiser.
 
-First install Raspian onto your Raspberry Pi. There are two methods we're attempting so far, the first sends audio data through OSC using the real-time audio programming language, ChucK, the second is to send audio using Jack to the Raspberry Pis.
+First install Raspian onto your Raspberry Pi. There are two methods we're attempting so far, the first sends audio data through OSC using the real-time audio programming language, ChucK, the second sends audio over a network to the Raspberry Pis using JACK, the "de-facto standard audio server for working with professional audio on Linux".
 
-ChucK Method
-------------
-------------
+## ChucK Method
 
 To enable wireless on a Raspberry Pi
 ------------------------------------
