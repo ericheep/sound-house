@@ -2,7 +2,7 @@
 // Eric Heep
 
 // constants
-2 => int NUM_PIS;
+1 => int NUM_PIS;
 512 => int BUFFER_SIZE;
 
 string ip[NUM_PIS];
