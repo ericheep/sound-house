@@ -24,7 +24,7 @@ Then edit your interfaces file to this.
         wpa-ssid "your network"
         wpa-psk "your passkey"
 
-**Note:*** this will change! Eventually it'll be safer to use static IPs, so we dont' have to worry about the IPs changing throughout the installlation.
+**Note:** this will change! Eventually it'll be safer to use static IPs, then we don't have to worry about the IPs changing throughout the installlation.
 
 To install ChucK on a Raspberry Pi:
 -----------------------------------
@@ -53,3 +53,8 @@ This will build the makefile for ChucK, now we install it.
 
 This moves the built makefile into the proper directory. This should be all we need to install ChucK.
 
+
+Then run this script, or set to run in rc.local:
+------------------------------------------------
+
+Will be done shortly.
