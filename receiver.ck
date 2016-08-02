@@ -6,7 +6,7 @@ OscMsg msg;
 Step st => dac;
 
 // constant
-512 => int BUFFER_SIZE;
+512 => int bufferSize;
 
 12345 => in.port;
 in.listenAll();
@@ -16,10 +16,14 @@ while (true) {
     in => now;
     while (in.recv(msg)) {
         if (msg.address == "/b") {
-            for (0 => int i; i < BUFFER_SIZE; i++) {
+            for (0 => int i; i < bufferSize; i++) {
                 msg.getFloat(i) => st.next;
                 1::samp => now;
             }
+        }
+        else if (msg.address == "/bufferSize") {
+            msg.getInt(0) => bufferSize;
+            <<< "Buffer size set to", bufferSize, "" >>>;
         }
     }
 }
