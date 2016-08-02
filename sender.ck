@@ -39,7 +39,7 @@ fun void send() {
         for (0 => int i; i < NUM_PIS; i++) {
             out[i].add(mic[i].last());
         }
-        2::samp => now;
+        1::samp => now;
     }
 
     for (0 => int i; i < NUM_PIS; i++) {
