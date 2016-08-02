@@ -4,6 +4,7 @@ Work in progress for an Automata installation, with John Eagle, Cassia Streb, an
 First install Raspian onto your Raspberry Pi.
 
 To enable wireless on your Raspberry Pi:
+----------------------------------------
 
 Either plug an ethernet cable into your Pi, or use the following to enable wireless internet.
 
@@ -11,7 +12,19 @@ Either plug an ethernet cable into your Pi, or use the following to enable wirel
 
 Then edit your interfaces file to this.
 
+    auto lo
 
+    iface lo inet loopback
+    iface eth0 inet dhcp
+
+    allow-hotplug wlan0
+    auto wlan0
+
+    iface wlan0 inet dhcp
+        wpa-ssid "your network"
+        wpa-psk "your passkey"
+
+**Note:*** this will change! Eventually it'll be safer to use static IPs, so we dont' have to worry about the IPs changing throughout the installlation.
 
 To install ChucK on a Raspberry Pi:
 -----------------------------------
