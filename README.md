@@ -1,9 +1,22 @@
 # rpi-walls
 Work in progress for an Automata installation, with John Eagle, Cassia Streb, and Janie Geiser.
 
-To install ChucK on a Raspberry Pi:
+First install Raspian onto your Raspberry Pi.
 
-After installing Raspbian onto your Pi, install ChucK with the following command.
+To enable wireless on your Raspberry Pi:
+
+Either plug an ethernet cable into your Pi, or use the following to enable wireless internet.
+
+    sudo nano /etc/network/interfaces
+
+Then edit your interfaces file to this.
+
+
+
+To install ChucK on a Raspberry Pi:
+-----------------------------------
+
+After installing Raspbian onto your Pi and enabling with wireless or an ethernet internet connecton, install ChucK with the following command.
 
     git clone https://github.com/ccrma/chuck
 
@@ -12,7 +25,7 @@ cd into chuck/src
 Now we'll have to install the depnedencies.
 
     sudo apt-get install alsa-base
-    sudo apt-get install libaosund2-dev
+    sudo apt-get install libaosound2-dev
     sudo apt-get install libasndfile1-dev
 
 There may be others, will confirm.
