@@ -21,13 +21,12 @@
 OscOut out[NUM_PIS];
 
 // audio out
-SinOsc sin[NUM_PIS];
+Gain mic[NUM_PIS];
 
 // audio set up
 for (0 => int i; i < NUM_PIS; i++) {
-    sin[i] => blackhole;
+    adc.chan(i) => mic[i] => blackhole;
     out[i].dest(IP[i], OUT_PORT[i]);
-    sin[i].freq(220 * (i + 1));
 }
 
 // sends out audio in 512 sample blocks
@@ -38,7 +37,7 @@ fun void send() {
 
     for (0 => int j; j < BUFFER_SIZE; j++) {
         for (0 => int i; i < NUM_PIS; i++) {
-            out[i].add(sin[i].last());
+            out[i].add(mic[i].last());
         }
         1::samp => now;
     }
