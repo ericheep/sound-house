@@ -78,10 +78,15 @@ Then install JackTrip. Go here and download the `.zip` file.
 
     https://github.com/jcacerec/jacktrip/releases
 
-After unzipping the `.zip` file, go to terminal, change to the directory where `jacktrip` is, and run the following commands.
+After unzipping the `.zip` file, go to terminal, change to the directory where `jacktrip` is, go to `/bin`, and run the following commands.
 
     sudo cp jacktrip /usr/bin/
     sudo chmod 755 /usr/bin/jacktrip
+
+If you're on El Capitan, Apple's System Integrity Protection will prevent you from moving anything around in root. To get around this you'll have to reboot, hold `cmd-r`, open up Terminal through utilities, and type in the following.
+
+    csrutil disable
+    reboot
 
 More to come, I hope this works.
 
