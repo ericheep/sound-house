@@ -1,7 +1,7 @@
 # rpi-sound-house
 Work in progress for an installation at Automata, with John Eagle, Cassia Streb, and Janie Geiser.
 
-First install Raspian onto your Raspberry Pi. There are two methods we're attempting so far, the first sends audio data through OSC using the real-time audio programming language, ChucK, the second sends audio over a network to the Raspberry Pis using JACK, the "de-facto standard audio server for working with professional audio on Linux".
+First install Raspian onto your Raspberry Pi. There are two methods we're attempting so far, the first sends audio data through OSC using the real-time audio programming language, ChucK, the second sends audio over a network to the Raspberry Pis using JACK and JackTrip, a CCRMA developed system for sending streaming audio over the internet.
 
 ChucK Implementation
 --------------------
@@ -66,8 +66,22 @@ And then on the master computer, run the program that sends the audio.
 
 That's about it! It's not the best quality at the moment, will need to test with a dedicated router and tweak a few other things.
 
-JACK Method
------------
------------
+JACK/JackTrip Implementation
+-------------------
+-------------------
 
-Researching.
+Install JACK for OSX.
+
+    https://dl.dropboxusercontent.com/u/28869550/JackOSX.0.92_b3.zip
+
+Then install JackTrip. Go here and download the `.zip` file.
+
+    https://github.com/jcacerec/jacktrip/releases
+
+After unzipping the `.zip` file, go to terminal, change to the directory where `jacktrip` is, and run the following commands.
+
+    sudo cp jacktrip /usr/bin/
+    sudo chmod 755 /usr/bin/jacktrip
+
+More to come, I hope this works.
+
