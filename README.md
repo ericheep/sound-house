@@ -1,18 +1,21 @@
 # rpi-sound-house
 Work in progress for an installation at Automata, with John Eagle, Cassia Streb, and Janie Geiser.
 
-First install Raspian onto your Raspberry Pi. There are two methods we're attempting so far, the first sends audio data through OSC using the real-time audio programming language, ChucK, the second sends audio over a network to the Raspberry Pis using JACK and JackTrip, a CCRMA developed system for sending streaming audio over the internet.
+First install Raspian onto your Raspberry Pi. There are two methods we're attempting so far, the first sends audio data through OSC using the real-time audio programming language, ChucK, the second sends audio using the JACK audio server over a network to the individual Raspberry Pis using [JackTrip](https://ccrma.stanford.edu/software/jacktrip/) (CCRMA developed system for sending streaming audio over the internet). While JackTrip is meant for wired applications, it still (sorta) works for this one.
 
-ChucK Implementation
---------------------
---------------------
+Install the latest Raspbian (Jessie)
+------------------------------------
 
-This is more of a hack than a real solution, the audio that is sent to the Raspberry Pis sounds a bit glitchy as of right now.
+While this isn't necessarily required for the ChucK implementation, it is definitely required for the JackTrip implementation. Go to the Raspberry Pi and get the latest [NOOBS image](https://www.raspberrypi.org/downloads/noobs/)
+
+Format your microSD card using [SDFormatter](https://www.sdcard.org/downloads/formatter_4/)
+
+Then simply load the contents of the NOOBS `.zip` onto your card.
 
 To enable wireless on a Raspberry Pi
 ------------------------------------
 
-We'll have to access the interfaces file, and edit it using the built in editor. Use the following command to open the interfaces file for editing.
+We'll have to access the interfaces file, and edit it using the built-in editor (Nano). Use the following command to open the interfaces file for editing.
 
     sudo nano /etc/network/interfaces
 
@@ -32,7 +35,13 @@ Then edit your interfaces file to this.
 
 To save, press `ctrl-x`, when it asks to save, press `y`. Then press `enter` to finish.
 
-**Note:** This will change! Eventually it'll be safer to use static IPs, then we don't have to worry about the IPs changing throughout the installlation. For now it's a quick way to get up and running.
+**Note:** This might change! Eventually it'll be safer to use static IPs, then we don't have to worry about the IPs changing throughout the installlation. For now it's a quick way to get up and running.
+
+ChucK Implementation
+--------------------
+--------------------
+
+This is more of a hack than a real solution, the audio that is sent to the Raspberry Pis sounds a bit glitchy as of right now.
 
 To install ChucK on a Raspberry Pi
 ----------------------------------
