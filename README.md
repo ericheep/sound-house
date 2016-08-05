@@ -1,16 +1,20 @@
 # rpi-sound-house
 Work in progress for an installation at Automata, with John Eagle, Cassia Streb, and Janie Geiser.
 
-First install Raspian onto your Raspberry Pi. There are two methods we're attempting so far, the first sends audio data through OSC using the real-time audio programming language, ChucK, the second sends audio using the JACK audio server over a network to the individual Raspberry Pis using [JackTrip](https://ccrma.stanford.edu/software/jacktrip/) (CCRMA developed system for sending streaming audio over the internet). While JackTrip is meant for wired applications, it still (sorta) works for this one.
+There are two methods we're attempting so far, the first sends audio data through OSC using the real-time audio programming language, [ChucK](http://chuck.cs.princeton.edu/).
+
+The second sends audio using the [JACK](http://www.jackosx.com/) audio server over a network to the individual Raspberry Pis using [JackTrip](https://ccrma.stanford.edu/software/jacktrip/) (CCRMA developed system for sending streaming audio over the internet). While JackTrip is meant for wired applications, it still (sorta) works for this one.
 
 Install the latest Raspbian (Jessie)
 ------------------------------------
 
-While this isn't necessarily required for the ChucK implementation, it is definitely required for the JackTrip implementation. Go to the Raspberry Pi and get the latest [NOOBS image](https://www.raspberrypi.org/downloads/noobs/)
+While this isn't necessarily required for the ChucK implementation, it is definitely required for the JackTrip implementation. Go to the Raspberry Pi and get the latest [NOOBS image](https://www.raspberrypi.org/downloads/noobs/).
 
-Format your microSD card using [SDFormatter](https://www.sdcard.org/downloads/formatter_4/)
+Format your microSD card using [SDFormatter](https://www.sdcard.org/downloads/formatter_4/).
 
 Then simply load the contents of the NOOBS `.zip` onto your card.
+
+![drag and drop](copytocard.png)
 
 To enable wireless on a Raspberry Pi
 ------------------------------------
