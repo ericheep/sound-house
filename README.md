@@ -16,30 +16,27 @@ Then simply load the contents of the NOOBS `.zip` onto your card.
 
 ![drag and drop](copytocard.png)
 
+Then load the microSD onto your Pi and install Raspbian using the prompts.
+
+After the install, you might have to change your keyboard settings to US and use the system preferences to disable boot to desktop and enable boot to CLI (command-line interface).
+
 To enable wireless on a Raspberry Pi
 ------------------------------------
 
-We'll have to access the interfaces file, and edit it using the built-in editor (Nano). Use the following command to open the interfaces file for editing.
+Use the following command to open the `wpa_supplicant.conf` with the built-in editor (Nano). A more detailed instruction of this process is found [here](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md).
 
-    sudo nano /etc/network/interfaces
+    sudo nano /etc/network/wpa_supplicant/wpa_supplicant.conf
 
-Then edit your interfaces file to this.
+Then add the following to the bottom of the file.
 
-    auto lo
-
-    iface lo inet loopback
-    iface eth0 inet dhcp
-
-    allow-hotplug wlan0
-    auto wlan0
-
-    iface wlan0 inet dhcp
-        wpa-ssid "your network"
-        wpa-psk "your passkey"
+    network={
+        ssid="your_network"
+        psk="your_passkey"
+    }
 
 To save, press `ctrl-x`, when it asks to save, press `y`. Then press `enter` to finish.
 
-**Note:** This might change! Eventually it'll be safer to use static IPs, then we don't have to worry about the IPs changing throughout the installlation. For now it's a quick way to get up and running.
+**Note:** This might change! Eventually it'll be safer to use static IPs, and this process will be more involved, for now this just sets up a basic internet connection.
 
 ChucK Implementation
 --------------------
@@ -62,7 +59,7 @@ Clone the ChucK repository to a suitable directory.
 Now we can change to the `chuck/src` directory and build the makefile.
 
     cd chuck/src
-    sudo make linux-alsa
+    make linux-alsa
 
 After it is built, install it.
 
@@ -80,16 +77,17 @@ And then on the master computer, run the program that sends the audio.
 That's about it! It's not the best quality at the moment, will need to test with a dedicated router and tweak a few other things.
 
 JACK/JackTrip Implementation
--------------------
--------------------
+----------------------------
+----------------------------
 
-Install JACK for OSX.
+This might be the best solution overall, as it provides a low latency network that is designed to route audio. The only caveat is that it was designed for wired connections, which proves more reliable than our wireless system.
 
-    https://dl.dropboxusercontent.com/u/28869550/JackOSX.0.92_b3.zip
+Mac OSC Install
+---------------
 
-Then install JackTrip. Go here and download the `.zip` file.
+Install JACK for OSX using this [`.zip`](https://dl.dropboxusercontent.com/u/28869550/JackOSX.0.92_b3.zip).
 
-    https://github.com/jcacerec/jacktrip/releases
+Then to install JackTrip, go here and download it's [`.zip`](https://github.com/jcacerec/jacktrip/releases).
 
 After unzipping the `.zip` file, go to terminal, change to the directory where `jacktrip` is, go to `/bin`, and run the following commands.
 
@@ -102,4 +100,42 @@ If you're on El Capitan, Apple's System Integrity Protection will prevent you fr
     reboot
 
 More to come, I hope this works.
+
+
+Raspberry Pi (Linux) Install
+----------------------------
+
+The Jack audio server comes preinstalled on this version of Raspbian (maybe on others too), now we just have to install JackTrip.
+
+    sudo apt-get install jacktrip
+
+Setting Up a Server on OSX
+--------------------------
+
+Open up the `jackPilot` application, and open up it's preferences.
+
+Make sure that Jack's settings matching the settings that we'll use on the Pi.
+
+The only only you should have to change is the buffer size, which we'll set to `2048`.
+
+
+Setting Up a Client on a Pi
+--------------------------
+
+Some of these directions for the initial setup come from [here](http://wiki.sgmk-ssam.ch/wiki/Raspberry_Pi).
+
+First we have to run the JACK audio server.
+
+We can run this in the background with the following.
+
+    jackd -S -P70 -t2000 -dalsa -dhw:ALSA -r44100 -p2048 -n3 -s &
+
+And then we start JackTrip talking to the OSX machine using the computer's IP.
+
+    jacktrip -c 192.168.1.XXX
+
+And we're off!
+
+Soon I'll add instructions to send separate channels to each Pi, that's the next hurdle.
+
 
