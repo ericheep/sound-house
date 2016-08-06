@@ -65,12 +65,14 @@ After it is built, install it.
 
     sudo make install linux-alsa
 
-Then run this script, or set to run in rc.local
------------------------------------------------
+Instructions
+------------
+
+On the Raspberry Pi, run the program that receives the OSX.
 
     chuck receiver.ck
 
-And then on the master computer, run the program that sends the audio.
+And then on the master computer, run the program that sends the audio. You'll probably have to edit the file so you're sending to the proper IP addresses.
 
     chuck sender.ck
 
@@ -141,5 +143,3 @@ Setting Up a Server To Receive Multiple Channels on a Pi
 --------------------------------------------------------
 
 Soon.
-
-
