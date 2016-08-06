@@ -99,9 +99,6 @@ If you're on El Capitan, Apple's System Integrity Protection will prevent you fr
     csrutil disable
     reboot
 
-More to come, I hope this works.
-
-
 Raspberry Pi (Linux) Install
 ----------------------------
 
@@ -116,17 +113,16 @@ Open up the `jackPilot` application, and open up it's preferences.
 
 Make sure that Jack's settings matching the settings that we'll use on the Pi.
 
-The only only you should have to change is the buffer size, which we'll set to `2048`.
+![JackTrip awaiting a connection](jacktripOSX.png)
 
+The only only you should have to change is the buffer size, which we'll set to `2048`.
 
 Setting Up a Client on a Pi
 --------------------------
 
 Some of these directions for the initial setup come from [here](http://wiki.sgmk-ssam.ch/wiki/Raspberry_Pi).
 
-First we have to run the JACK audio server.
-
-We can run this in the background with the following.
+First we have to run the JACK audio server, which we'll run in the in the background with the following.
 
     jackd -S -P70 -t2000 -dalsa -dhw:ALSA -r44100 -p2048 -n3 -s &
 
@@ -134,8 +130,16 @@ And then we start JackTrip talking to the OSX machine using the computer's IP.
 
     jacktrip -c 192.168.1.XXX
 
-And we're off!
+And we're off! The quality is decent enough for now, we'll keep tweaking options to improve it.
 
-Soon I'll add instructions to send separate channels to each Pi, that's the next hurdle.
+Setting Up a Server To Send Multiple Channels on OSX
+----------------------------------------------------
+
+Soon.
+
+Setting Up a Server To Receive Multiple Channels on a Pi
+--------------------------------------------------------
+
+Soon.
 
 
