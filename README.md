@@ -3,7 +3,7 @@ Work in progress for an installation at Automata, with John Eagle, Cassia Streb,
 
 There are two methods we're attempting so far, the first sends audio data through OSC using the real-time audio programming language, [ChucK](http://chuck.cs.princeton.edu/).
 
-The second sends audio using the JACK ([JACK Audio Connection Kit](http://www.jackosx.com/)) audio server over a network to the individual Raspberry Pis using [JackTrip](https://ccrma.stanford.edu/software/jacktrip/) (CCRMA developed system for sending streaming audio over the internet). While JackTrip is meant for wired applications, it still (sorta) works for this one.
+The second sends audio using the JACK ([JACK Audio Connection Kit](http://www.jackosx.com/)) audio server over a network to the individual Raspberry Pis using [JackTrip](https://ccrma.stanford.edu/software/jacktrip/) (CCRMA developed system for streaming audio over the internet). While JackTrip is meant for wired applications, it still (sorta) works for this one.
 
 Install the latest Raspbian (Jessie)
 ------------------------------------
