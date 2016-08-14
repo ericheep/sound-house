@@ -36,6 +36,10 @@ Then add the following to the bottom of the file.
 
 To save, press `ctrl-x`, when it asks to save, press `y`. Then press `enter` to finish.
 
+On the Raspberry Pi 3, it's also necessary to turn off power management. This ensures that the WiFi still operates when it's headless.
+
+    sudo dev wlan0 set power_save off
+
 **Note:** This might change! Eventually it'll be safer to use static IPs, and this process will be more involved, for now this just sets up a basic internet connection.
 
 ChucK Implementation
