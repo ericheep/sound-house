@@ -36,11 +36,11 @@ Then add the following to the bottom of the file.
 
 To save, press `ctrl-x`, when it asks to save, press `y`. Then press `enter` to finish.
 
-On the Raspberry Pi 3, it's nice to turn off power management. This ensures that the WiFi still operates after 1 minute of inactivity. You'll have to the following line to your your `/etc/network/interfaces' config file.
+On the Raspberry Pi 3, it's nice to turn off power management. This ensures that the WiFi still operates after 1 minute of inactivity. You'll have to the following line to your your `/etc/network/interfaces` config file.
 
     post-up iw dev $IFACE set power_save off
 
-To access the file, type in `sudo nano /etc/network/interfaces', and add the line right underneath the `iface wlan0 inet manual` line. It should look like the following.
+To access the file, type in `sudo nano /etc/network/interfaces`, and add the line right underneath the `iface wlan0 inet manual` line. It should look like the following.
 
     allow-hotplug wlan0
     iface wlan0 inet manual
