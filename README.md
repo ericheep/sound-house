@@ -5,7 +5,7 @@ There are two methods we're attempting so far, the first sends audio data throug
 
 The second sends audio using the JACK ([JACK Audio Connection Kit](http://www.jackosx.com/)) audio server over a network to the individual Raspberry Pis using [JackTrip](https://ccrma.stanford.edu/software/jacktrip/) (CCRMA developed system for streaming audio over the internet). While JackTrip is meant for wired applications, it still (sorta) works for this one.
 
-Install the latest Raspbian (Jessie)
+Install The Latest Raspbian (Jessie)
 ------------------------------------
 
 While this isn't necessarily required for the ChucK implementation, it is definitely required for the JackTrip implementation. Go to the Raspberry Pi and get the latest [NOOBS image](https://www.raspberrypi.org/downloads/noobs/).
@@ -20,8 +20,8 @@ Then load the microSD onto your Pi and install Raspbian using the prompts.
 
 After the install, you might have to change your keyboard settings to US and use the system preferences to disable boot to desktop and enable boot to CLI (command-line interface).
 
-To enable wireless on a Raspberry Pi
-------------------------------------
+To Enable WiFi on a Raspberry Pi And Set a Static IP
+----------------------------------------------------
 
 Use the following command to open the `wpa_supplicant.conf` with the built-in editor (Nano). A more detailed instruction of this process is found [here](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md).
 
@@ -57,9 +57,9 @@ Then type on `sudo nano /etc/dhcpcd.conf` to edit the `dhcpdc.conf` file, at the
 
     interface wlan0
 
-    static ip_address=192.168.1.10/24       #put your desired IP address here, with the /24 after it
+    static ip_address=192.168.1.11/24       #put your desired IP address here, with the /24 after it
     static routers=192.168.X.X              #put your router's IP address here, in place of the 192.168.X.X
-    static domain_name_servers=192.168.X.X  #same IP address at the above line
+    static domain_name_servers=192.168.X.X  #same IP address as the above line
 
 Reboot and make sure that your IP is to what you set it, and you're still on the network, then you should be good to go.
 
