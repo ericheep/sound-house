@@ -36,9 +36,16 @@ Then add the following to the bottom of the file.
 
 To save, press `ctrl-x`, when it asks to save, press `y`. Then press `enter` to finish.
 
-On the Raspberry Pi 3, it's also necessary to turn off power management. This ensures that the WiFi still operates when it's headless.
+On the Raspberry Pi 3, it's nice to turn off power management. This ensures that the WiFi still operates after 1 minute of inactivity. You'll have to the following line to your your `/etc/network/interfaces' config file.
 
-    sudo iw dev wlan0 set power_save off
+    post-up iw dev $IFACE set power_save off
+
+To access the file, type in `sudo nano /etc/network/interfaces', and add the line right underneath the `iface wlan0 inet manual` line. It should look like the following.
+
+    allow-hotplug wlan0
+    iface wlan0 inet manual
+        post-up iw dev $IFACE set power_save off
+        wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 
 **Note:** This might change! Eventually it'll be safer to use static IPs, and this process will be more involved, for now this just sets up a basic internet connection.
 
