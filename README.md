@@ -47,7 +47,23 @@ To access the file, type in `sudo nano /etc/network/interfaces`, and add the lin
         post-up iw dev $IFACE set power_save off
         wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 
-**Note:** This might change! Eventually it'll be safer to use static IPs, and this process will be more involved, for now this just sets up a basic internet connection.
+Now to set a static IP, we'll have to edit the `/etc/dhcpcd.conf` file, but first we'll need to know the router's IP address. To find it, type in `netstat -nr`, the router's IP will be listed under `Gateway`, it should look something like the following.
+
+    Destination     Gateway         Genmaks         Flag    MSS Window  irtt Iface
+    0.0.0.0         192.168.X.X     0.0.0.0         UG      0 0         0 wlan0
+    192.168.1.0     0.0.0.0         255.255.255.0   U       0 0         0 wlan0
+
+Then type on `sudo nano /etc/dhcpcd.conf` to edit the `dhcpdc.conf` file, at the bottom, add the following.
+
+    interface wlan0
+
+    static ip_address=192.168.1.10/24       #put your desired IP address here, with the /24 after it
+    static routers=192.168.X.X              #put your router's IP address here, in place of the 192.168.X.X
+    static domain_name_servers=192.168.X.X  #same IP address at the above line
+
+Reboot and make sure that your IP is to what you set it, and you're still on the network, then you should be good to go.
+
+For the installation, `pione` will be `192.168.1.11`, `pitwo` will be `192.168.1.12`, and so on.
 
 ChucK Implementation
 --------------------
