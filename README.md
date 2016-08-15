@@ -5,7 +5,7 @@ There are two methods we're attempting so far, the first sends audio data throug
 
 The second sends audio using the JACK ([JACK Audio Connection Kit](http://www.jackosx.com/)) audio server over a network to the individual Raspberry Pis using [JackTrip](https://ccrma.stanford.edu/software/jacktrip/) (CCRMA developed system for streaming audio over the internet). While JackTrip is meant for wired applications, it still (sorta) works for this one.
 
-Install the latest Raspbian (Jessie)
+Install The Latest Raspbian (Jessie)
 ------------------------------------
 
 While this isn't necessarily required for the ChucK implementation, it is definitely required for the JackTrip implementation. Go to the Raspberry Pi and get the latest [NOOBS image](https://www.raspberrypi.org/downloads/noobs/).
@@ -20,8 +20,8 @@ Then load the microSD onto your Pi and install Raspbian using the prompts.
 
 After the install, you might have to change your keyboard settings to US and use the system preferences to disable boot to desktop and enable boot to CLI (command-line interface).
 
-To enable wireless on a Raspberry Pi
-------------------------------------
+To Enable WiFi on a Raspberry Pi And Set a Static IP
+----------------------------------------------------
 
 Use the following command to open the `wpa_supplicant.conf` with the built-in editor (Nano). A more detailed instruction of this process is found [here](https://www.raspberrypi.org/documentation/configuration/wireless/wireless-cli.md).
 
@@ -36,7 +36,34 @@ Then add the following to the bottom of the file.
 
 To save, press `ctrl-x`, when it asks to save, press `y`. Then press `enter` to finish.
 
-**Note:** This might change! Eventually it'll be safer to use static IPs, and this process will be more involved, for now this just sets up a basic internet connection.
+On the Raspberry Pi 3, it's nice to turn off power management. This ensures that the WiFi still operates after 1 minute of inactivity. You'll have to the following line to your your `/etc/network/interfaces` config file.
+
+    post-up iw dev $IFACE set power_save off
+
+To access the file, type in `sudo nano /etc/network/interfaces`, and add the line right underneath the `iface wlan0 inet manual` line. It should look like the following.
+
+    allow-hotplug wlan0
+    iface wlan0 inet manual
+        post-up iw dev $IFACE set power_save off
+        wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+Now to set a static IP, we'll have to edit the `/etc/dhcpcd.conf` file, but first we'll need to know the router's IP address. To find it, type in `netstat -nr`, the router's IP will be listed under `Gateway`, it should look something like the following.
+
+    Destination     Gateway         Genmaks         Flag    MSS Window  irtt Iface
+    0.0.0.0         192.168.X.X     0.0.0.0         UG      0 0         0 wlan0
+    192.168.1.0     0.0.0.0         255.255.255.0   U       0 0         0 wlan0
+
+Then type on `sudo nano /etc/dhcpcd.conf` to edit the `dhcpdc.conf` file, at the bottom, add the following.
+
+    interface wlan0
+
+    static ip_address=192.168.1.11/24       #put your desired IP address here, with the /24 after it
+    static routers=192.168.X.X              #put your router's IP address here, in place of the 192.168.X.X
+    static domain_name_servers=192.168.X.X  #same IP address as the above line
+
+Reboot and make sure that your IP is to what you set it, and you're still on the network, then you should be good to go.
+
+For the installation, `pione` will be `192.168.1.11`, `pitwo` will be `192.168.1.12`, and so on.
 
 ChucK Implementation
 --------------------
