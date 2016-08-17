@@ -2,3 +2,6 @@ sudo pip3 install python-osc
 sudo apt-get install jacktrip
 amixer set PCM 95%
 sudo alsactl store
+
+sudo cp /home/pi/git/sound-house/config/interfaces /etc/network/interfaces
+sudo cp /home/pi/git/sound-house/config/dhcpcd.conf /etc/dhcpcd.conf
