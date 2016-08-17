@@ -1,3 +1,10 @@
+
+sleep 5
+
+python3 /home/pi/git/sound-house/oscDistance.py
+
+sleep 5
+
 export DISPLAY=:0
 export `dbus-launch | grep ADDRESS`
 jackd -P70 -t3000 -dalsa -dhw:ALSA -r44100 -p1024 -n3 -s -S &
