@@ -1,0 +1,4 @@
+sudo pip3 install python-osc
+sudo apt-get install jacktrip
+amixer set PCM 95%
+sudo alsactl store
