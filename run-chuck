@@ -1,0 +1,8 @@
+
+sleep 5
+
+python3 /home/pi/git/sound-house/python/oscDistance.py &
+
+sleep 5
+
+chuck /home/pi/git/sound-house/chuck/receiver.ck &
