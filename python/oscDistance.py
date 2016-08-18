@@ -19,8 +19,8 @@ from pythonosc import osc_message_builder
 from pythonosc import udp_client
 
 # osc vars
-piIp = "192.168.1.89"
-hostIp = "192.168.1.68"
+piIp = "192.168.1.12"
+hostIp = "192.168.1.100"
 piPort = 5000
 hostPort = 12345
 
