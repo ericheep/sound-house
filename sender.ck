@@ -2,20 +2,24 @@
 // Eric Heep
 
 // constants
-2 => int NUM_PIS;
+8 => int NUM_PIS;
 512 => int BUFFER_SIZE;
 
 // ip addresses
-["127.0.0.1",
- "192.168.1.71"] @=> string IP[];
+["192.168.1.11",
+ "192.168.1.12",
+ "192.168.1.13",
+ "192.168.1.14",
+ "192.168.1.15",
+ "192.168.1.16",
+ "192.168.1.17",
+ "192.168.1.18"] @=> string IP[];
 
-// ports, might as well not change these
-[12345,
- 12345] @=> int OUT_PORT[];
+// port is the same for all
+12345 => int OUT_PORT[];
 
-// not sure if we need to change these either
-["/a",
- "/b"] @=> string ADDRESS[];
+// address is the same for all
+"/m" => string ADDRESS[];
 
 // osc out
 OscOut out[NUM_PIS];
@@ -26,13 +30,13 @@ Gain mic[NUM_PIS];
 // audio set up
 for (0 => int i; i < NUM_PIS; i++) {
     adc.chan(i) => mic[i] => blackhole;
-    out[i].dest(IP[i], OUT_PORT[i]);
+    out[i].dest(IP[i], OUT_PORT);
 }
 
 // sends out audio in 512 sample blocks
 fun void send() {
     for (0 => int i; i < NUM_PIS; i++) {
-        out[i].start(ADDRESS[i]);
+        out[i].start(ADDRESS);
     }
 
     for (0 => int j; j < BUFFER_SIZE; j++) {
