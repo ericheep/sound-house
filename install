@@ -3,8 +3,8 @@ sudo apt-get install jacktrip
 amixer set PCM 95%
 sudo alsactl store
 
-sudo cp /home/pi/git/sound-house/config/interfaces /etc/network/interfaces
-sudo cp /home/pi/git/sound-house/config/dhcpcd.conf /etc/dhcpcd.conf
+# sudo cp /home/pi/git/sound-house/config/interfaces /etc/network/interfaces
+# sudo cp /home/pi/git/sound-house/config/dhcpcd.conf /etc/dhcpcd.conf
 
 sudo apt-get install bison flex
 sudo apt-get install alsa-base libasound2-dev libsndfile1-dev
