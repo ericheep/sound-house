@@ -1,18 +1,21 @@
-8 => int NUM_PIS;
 5000 => int OUT_PORT;
 
-OscOut out[NUM_PIS];
-OscIn in;
-OscMsg msg;
-
-["192.168.1.11",
+[
+//"192.168.1.11",
  "192.168.1.12",
  "192.168.1.13",
- "192.168.1.14",
+ //"192.168.1.14",
  "192.168.1.15",
- "192.168.1.16",
- "192.168.1.17",
- "192.168.1.18"] @=> string ips[];
+ "192.168.1.16"
+ //"192.168.1.17"
+ //"192.168.1.18"
+ ] @=> string ips[];
+
+ips.cap() => int NUM_PIS;
+
+OscOut out[NUM_PIS];
+// OscIn in;
+OscMsg msg;
 
 for (0 => int i; i < NUM_PIS; i++) {
     out[i].dest(ips[i], OUT_PORT);
@@ -20,8 +23,8 @@ for (0 => int i; i < NUM_PIS; i++) {
 
 float incMsg[NUM_PIS];
 
-in.port(12345);
-in.listenAll();
+// in.port(12345);
+// in.listenAll();
 
 spork ~ oscOut();
 // spork ~ oscIn();
@@ -38,6 +41,7 @@ fun void oscOut() {
     }
 }
 
+/*
 fun void oscIn() {
     while (true) {
         in => now;
@@ -50,12 +54,14 @@ fun void oscIn() {
         }
     }
 }
+*/
+
 
 while (true) {
     "" => string print;
     for (0 => int i; i < NUM_PIS; i++) {
         print + Math.round(incMsg[i]) + " "  => print;
     }
-    // <<< print, "" >>>;
+    //<<< print, "" >>>;
     0.5::second => now;
 }

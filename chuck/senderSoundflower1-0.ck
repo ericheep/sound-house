@@ -8,10 +8,10 @@
 [
 // "192.168.1.11",
  "192.168.1.12",
- "192.168.1.13",
+ "192.168.1.13"
 //"192.168.1.14",
 //"192.168.1.15",
- "192.168.1.16"
+// "192.168.1.16",
 // "192.168.1.17"
  //"192.168.1.18"
 ] @=> string IP[];
@@ -25,7 +25,7 @@ IP.cap() => int NUM_PIS;
 "/m" => string ADDRESS;
 
 // we'll try this out
-100::ms => dur delayTime;
+50::ms => dur delayTime;
 
 // osc out
 OscOut out[NUM_PIS];
@@ -36,11 +36,11 @@ Delay del[NUM_PIS];
 OnePole pole[NUM_PIS];
 
 // thresholds in decibels
-10.0 => float risingThreshold;  //10
+10.0 => float risingThreshold;
 1.0 => float fallingThreshold;
 
 // this determines how much audio is send through in milliseconds
-10::ms => dur minimumLength;  //10
+50::ms => dur minimumLength;
 
 // set up
 for (0 => int i; i < NUM_PIS; i++) {
