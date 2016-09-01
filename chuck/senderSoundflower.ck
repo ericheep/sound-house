@@ -8,27 +8,34 @@
 [
 // "192.168.1.11",
  "192.168.1.12",
- "192.168.1.13",
+ "192.168.1.13"
 //"192.168.1.14",
 //"192.168.1.15",
- "192.168.1.16"
+//"192.168.1.16"
 // "192.168.1.17"
  //"192.168.1.18"
 ] @=> string IP[];
 
 IP.cap() => int NUM_PIS;
 
-// port is the same for all
+// port is the same for all outgoing messages
 12345 => int OUT_PORT;
 
-// address is the same for all
+// address is the same for all outgoing messages
 "/m" => string ADDRESS;
 
 // we'll try this out
 100::ms => dur delayTime;
 
-// osc out
+// osc out to Raspberry Pis
 OscOut out[NUM_PIS];
+// osc in to ChucK from Max
+OscIn in;
+OscMsg msg;
+
+// the port for the incoming messages
+7400 => in.port;
+in.listenAll();
 
 // UGens
 Gain mic[NUM_PIS];
@@ -36,11 +43,34 @@ Delay del[NUM_PIS];
 OnePole pole[NUM_PIS];
 
 // thresholds in decibels
-10.0 => float risingThreshold;  //10
-1.0 => float fallingThreshold;
+10 => int risingThreshold;  //10
+1 => int fallingThreshold;
 
 // this determines how much audio is send through in milliseconds
-10::ms => dur minimumLength;  //10
+10::ms => dur packetLength;  //10
+
+// allows Max/MSP to change the values of
+// the threshold and length variables
+fun void oscReceive() {
+    while (true) {
+        while (in.recv(msg)) {
+            if (msg.address == "/risingThreshold") {
+                msg.getInt(0) => risingThreshold;
+            }
+            if (msg.address == "/fallingThreshold") {
+                msg.getInt(0) => fallingThreshold;
+            }
+            if (msg.address == "/packetLength") {
+                msg.getInt(0)::ms => packetLength;
+            }
+            if (msg.address == "/delayTime") {
+                msg.getInt(0)::ms => delayTime;
+            }
+        }
+    }
+}
+
+spork ~ oscReceive();
 
 // set up
 for (0 => int i; i < NUM_PIS; i++) {
@@ -58,6 +88,7 @@ for (0 => int i; i < NUM_PIS; i++) {
     spork ~ envelopeFollower(i);
 }
 
+// envelope follower
 fun void envelopeFollower(int idx) {
     // loops until the decibel limit is reached
     while (true) {
@@ -67,7 +98,7 @@ fun void envelopeFollower(int idx) {
         <<< "Sending!", Std.rmstodb(pole[idx].last()) >>>;
         now => time past;
         while (Std.rmstodb(pole[idx].last()) > fallingThreshold
-            ||  now < past + minimumLength) {
+            ||  now < past + packetLength) {
             send(idx);
             //1024::samp => now;
         }
