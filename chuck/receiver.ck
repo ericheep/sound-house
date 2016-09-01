@@ -1,6 +1,7 @@
 // receiver.ck
 // Eric Heep
 
+// osc stuff
 OscIn in;
 OscMsg msg;
 Step st => dac;
