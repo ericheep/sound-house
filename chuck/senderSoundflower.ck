@@ -6,14 +6,14 @@
 
 // ip addresses
 [
-// "192.168.1.11",
+ "192.168.1.11",
  "192.168.1.12",
  "192.168.1.13",
-//"192.168.1.14",
-//"192.168.1.15",
- "192.168.1.16"
-// "192.168.1.17"
- //"192.168.1.18"
+ "192.168.1.14",
+ "192.168.1.15",
+ "192.168.1.16",
+ "192.168.1.17",
+ "192.168.1.18"
 ] @=> string IP[];
 
 IP.cap() => int NUM_PIS;
@@ -47,26 +47,31 @@ OnePole pole[NUM_PIS];
 1 => int fallingThreshold;
 
 // this determines how much audio is send through in milliseconds
-10::ms => dur packetLength;  //10
+400::ms => dur packetLength;  //10
 
 // allows Max/MSP to change the values of
 // the threshold and length variables
 fun void oscReceive() {
     while (true) {
+        in => now;
         while (in.recv(msg)) {
             if (msg.address == "/risingThreshold") {
-                msg.getInt(0) => risingThreshold;
+                <<< msg.getInt(0), "rising" >>>;
+                //msg.getInt(0) => risingThreshold;
             }
             if (msg.address == "/fallingThreshold") {
-                msg.getInt(0) => fallingThreshold;
+                                <<< msg.getInt(0), "Falling" >>>;
+
+                //msg.getInt(0) => fallingThreshold;
             }
             if (msg.address == "/packetLength") {
-                msg.getInt(0)::ms => packetLength;
+                //msg.getInt(0)::ms => packetLength;
             }
             if (msg.address == "/delayTime") {
-                msg.getInt(0)::ms => delayTime;
+                //msg.getInt(0)::ms => delayTime;
             }
-        }
+         }
+         //1::ms => now;
     }
 }
 
@@ -95,10 +100,11 @@ fun void envelopeFollower(int idx) {
         while (Std.rmstodb(pole[idx].last()) < risingThreshold) {
             1::samp => now;
         }
-        <<< "Sending!", Std.rmstodb(pole[idx].last()) >>>;
+        <<< "Sending!", Std.rmstodb(pole[idx].last()), risingThreshold >>>;
         now => time past;
-        while (Std.rmstodb(pole[idx].last()) > fallingThreshold
-            ||  now < past + packetLength) {
+        //while (Std.rmstodb(pole[idx].last()) > fallingThreshold
+        //    ||  now < past + packetLength) {
+        while (now < past + packetLength) {
             send(idx);
             //1024::samp => now;
         }
