@@ -77,7 +77,7 @@ To install ChucK on a Raspberry Pi
 First we'll have to install some depnedencies.
 
     sudo apt-get install bison flex
-    sudo apt-get install alsa-base libasound2-dev libasndfile1-dev
+    sudo apt-get install alsa-base libasound2-dev libsndfile1-dev
 
 Clone the ChucK repository to a suitable directory.
 
