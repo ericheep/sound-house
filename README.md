@@ -101,11 +101,11 @@ And then on the master computer, run the program that sends the audio. You'll pr
 
 That's about it! It's not the best quality at the moment, will need to test with a dedicated router and tweak a few other things.
 
-~~JACK/JackTrip Implementation
+JACK/JackTrip Implementation
 ----------------------------
 ----------------------------
 
-This might be the best solution overall, as it provides a low latency network that is designed to route audio. The only caveat is that it was designed for wired connections, which proves more reliable than our wireless system.
+This was an attempt at not using OSC, and has since been disregarded. It might work well with a wired connection, but as it says in its documentation, JackTrip is not meant for wireless communication.
 
 Mac OSC Install
 ---------------
