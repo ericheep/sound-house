@@ -12,7 +12,7 @@ Format your microSD card using [SDFormatter](https://www.sdcard.org/downloads/fo
 
 Then simply load the contents of the NOOBS `.zip` onto your card.
 
-![drag and drop](copytocard.png)
+![drag and drop](images/copytocard.png)
 
 Then load the microSD onto your Pi and install Raspbian using the prompts.
 
@@ -138,7 +138,7 @@ Open up the `jackPilot` application, and open up it's preferences.
 
 Make sure that Jack's settings matching the settings that we'll use on the Pi.
 
-![JackTrip awaiting a connection](jacktripOSX.png)
+![JackTrip awaiting a connection](images/jacktripOSX.png)
 
 The only only you should have to change is the buffer size, which we'll set to `2048`.
 
