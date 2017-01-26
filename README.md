@@ -1,9 +1,7 @@
 # rpi-sound-house
 Work in progress for an installation at Automata, with John Eagle, Cassia Streb, and Janie Geiser.
 
-There are two methods we're attempting so far, the first sends audio data through OSC using the real-time audio programming language, [ChucK](http://chuck.cs.princeton.edu/).
-
-The second sends audio using the JACK ([JACK Audio Connection Kit](http://www.jackosx.com/)) audio server over a network to the individual Raspberry Pis using [JackTrip](https://ccrma.stanford.edu/software/jacktrip/) (CCRMA developed system for streaming audio over the internet). While JackTrip is meant for wired applications, it still (sorta) works for this one.
+This project sends audio using OSC packets to eight individual Raspberry Pis using the real-time audio programming language, [ChucK](http://chuck.cs.princeton.edu/). The following steps outline the process for setting up this system.
 
 Install The Latest Raspbian (Jessie)
 ------------------------------------
@@ -49,7 +47,7 @@ To access the file, type in `sudo nano /etc/network/interfaces`, and add the lin
 
 Now to set a static IP, we'll have to edit the `/etc/dhcpcd.conf` file, but first we'll need to know the router's IP address. To find it, type in `netstat -nr`, the router's IP will be listed under `Gateway`, it should look something like the following.
 
-    Destination     Gateway         Genmaks         Flag    MSS Window  irtt Iface
+    Destination     Gateway         Genmask         Flag    MSS Window  irtt Iface
     0.0.0.0         192.168.X.X     0.0.0.0         UG      0 0         0 wlan0
     192.168.1.0     0.0.0.0         255.255.255.0   U       0 0         0 wlan0
 
@@ -69,9 +67,7 @@ ChucK Implementation
 --------------------
 --------------------
 
-This is more of a hack than a real solution, the audio that is sent to the Raspberry Pis sounds a bit glitchy as of right now.
-
-To install ChucK on a Raspberry Pi
+Install ChucK on a Raspberry Pi
 ----------------------------------
 
 First we'll have to install some depnedencies.
@@ -105,7 +101,7 @@ And then on the master computer, run the program that sends the audio. You'll pr
 
 That's about it! It's not the best quality at the moment, will need to test with a dedicated router and tweak a few other things.
 
-JACK/JackTrip Implementation
+~~JACK/JackTrip Implementation
 ----------------------------
 ----------------------------
 
@@ -159,14 +155,4 @@ And then we start JackTrip talking to the OSX machine using the computer's IP.
 
     jacktrip -c 192.168.1.XXX
 
-And we're off! The quality is decent enough for now, we'll keep tweaking options to improve it.
-
-Setting Up a Server To Send Multiple Channels on OSX
-----------------------------------------------------
-
-Soon.
-
-Setting Up a Client To Receive Multiple Channels on a Pi
---------------------------------------------------------
-
-Soon.
+And we're off! The quality is decent enough for now, we'll keep tweaking options to improve it.~~

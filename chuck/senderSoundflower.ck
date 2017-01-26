@@ -30,6 +30,7 @@ IP.cap() => int NUM_PIS;
 // osc out to Raspberry Pis
 OscOut out[NUM_PIS];
 // osc in to ChucK from Max
+
 OscIn in;
 OscMsg msg;
 
@@ -48,6 +49,7 @@ OnePole pole[NUM_PIS];
 
 // this determines how much audio is send through in milliseconds
 400::ms => dur packetLength;  //10
+
 
 // allows Max/MSP to change the values of
 // the threshold and length variables
@@ -70,8 +72,15 @@ fun void oscReceive() {
             if (msg.address == "/delayTime") {
                 //msg.getInt(0)::ms => delayTime;
             }
+<<<<<<< HEAD
          }
          //1::ms => now;
+=======
+            <<<"Rising", risingThreshold, "Falling", fallingThreshold,
+            "Packet Length", packetLength/ms, "Delay Time", delayTime/ms >>>;
+        }
+        1::ms => now;
+>>>>>>> 2670b9960465164c062754accad70df6176db185
     }
 }
 
@@ -102,8 +111,12 @@ fun void envelopeFollower(int idx) {
         }
         <<< "Sending!", Std.rmstodb(pole[idx].last()), risingThreshold >>>;
         now => time past;
+<<<<<<< HEAD
         //while (Std.rmstodb(pole[idx].last()) > fallingThreshold
         //    ||  now < past + packetLength) {
+=======
+        // while (Std.rmstodb(pole[idx].last()) > fallingThreshold ||  now < past + packetLength) {
+>>>>>>> 2670b9960465164c062754accad70df6176db185
         while (now < past + packetLength) {
             send(idx);
             //1024::samp => now;
@@ -139,6 +152,8 @@ init();
 // loop it
 while (true) {
     // send();
-    1::ms => now;
+    // <<< Std.rmstodb(pole[0].last()) >>>;
+    // <<< "!" >>>;
+    100::ms => now;
 }
 
