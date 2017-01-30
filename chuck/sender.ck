@@ -135,7 +135,7 @@ fun void oscReceive() {
                 }
                 if (msg.address == "/packetLength" + i) {
                     msg.getFloat(0)::ms => packetLength[i];
-                    <<< "/packetLength" + i, packetLength[i], "" >>>;
+                    <<< "/packetLength" + i, packetLength[i]/ms, "" >>>;
                 }
                 if (msg.address == "/threshold" + i) {
                     msg.getFloat(0) => threshold[i];
