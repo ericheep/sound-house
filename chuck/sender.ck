@@ -134,7 +134,7 @@ fun void oscReceive() {
                     <<< "/res" + i, res[i].Q(), "" >>>;
                 }
                 if (msg.address == "/packetLength" + i) {
-                    msg.getInt(0)::ms => packetLength[i];
+                    msg.getFloat(0)::ms => packetLength[i];
                     <<< "/packetLength" + i, packetLength[i], "" >>>;
                 }
                 if (msg.address == "/threshold" + i) {
@@ -146,7 +146,7 @@ fun void oscReceive() {
                     <<< "/micGain" + i, gain[i].gain(), "" >>>;
                 }
                 if (msg.address == "/delayLength" + i) {
-                    msg.getInt(0)::ms => delayLength[i];
+                    msg.getFloat(0)::ms => delayLength[i];
                     <<< "/delayLength" + i, delayLength[i]/ms, "" >>>;
                 }
             }
