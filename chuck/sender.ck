@@ -123,37 +123,37 @@ fun void oscReceive() {
             if (msg.address == "/hpCutoff") {
                 msg.getInt(0) => int idx;
                 msg.getFloat(0) => hp[idx].freq;
-                <<< "/hpCutoff:", hp[idx].freq(), "" >>>;
+                <<< "/hpCutoff:", idx, hp[idx].freq(), "" >>>;
             }
             if (msg.address == "/lpCutoff") {
                 msg.getInt(0) => int idx;
                 msg.getFloat(0) => lp[idx].freq;
-                <<< "/lpCutoff:", lp[idx].freq(), "" >>>;
+                <<< "/lpCutoff:", idx, lp[idx].freq(), "" >>>;
             }
             if (msg.address == "/res") {
                 msg.getInt(0) => int idx;
                 msg.getFloat(0) => res[idx].Q;
-                <<< "/res:", res[idx].Q(), "" >>>;
+                <<< "/res:", idx, res[idx].Q(), "" >>>;
             }
             if (msg.address == "/packetLength") {
                 msg.getInt(0) => int idx;
                 msg.getInt(1)::ms => packetLength[idx];
-                <<< "/packetLength:", packetLength[idx], "" >>>;
+                <<< "/packetLength:", idx, packetLength[idx], "" >>>;
             }
             if (msg.address == "/threshold") {
                 msg.getInt(0) => int idx;
                 msg.getFloat(0) => threshold[idx];
-                <<< "/threshold:", threshold[idx], "" >>>;
+                <<< "/threshold:", idx, threshold[idx], "" >>>;
             }
             if (msg.address == "/micGain") {
                 msg.getInt(0) => int idx;
                 msg.getFloat(0) => gain[idx].gain;
-                <<< "/micGain:", gain[idx].gain(), "" >>>;
+                <<< "/micGain:", idx, gain[idx].gain(), "" >>>;
             }
             if (msg.address == "/delayLength") {
                 msg.getInt(0) => int idx;
                 msg.getInt(1)::ms => delayLength[idx];
-                <<< "/delayLength:", delayLength[idx]/ms, "" >>>;
+                <<< "/delayLength:", idx, delayLength[idx]/ms, "" >>>;
             }
         }
     }
