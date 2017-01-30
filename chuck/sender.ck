@@ -64,12 +64,16 @@ in.listenAll();
 // --------------------------------------------------------------
 
 Gain mic;
+Gain gain[NUM_PIS];
+HPF hp[NUM_PIS];
+LPF lp[NUM_PIS];
+ResonZ res[NUM_PIS];
 Delay del[NUM_PIS];
 OnePole pole[NUM_PIS];
 
 // we'll try this out
-dur delayTime[NUM_PIS];
-float risingThreshold[NUM_PIS];
+dur delayLength[NUM_PIS];
+float threshold[NUM_PIS];
 
 // --------------------------------------------------------------
 // initialize ---------------------------------------------------
@@ -78,11 +82,11 @@ float risingThreshold[NUM_PIS];
 adc => mic;
 for (0 => int i; i < NUM_PIS; i++) {
     // sound chain
-    mic => del[i] => blackhole;
+    mic => gain[i] => res[i] => lp[i] => hp[i] => del[i] => blackhole;
     mic => pole[i] => blackhole;
 
     // delay of adc
-    100::ms => delayTime[i];
+    100::ms => delayLength[i];
 
     // delay stuff
     del[i].max(100::ms);
@@ -93,7 +97,7 @@ for (0 => int i; i < NUM_PIS; i++) {
     0.9999 => pole[i].pole;
 
     // thresholds in decibels
-    10 => risingThreshold[i];
+    10 => threshold[i];
 
     // this determines how much audio is send through in milliseconds
     500::ms => packetLength[i];
@@ -116,15 +120,40 @@ fun void oscReceive() {
     while (true) {
         in => now;
         while (in.recv(msg)) {
+            if (msg.address == "/hpCutoff") {
+                msg.getInt(0) => int idx;
+                msg.getFloat(0) => hp[idx].freq;
+                <<< "/hpCutoff:", hp[idx].freq(), "" >>>;
+            }
+            if (msg.address == "/lpCutoff") {
+                msg.getInt(0) => int idx;
+                msg.getFloat(0) => lp[idx].freq;
+                <<< "/lpCutoff:", lp[idx].freq(), "" >>>;
+            }
+            if (msg.address == "/res") {
+                msg.getInt(0) => int idx;
+                msg.getFloat(0) => res[idx].Q;
+                <<< "/res:", res[idx].Q(), "" >>>;
+            }
             if (msg.address == "/packetLength") {
                 msg.getInt(0) => int idx;
                 msg.getInt(1)::ms => packetLength[idx];
-                <<< "Packet Length:", packetLength[idx]/ms, "" >>>;
+                <<< "/packetLength:", packetLength[idx], "" >>>;
             }
-            if (msg.address == "/delayTime") {
+            if (msg.address == "/threshold") {
                 msg.getInt(0) => int idx;
-                msg.getInt(1)::ms => delayTime[idx];
-                <<< "Delay Time:", delayTime[idx]/ms, "" >>>;
+                msg.getFloat(0) => threshold[idx];
+                <<< "/threshold:", threshold[idx], "" >>>;
+            }
+            if (msg.address == "/micGain") {
+                msg.getInt(0) => int idx;
+                msg.getFloat(0) => gain[idx].gain;
+                <<< "/micGain:", gain[idx].gain(), "" >>>;
+            }
+            if (msg.address == "/delayLength") {
+                msg.getInt(0) => int idx;
+                msg.getInt(1)::ms => delayLength[idx];
+                <<< "/delayLength:", delayLength[idx]/ms, "" >>>;
             }
         }
     }
@@ -136,7 +165,7 @@ spork ~ oscReceive();
 fun void envelopeFollower(int idx) {
     // loops until the decibel limit is reached
     while (true) {
-        while (Std.rmstodb(pole[idx].last()) < risingThreshold[idx]) {
+        while (Std.rmstodb(pole[idx].last()) < threshold[idx]) {
             1::samp => now;
         }
 
