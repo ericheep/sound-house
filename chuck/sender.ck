@@ -123,31 +123,31 @@ fun void oscReceive() {
             for (int i; i < NUM_PIS; i++) {
                 if (msg.address == "/hpCutoff" + i) {
                     msg.getFloat(0) => hp[i].freq;
-                    <<< "/hpCutoff:", i, hp[i].freq(), "" >>>;
+                    <<< "/hpCutoff" + i, hp[i].freq(), "" >>>;
                 }
                 if (msg.address == "/lpCutoff" + i) {
                     msg.getFloat(0) => lp[i].freq;
-                    <<< "/lpCutoff:", i, lp[i].freq(), "" >>>;
+                    <<< "/lpCutoff" + i, lp[i].freq(), "" >>>;
                 }
                 if (msg.address == "/res" + i) {
                     msg.getFloat(0) => res[i].Q;
-                    <<< "/res:", i, res[i].Q(), "" >>>;
+                    <<< "/res" + i, res[i].Q(), "" >>>;
                 }
                 if (msg.address == "/packetLength" + i) {
                     msg.getInt(0)::ms => packetLength[i];
-                    <<< "/packetLength:", i, packetLength[i], "" >>>;
+                    <<< "/packetLength" + i, packetLength[i], "" >>>;
                 }
                 if (msg.address == "/threshold" + i) {
-                    msg.getFloat(0) => threshold[i];
-                    <<< "/threshold:", i, threshold[i], "" >>>;
+                    msg.getInt(0) => threshold[i];
+                    <<< "/threshold" + i, threshold[i], "" >>>;
                 }
                 if (msg.address == "/micGain" + i) {
                     msg.getFloat(0) => gain[i].gain;
-                    <<< "/micGain:", i, gain[i].gain(), "" >>>;
+                    <<< "/micGain" + i, gain[i].gain(), "" >>>;
                 }
                 if (msg.address == "/delayLength" + i) {
-                    msg.getInt(1)::ms => delayLength[i];
-                    <<< "/delayLength:", i, delayLength[i]/ms, "" >>>;
+                    msg.getInt(0)::ms => delayLength[i];
+                    <<< "/delayLength" + i, delayLength[i]/ms, "" >>>;
                 }
             }
         }
