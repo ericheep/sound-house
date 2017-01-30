@@ -1,6 +1,20 @@
 // sender.ck
 // Eric Heep
 
+/*
+sine tone freq per pi
+sine tone gain per pi
+
+mic volume per pi
+lookback delay time per pi
+packet length per pi
+threshold per pi
+
+cutoff freq per pi
+resonance Q per pi
+envelope length
+*/
+
 // constants
 512 => int BUFFER_SIZE;
 
@@ -66,6 +80,7 @@ for (0 => int i; i < NUM_PIS; i++) {
     // sound chain
     mic => del[i] => blackhole;
     mic => pole[i] => blackhole;
+
     // delay of adc
     100::ms => delayTime[i];
 
@@ -129,9 +144,7 @@ fun void envelopeFollower(int idx) {
 
         while (now < past + packetLength[idx]) {
             send(idx);
-            //1024::samp => now;
         }
-        <<< "Sent!", Std.rmstodb(pole[idx].last()) >>>;
     }
 }
 
