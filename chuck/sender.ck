@@ -120,40 +120,35 @@ fun void oscReceive() {
     while (true) {
         in => now;
         while (in.recv(msg)) {
-            if (msg.address == "/hpCutoff") {
-                msg.getInt(0) => int idx;
-                msg.getFloat(0) => hp[idx].freq;
-                <<< "/hpCutoff:", idx, hp[idx].freq(), "" >>>;
-            }
-            if (msg.address == "/lpCutoff") {
-                msg.getInt(0) => int idx;
-                msg.getFloat(0) => lp[idx].freq;
-                <<< "/lpCutoff:", idx, lp[idx].freq(), "" >>>;
-            }
-            if (msg.address == "/res") {
-                msg.getInt(0) => int idx;
-                msg.getFloat(0) => res[idx].Q;
-                <<< "/res:", idx, res[idx].Q(), "" >>>;
-            }
-            if (msg.address == "/packetLength") {
-                msg.getInt(0) => int idx;
-                msg.getInt(1)::ms => packetLength[idx];
-                <<< "/packetLength:", idx, packetLength[idx], "" >>>;
-            }
-            if (msg.address == "/threshold") {
-                msg.getInt(0) => int idx;
-                msg.getFloat(0) => threshold[idx];
-                <<< "/threshold:", idx, threshold[idx], "" >>>;
-            }
-            if (msg.address == "/micGain") {
-                msg.getInt(0) => int idx;
-                msg.getFloat(0) => gain[idx].gain;
-                <<< "/micGain:", idx, gain[idx].gain(), "" >>>;
-            }
-            if (msg.address == "/delayLength") {
-                msg.getInt(0) => int idx;
-                msg.getInt(1)::ms => delayLength[idx];
-                <<< "/delayLength:", idx, delayLength[idx]/ms, "" >>>;
+            for (int i; i < NUM_PIS; i++) {
+                if (msg.address == "/hpCutoff" + i) {
+                    msg.getFloat(0) => hp[i].freq;
+                    <<< "/hpCutoff:", i, hp[i].freq(), "" >>>;
+                }
+                if (msg.address == "/lpCutoff" + i) {
+                    msg.getFloat(0) => lp[i].freq;
+                    <<< "/lpCutoff:", i, lp[i].freq(), "" >>>;
+                }
+                if (msg.address == "/res" + i) {
+                    msg.getFloat(0) => res[i].Q;
+                    <<< "/res:", i, res[i].Q(), "" >>>;
+                }
+                if (msg.address == "/packetLength" + i) {
+                    msg.getInt(0)::ms => packetLength[i];
+                    <<< "/packetLength:", i, packetLength[i], "" >>>;
+                }
+                if (msg.address == "/threshold" + i) {
+                    msg.getFloat(0) => threshold[i];
+                    <<< "/threshold:", i, threshold[i], "" >>>;
+                }
+                if (msg.address == "/micGain" + i) {
+                    msg.getFloat(0) => gain[i].gain;
+                    <<< "/micGain:", i, gain[i].gain(), "" >>>;
+                }
+                if (msg.address == "/delayLength" + i) {
+                    msg.getInt(1)::ms => delayLength[i];
+                    <<< "/delayLength:", i, delayLength[i]/ms, "" >>>;
+                }
             }
         }
     }
