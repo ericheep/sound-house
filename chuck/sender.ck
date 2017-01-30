@@ -103,7 +103,7 @@ for (0 => int i; i < NUM_PIS; i++) {
     500::ms => packetLength[i];
 
     // start the envelope follower
-    spork ~ envelopeFollower(i);
+    // spork ~ envelopeFollower(i);
 
     // set ip and port for each osc out
     out[i].dest(IP[i], OUT_PORT);
