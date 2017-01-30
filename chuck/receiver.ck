@@ -12,23 +12,10 @@ in.listenAll();
 SinOsc sin => dac;
 sin.gain(0.0);
 sin.freq(0.0);
-Step st => ADSR env => dac;
-
-// envelope
-0.0 => float win;
-0::samp => dur winDur;
-env.set(winDur, 0::samp, 1.0, winDur);
+Step st => Gain stGain => dac;
 
 // constant
 512 => int bufferSize;
-
-// run concurrently with sample playback
-fun void envelope() {
-    env.keyOn();
-    winDur => now;
-    (bufferSize::samp) - winDur => now;
-    env.keyOff();
-}
 
 // loop it
 while (true) {
@@ -44,28 +31,20 @@ while (true) {
             msg.getFloat(0) => sin.gain;
             <<< "/sinGain", sin.gain() >>>;
         }
-        // receive envelope length
-        if (msg.address == "/envLength") {
-            msg.getFloat(0) => win;
-            <<< "/envLength", win >>>;
-        }
         // receive packet of audio samples
         if (msg.address == "/m") {
-            (win * 0.5 * bufferSize)::samp => winDur;
-            env.set(winDur, 0::samp, 1.0, winDur);
-
-            // start envelope
-            spork ~ envelope();
-
+	    stGain.gain(1.0);
             // start the sample playback
             for (0 => int i; i < bufferSize; i++) {
                 msg.getFloat(i) => st.next;
                 1::samp => now;
             }
+	    stGain.gain(0.0);
         }
         if (msg.address == "/bufferSize") {
             msg.getInt(0) => bufferSize;
             <<< "Buffer size set to", bufferSize, "" >>>;
         }
     }
+    1::samp => now;
 }
