@@ -37,14 +37,17 @@ while (true) {
         // frequency of the sine tone
         if (msg.address == "/sineFreq") {
             msg.getFloat(0) => sin.freq;
+            <<< "/sinFreq", sin.freq() >>>;
         }
         // gain of the sine tone
         if (msg.address == "/sineGain") {
             msg.getFloat(0) => sin.gain;
+            <<< "/sinGain", sin.gain() >>>;
         }
         // receive envelope length
         if (msg.address == "/envLength") {
             msg.getFloat(0) => win;
+            <<< "/envLength", win >>>;
         }
         // receive packet of audio samples
         if (msg.address == "/m") {
