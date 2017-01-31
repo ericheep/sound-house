@@ -9,34 +9,17 @@ OscMsg msg;
 in.listenAll();
 
 // sine tones
-SinOsc sin => Gain sinGain => dac;
-sin.gain(0.00001);
-sin.freq(1.0);
-sinGain.gain(0.0);
-
+SinOsc sin => dac;
+sin.gain(0.0);
+sin.freq(0.0);
 Step st => Gain stGain => dac;
 
-0.001 => float gainInc;
-0.0 => float targetGain;
-
-fun void easeGain() {
-    while (true) {
-        if (sinGain.gain() < targetGain - gainInc) {
-	    sinGain.gain() + gainInc => sinGain.gain;
-            <<< sinGain.gain() >>>;
-	}     
-        else if (sinGain.gain() > targetGain + gainInc) {
-            sinGain.gain() - gainInc => sinGain.gain;
-            <<< sinGain.gain() >>>;
-        }
-        1::ms => now;
-    }
-}
-
-spork ~ easeGain();
+sinGain.gain(0.25);
+dac.gain(0.25);
 
 // constant
 512 => int bufferSize;
+0.0 => float g;
 
 // loop it
 while (true) {
@@ -45,12 +28,12 @@ while (true) {
         // frequency of the sine tone
         if (msg.address == "/sineFreq") {
             msg.getFloat(0) => sin.freq;
-            <<< "/sinFreq", sin.freq() >>>;
+            // <<< "/sinFreq", sin.freq() >>>;
         }
         // gain of the sine tone
-        if (msg.address == "/sinGain") {
-            msg.getFloat(0) => targetGain;
-            // <<< "/sinGain", targetGain >>>;
+        if (msg.address == "/sineGain") {
+            msg.getFloat(0) => sin.gain;
+            // <<< "/sinGain", sin.gain() >>>;
         }
         // receive packet of audio samples
         if (msg.address == "/m") {

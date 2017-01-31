@@ -1,7 +1,6 @@
-sleep 5
 
-python3 /home/pi/git/sound-house/python/oscDistance.py &
+# sleep 5
+# python3 /home/pi/git/sound-house/python/oscDistance.py &
 
-sleep 5
-
-chuck --srate:22050 /home/pi/git/sound-house/chuck/receiver.ck &
+sleep 10
+chuck --srate:22050 --adaptive:256 /home/pi/git/sound-house/chuck/receiver.ck &
