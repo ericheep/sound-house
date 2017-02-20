@@ -24,17 +24,19 @@ envelope length
 
 // ip addresses
 [
- "192.168.1.11",
- "192.168.1.12",
- "192.168.1.13",
- "192.168.1.14",
- "192.168.1.15",
- "192.168.1.16",
- "192.168.1.17",
- "192.168.1.18"
+ //"192.168.1.11",
+ //"192.168.1.12",
+ "192.168.1.13"
+ //"192.168.1.14",
+ //"192.168.1.15",
+ //"192.168.1.16",
+ //"192.168.1.17",
+ //"192.168.1.18"
 ] @=> string IP[];
 
-IP.cap() => int NUM_PIS;
+IP.size() => int NUM_IPS;
+
+8 => int NUM_PIS;
 
 // port is the same for all outgoing messages
 12345 => int OUT_PORT;
@@ -82,7 +84,9 @@ float threshold[NUM_PIS];
 adc => mic;
 for (0 => int i; i < NUM_PIS; i++) {
     // sound chain
-    mic => gain[i] => res[i] => lp[i] => hp[i] => del[i] => blackhole;
+    //mic => gain[i] => res[i] => lp[i] => hp[i] => del[i] => blackhole;
+    mic => gain[i] => lp[i] => hp[i] => del[i] => blackhole;
+    //mic => gain[i] => del[i] => blackhole;
     mic => pole[i] => blackhole;
 
     // delay of adc
@@ -91,6 +95,9 @@ for (0 => int i; i < NUM_PIS; i++) {
     // delay stuff
     del[i].max(100::ms);
     del[i].delay(100::ms);
+
+    hp[i].freq(0.1);
+    lp[i].freq(10000.0);
 
     // following
     3 => pole[i].op;
@@ -102,16 +109,21 @@ for (0 => int i; i < NUM_PIS; i++) {
     // this determines how much audio is send through in milliseconds
     500::ms => packetLength[i];
 
-    // start the envelope follower
-    // spork ~ envelopeFollower(i);
 
-    // set ip and port for each osc out
+   }
+
+for (0 => int i; i < NUM_IPS; i++) {
+    // start the envelope follower
+    spork ~ envelopeFollower(i);
+
+     // set ip and port for each osc out
     out[i].dest(IP[i], OUT_PORT);
 
     // set buffer_size
     out[i].start("/bufferSize");
     out[i].add(BUFFER_SIZE);
     out[i].send();
+
 }
 
 // allows Max/MSP to change the values of
@@ -122,11 +134,13 @@ fun void oscReceive() {
         while (in.recv(msg)) {
             for (int i; i < NUM_PIS; i++) {
                 if (msg.address == "/hpCutoff" + i) {
-                    msg.getFloat(0) => hp[i].freq;
+                    msg.getFloat(0) => float hpFreq;
+                    Std.clampf(hpFreq, 0.1, 22050.0) => hp[i].freq;
                     <<< "/hpCutoff" + i, hp[i].freq(), "" >>>;
                 }
                 if (msg.address == "/lpCutoff" + i) {
-                    msg.getFloat(0) => lp[i].freq;
+                    msg.getFloat(0) => float lpFreq;
+                    Std.clampf(lpFreq, 0.1, 22050.0) => lp[i].freq;
                     <<< "/lpCutoff" + i, lp[i].freq(), "" >>>;
                 }
                 if (msg.address == "/res" + i) {
@@ -163,7 +177,9 @@ fun void envelopeFollower(int idx) {
         while (Std.rmstodb(pole[idx].last()) < threshold[idx]) {
             1::samp => now;
         }
+        <<< "Sound.", "" >>>;
 
+        send(idx);
         now => time past;
 
         while (now < past + packetLength[idx]) {
@@ -176,10 +192,9 @@ fun void envelopeFollower(int idx) {
 fun void send(int idx) {
     out[idx].start(ADDRESS);
 
-    // 2 samples per loop for 22050 on the other end
     for (0 => int j; j < BUFFER_SIZE; j++) {
         out[idx].add(del[idx].last());
-        2::samp => now;
+        1::samp => now;
     }
 
     out[idx].send();
