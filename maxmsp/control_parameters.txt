@@ -1,0 +1,1 @@
+map index controls to individual sliders on nano kontrol, add banks for each parameter value (bank control using marker buttons on nanokontrol)
