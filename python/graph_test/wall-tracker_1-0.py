@@ -4,19 +4,13 @@
 #must install pygame and python-osc packages
 
 
-import pygame
-from random import randint
+import pygame, argparse, time
+from random import randint, randrange
+from math import sqrt
 import subprocess as sp
-import argparse
-import time
 
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
-
-#from pygame.locals import *
-#import math
-#from time import sleep
-#import sys
 
 #constants
 CRIMSON =   (176, 23, 31)
@@ -33,11 +27,23 @@ BLACK =     (0, 0, 0)
 #store these vals in a dictionary so they can be accessed by key val
 positions = { 1: [0, 0], 2: [0, 0], 3: [0, 0], 4: [0, 0], 5: [0, 0], 6: [0, 0], 7: [0, 0], 8: [0, 0], "mic": [250, 250] }
 
+#rectangle dimensions:
+long = 40
+short = 10
+dimensions = { 1: [short, long], 2: [short, long], 3: [short, long], 4: [short, long], 5: [short, long], 6: [short, long], 7: [short, long], 8: [short, long] }
+
 # initialize values then add method which initializes wall positions and calls distance method on each
 distances = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 }
 
 #for wall selection via number keys
 wall_keys = { 49: 1, 50: 2, 51: 3, 52: 4, 53: 5, 54: 6, 55: 7, 56: 8, 109: "mic" }
+
+try:
+    screen_size = int(input("Input screen length, in pixels, for square screen (500 default): "))
+except ValueError:
+    screen_size = 500
+
+max_distance = sqrt(((screen_size ** 2) * 2))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -56,11 +62,11 @@ def update_pos(wall_num):
     print("Updated position for Wall #" + str(wall_num) + ": " + str(positions[wall_num]))
 
 def find_distance(wall_num):
-    #position vals will be in dictionary, function will receive key to perform calculation
-    point_1 = [positions[wall_num][0], (positions[wall_num][1] + 20)]
-    mic_point = [positions["mic"][0], positions["mic"][1]]
+    #position vals will be in dictionary, function will receive key to perform calculation, and normalize 0-1
+    point_1 = [(positions[wall_num][0] / max_distance), ((positions[wall_num][1] + 20) / max_distance)]
+    mic_point = [(positions["mic"][0] / max_distance), (positions["mic"][1] / max_distance)]
     distances[wall_num] = round(((((point_1[0] - mic_point[0]) ** 2) + ((point_1[1] - mic_point[1]) ** 2)) ** 0.5), 2)
-    print("Distance for Wall #" + str(wall_num) + ": " + str(distances[wall_num]) + " pixels")
+    print("Distance for Wall #" + str(wall_num) + ": " + str(distances[wall_num]))
     client.send_message("/wall" + str(wall_num), distances[wall_num])
 
 def initialize():
@@ -73,8 +79,8 @@ def initialize():
     elif choice == 2:
         for i in range(8):
             wall_num = i + 1
-            x = randint(0, 490)
-            y = randint(0, 460)
+            x = randint(0, screen_size - 10)
+            y = randint(0, screen_size - 40)
             positions[wall_num][0] = x
             positions[wall_num][1] = y
             find_distance(wall_num)
@@ -84,7 +90,7 @@ initialize()
 pygame.init()
 
 #open a window and set display (width, height)
-size = (500, 500)
+size = (screen_size, screen_size)
 screen = pygame.display.set_mode(size)
 
 pygame.display.set_caption("Walls")
@@ -98,6 +104,9 @@ clock = pygame.time.Clock()
 font = pygame.font.SysFont('Arial', 15, True, False)
 x = "mic"
 y = "mic"
+
+line_on = False
+wall_index = "mic"
 
 #----- Main Program Loop -----
 while not done:
@@ -113,17 +122,25 @@ while not done:
             else:
                 move_size = 10
             if event.key in wall_keys:
-                x = wall_keys[event.key]
-                y = wall_keys[event.key]
+                wall_index = wall_keys[event.key]
+                if wall_index != "mic":
+                    line_on = True
+                elif wall_index == "mic":
+                    line_on = False
+            if event.key == pygame.K_r:
+                temp_0 = dimensions[wall_index][0]
+                temp_1 = dimensions[wall_index][1]
+                dimensions[wall_index][0] = temp_1
+                dimensions[wall_index][1] = temp_0
             #use key mod "shift" to change movement interval
             if event.key == pygame.K_LEFT:
-                positions[x][0] -= move_size
+                positions[wall_index][0] -= move_size
             if event.key == pygame.K_RIGHT:
-                positions[x][0] += move_size
+                positions[wall_index][0] += move_size
             if event.key == pygame.K_UP:
-                positions[y][1] -= move_size
+                positions[wall_index][1] -= move_size
             if event.key == pygame.K_DOWN:
-                positions[y][1] += move_size
+                positions[wall_index][1] += move_size
         elif event.type == pygame.KEYUP:
             sp.call('clear', shell=True)
             for wall in range(8):
@@ -148,14 +165,19 @@ while not done:
     pygame.draw.circle(screen, GREEN, (positions['mic'][0], positions['mic'][1]), 10, 0)
 
     #walls 1-8
-    pygame.draw.rect(screen, RED, (positions[1][0], positions[1][1], 10, 40), 0)
-    pygame.draw.rect(screen, RED, (positions[2][0], positions[2][1], 10, 40), 0)
-    pygame.draw.rect(screen, RED, (positions[3][0], positions[3][1], 10, 40), 0)
-    pygame.draw.rect(screen, RED, (positions[4][0], positions[4][1], 10, 40), 0)
-    pygame.draw.rect(screen, RED, (positions[5][0], positions[5][1], 10, 40), 0)
-    pygame.draw.rect(screen, RED, (positions[6][0], positions[6][1], 10, 40), 0)
-    pygame.draw.rect(screen, RED, (positions[7][0], positions[7][1], 10, 40), 0)
-    pygame.draw.rect(screen, RED, (positions[8][0], positions[8][1], 10, 40), 0)
+    pygame.draw.rect(screen, RED, (positions[1][0], positions[1][1], dimensions[1][0], dimensions[1][1]), 0)
+    pygame.draw.rect(screen, RED, (positions[2][0], positions[2][1], dimensions[2][0], dimensions[2][1]), 0)
+    pygame.draw.rect(screen, RED, (positions[3][0], positions[3][1], dimensions[3][0], dimensions[3][1]), 0)
+    pygame.draw.rect(screen, RED, (positions[4][0], positions[4][1], dimensions[4][0], dimensions[4][1]), 0)
+    pygame.draw.rect(screen, RED, (positions[5][0], positions[5][1], dimensions[5][0], dimensions[5][1]), 0)
+    pygame.draw.rect(screen, RED, (positions[6][0], positions[6][1], dimensions[6][0], dimensions[6][1]), 0)
+    pygame.draw.rect(screen, RED, (positions[7][0], positions[7][1], dimensions[7][0], dimensions[7][1]), 0)
+    pygame.draw.rect(screen, RED, (positions[8][0], positions[8][1], dimensions[8][0], dimensions[8][1]), 0)
+
+
+
+    if line_on == True:
+        pygame.draw.line(screen, BLACK, (positions['mic'][0], positions['mic'][1]), (positions[wall_index][0] + 5, positions[wall_index][1] + 20), 2)
 
     #labels:
 
@@ -176,24 +198,3 @@ while not done:
 
 #Close the window and quit
 pygame.quit()
-
-#updates any changes
-#    pygame.display.update()
-
-
-"""
-    move = int(input("1. Move wall 2. Reset 3. Exit: "))
-    if move == 1:
-        method = int(input("1. By coordinate 2. Using Arrows "))
-        wall_num = int(input("Which wall? 1-8 "))
-        if method == 1:
-            update_pos(wall_num)
-            find_distance(wall_num)
-        if method == 2:
-            while 1:
-
-    elif move == 2:
-        initialize()
-    elif move == 3:
-        break
-"""

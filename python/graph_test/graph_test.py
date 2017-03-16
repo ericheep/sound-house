@@ -95,6 +95,7 @@ done = False
 #Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
+font = pygame.font.SysFont('Arial', 25, True, False)
 x = "mic"
 y = "mic"
 
@@ -144,17 +145,26 @@ while not done:
 
     # --- Drawing code should go here
     #circle = mic position
-    pygame.draw.circle(screen, GREEN, (positions['mic'][0], positions['mic'][1]), 10, 1)
+    pygame.draw.circle(screen, GREEN, (positions['mic'][0], positions['mic'][1]), 10, 0)
+
+"""
+    #wall labels:
+    for wall in len(positions - 1):
+        wall = wall + 1
+        text = "text" + str(wall)
+        text.font.render(wall, True, WHITE)
+        screen.blit(text, [positions[wall][0], positions[wall][1]])
+"""
 
     #walls 1-8
-    pygame.draw.rect(screen, CRIMSON, (positions[1][0], positions[1][1], 10, 40), 1)
-    pygame.draw.rect(screen, DEEPPINK, (positions[2][0], positions[2][1], 10, 40), 1)
-    pygame.draw.rect(screen, MAGENTA, (positions[3][0], positions[3][1], 10, 40), 1)
-    pygame.draw.rect(screen, RED, (positions[4][0], positions[4][1], 10, 40), 1)
-    pygame.draw.rect(screen, BLUE, (positions[5][0], positions[5][1], 10, 40), 1)
-    pygame.draw.rect(screen, CYAN, (positions[6][0], positions[6][1], 10, 40), 1)
-    pygame.draw.rect(screen, YELLOW, (positions[7][0], positions[7][1], 10, 40), 1)
-    pygame.draw.rect(screen, BLACK, (positions[8][0], positions[8][1], 10, 40), 1)
+    pygame.draw.rect(screen, CRIMSON, (positions[1][0], positions[1][1], 10, 40), 0)
+    pygame.draw.rect(screen, DEEPPINK, (positions[2][0], positions[2][1], 10, 40), 0)
+    pygame.draw.rect(screen, MAGENTA, (positions[3][0], positions[3][1], 10, 40), 0)
+    pygame.draw.rect(screen, RED, (positions[4][0], positions[4][1], 10, 40), 0)
+    pygame.draw.rect(screen, BLUE, (positions[5][0], positions[5][1], 10, 40), 0)
+    pygame.draw.rect(screen, CYAN, (positions[6][0], positions[6][1], 10, 40), 0)
+    pygame.draw.rect(screen, YELLOW, (positions[7][0], positions[7][1], 10, 40), 0)
+    pygame.draw.rect(screen, BLACK, (positions[8][0], positions[8][1], 10, 40), 0)
 
     # --- Update the screen with what we've drawn
     pygame.display.flip()
