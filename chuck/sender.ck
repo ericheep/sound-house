@@ -24,14 +24,14 @@ envelope length
 
 // ip addresses
 [
- //"192.168.1.11",
- //"192.168.1.12",
- "192.168.1.13"
- //"192.168.1.14",
- //"192.168.1.15",
- //"192.168.1.16",
- //"192.168.1.17",
- //"192.168.1.18"
+ "pione.local",
+ "pitwo.local",
+ "pithree.local",
+ "pifour.local",
+ "pifive.local",
+ "pisix.local",
+ "piseven.local",
+ "pieght.local",
 ] @=> string IP[];
 
 IP.size() => int NUM_IPS;
@@ -108,9 +108,7 @@ for (0 => int i; i < NUM_PIS; i++) {
 
     // this determines how much audio is send through in milliseconds
     500::ms => packetLength[i];
-
-
-   }
+}
 
 for (0 => int i; i < NUM_IPS; i++) {
     // start the envelope follower
