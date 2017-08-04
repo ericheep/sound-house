@@ -22,7 +22,7 @@ from pythonosc import udp_client
 
 # osc vars
 piWall = "/w"
-hostIp = "John-Eagle-MBP.local"
+hostIp = "10.0.0.100"
 piPort = 5000
 hostPort = 12345
 
@@ -72,6 +72,8 @@ def getReading():
     break_loop = False
     timeout = datetime.now() + timedelta(seconds=1)
 
+    pulse_end = 0
+
     # finds the time measurements?
     while GPIO.input(ECHO)==0:
         pulse_start = time.time()
@@ -96,6 +98,7 @@ def send(self):
 
     # adds whichPi to the OSC message
     hostname = socket.gethostname()
+    print(hostname)
     packet.add_arg(hostname, arg_type='s')
 
     # adds distance reading to the OSC message
@@ -106,6 +109,7 @@ def send(self):
 
     # sends distance back to the host
     client.send(packet)
+
 
 if __name__ == "__main__":
     # sets up arguments for the dispatcher
