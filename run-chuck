@@ -1,5 +1,5 @@
 
-sleep 5
+sleep 10
 python3 /home/pi/git/sound-house/python/oscDistance.py &
 
 sleep 10
