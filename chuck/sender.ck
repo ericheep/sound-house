@@ -31,7 +31,7 @@ envelope length
  "pifive.local",
  "pisix.local",
  "piseven.local",
- "pieght.local"
+ "pieight.local"
 ] @=> string IP[];
 
 IP.size() => int NUM_IPS;
