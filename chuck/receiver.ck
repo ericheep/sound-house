@@ -54,13 +54,16 @@ while (true) {
         }
         // receive packet of audio samples
         if (msg.address == "/m") {
-	    stGain.gain(1.0);
+            <<< "received sound", "" >>>;
+            stGain.gain(1.0);
             // start the sample playback
             for (0 => int i; i < bufferSize; i++) {
                 msg.getFloat(i) => st.next;
                 1::samp => now;
             }
-	    stGain.gain(0.0);
+
+            stGain.gain(0.0);
+
         }
         if (msg.address == "/bufferSize") {
             msg.getInt(0) => bufferSize;
