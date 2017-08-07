@@ -167,7 +167,7 @@ while not done:
 
     # Here, we clear the screen to white. Don't put other drawing commands
     # above this, or they will be erased with this command.
-    screen.fill(WHITE)
+    screen.fill(BLACK)
 
     # --- Drawing code should go here
     #circle = mic position
@@ -186,7 +186,7 @@ while not done:
 
 
     if line_on == True:
-        pygame.draw.line(screen, BLACK, (positions['mic'][0], positions['mic'][1]), (positions[wall_index][0] + 5, positions[wall_index][1] + 20), 2)
+        pygame.draw.line(screen, WHITE, (positions['mic'][0], positions['mic'][1]), (positions[wall_index][0] + 5, positions[wall_index][1] + 20), 2)
 
     #labels:
 
@@ -196,7 +196,7 @@ while not done:
         wall = wall + 1
         wall_label = str(wall)
         #text = "text" + str(wall)
-        text = font.render(wall_label, True, BLACK)
+        text = font.render(wall_label, True, WHITE)
         screen.blit(text, [positions[wall][0] + 1, positions[wall][1] + 10])
 
     # --- Update the screen with what we've drawn
