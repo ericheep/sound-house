@@ -22,7 +22,7 @@ from pythonosc import udp_client
 
 # osc vars
 piWall = "/w"
-hostIp = "10.0.0.100"
+hostIp = "192.168.1.100"
 piPort = 5000
 hostPort = 12345
 
@@ -50,7 +50,7 @@ def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         # doesn't even have to be reachable
-        s.connect(('10.255.255.255', 1))
+        s.connect(('192.255.255.255', 1))
         IP = s.getsockname()[0]
     except:
         IP = '127.0.0.1'
