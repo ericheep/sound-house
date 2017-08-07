@@ -24,14 +24,14 @@ envelope length
 
 // ip addresses
 [
- "pione.local",
- "pitwo.local",
+ "pione.local"
+ /*"pitwo.local",
  "pithree.local",
  "pifour.local",
  "pifive.local",
  "pisix.local",
  "piseven.local",
- "pieght.local",
+ "pieght.local",*/
 ] @=> string IP[];
 
 IP.size() => int NUM_IPS;
@@ -39,7 +39,7 @@ IP.size() => int NUM_IPS;
 8 => int NUM_PIS;
 
 // port is the same for all outgoing messages
-12345 => int OUT_PORT;
+10001 => int OUT_PORT;
 
 // address is the same for all outgoing messages
 "/m" => string ADDRESS;

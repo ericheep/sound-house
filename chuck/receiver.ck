@@ -5,7 +5,7 @@
 OscIn in;
 OscMsg msg;
 
-12345 => in.port;
+10001 => in.port;
 in.listenAll();
 
 // sine tones
@@ -25,7 +25,7 @@ fun void easeGain() {
     while (true) {
         if (sin.gain() < targetGain - gainInc) {
 	    sin.gain() + gainInc => sin.gain;
-        }     
+        }
         else if (sin.gain() > targetGain + gainInc) {
             sin.gain() - gainInc => sin.gain;
         }
