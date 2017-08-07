@@ -36,7 +36,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 135.0, 690.0, 32.5, 18.0 ],
+					"patching_rect" : [ 225.0, 648.0, 32.5, 18.0 ],
 					"text" : "0.5"
 				}
 
@@ -203,12 +203,26 @@
 								"box" : 								{
 									"fontname" : "Arial",
 									"fontsize" : 12.0,
-									"id" : "obj-21",
+									"id" : "obj-9",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 360.0, 375.0, 50.0, 18.0 ]
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"fontname" : "Arial",
+									"fontsize" : 12.0,
+									"id" : "obj-1",
 									"maxclass" : "newobj",
 									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 360.0, 329.0, 34.0, 20.0 ],
-									"text" : "print"
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "OSCTimeTag" ],
+									"patching_rect" : [ 300.0, 270.0, 113.0, 20.0 ],
+									"text" : "OpenSoundControl"
 								}
 
 							}
@@ -471,12 +485,48 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 15.0, 270.0, 106.0, 20.0 ],
-									"text" : "udpreceive 12345"
+									"text" : "udpreceive 12346"
 								}
 
 							}
  ],
 						"lines" : [ 							{
+								"patchline" : 								{
+									"destination" : [ "obj-9", 1 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-1", 2 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-9", 1 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-1", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-9", 1 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-1", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-1", 0 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-27", 0 ]
+								}
+
+							}
+, 							{
 								"patchline" : 								{
 									"destination" : [ "obj-13", 0 ],
 									"disabled" : 0,
@@ -488,15 +538,6 @@
 , 							{
 								"patchline" : 								{
 									"destination" : [ "obj-2", 1 ],
-									"disabled" : 0,
-									"hidden" : 0,
-									"source" : [ "obj-27", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-21", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-27", 0 ]
@@ -910,7 +951,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "bang" ],
-					"patching_rect" : [ 165.0, 705.0, 20.0, 20.0 ]
+					"patching_rect" : [ 114.0, 646.0, 20.0, 20.0 ]
 				}
 
 			}
@@ -1049,8 +1090,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 1087.5, 660.0, 34.0, 18.0 ],
-					"text" : "0.15"
+					"patching_rect" : [ 1087.5, 660.0, 32.5, 18.0 ],
+					"text" : "0.9"
 				}
 
 			}
@@ -1063,8 +1104,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 982.5, 660.0, 34.0, 18.0 ],
-					"text" : "0.35"
+					"patching_rect" : [ 982.5, 660.0, 32.5, 18.0 ],
+					"text" : "0.9"
 				}
 
 			}
@@ -1078,7 +1119,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 877.5, 660.0, 32.5, 18.0 ],
-					"text" : "0.4"
+					"text" : "0.9"
 				}
 
 			}
@@ -1105,8 +1146,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 667.5, 660.0, 34.0, 18.0 ],
-					"text" : "0.65"
+					"patching_rect" : [ 667.5, 660.0, 32.5, 18.0 ],
+					"text" : "0.9"
 				}
 
 			}
@@ -1119,8 +1160,8 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 562.5, 660.0, 34.0, 18.0 ],
-					"text" : "0.37"
+					"patching_rect" : [ 562.5, 660.0, 32.5, 18.0 ],
+					"text" : "0.9"
 				}
 
 			}
@@ -1281,7 +1322,7 @@
 							"architecture" : "x86"
 						}
 ,
-						"rect" : [ 50.0, 95.0, 1187.0, 519.0 ],
+						"rect" : [ 50.0, 95.0, 685.0, 519.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1548,7 +1589,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 255.0, 165.0, 18.0 ],
-													"text" : "/sineGain 0."
+													"text" : "/sineGain 0.738462"
 												}
 
 											}
@@ -1853,7 +1894,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 180.0, 165.0, 18.0 ],
-													"text" : "/sineFreq 440."
+													"text" : "/sineFreq 4960.63"
 												}
 
 											}
@@ -1906,7 +1947,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 257.0, 166.0, 20.0 ],
-													"text" : "udpsend piseven.local 12345"
+													"text" : "udpsend piseven.local 10001"
 												}
 
 											}
@@ -2172,7 +2213,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 255.0, 165.0, 18.0 ],
-													"text" : "/sineGain 0."
+													"text" : "/sineGain 0.692308"
 												}
 
 											}
@@ -2477,7 +2518,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 180.0, 165.0, 18.0 ],
-													"text" : "/sineFreq 440."
+													"text" : "/sineFreq 4803.149414"
 												}
 
 											}
@@ -2530,7 +2571,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 257.0, 149.0, 20.0 ],
-													"text" : "udpsend pisix.local 12345"
+													"text" : "udpsend pisix.local 10001"
 												}
 
 											}
@@ -2810,7 +2851,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 255.0, 165.0, 18.0 ],
-													"text" : "/sineGain 0."
+													"text" : "/sineGain 0.946154"
 												}
 
 											}
@@ -3129,7 +3170,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 180.0, 165.0, 18.0 ],
-													"text" : "/sineFreq 440."
+													"text" : "/sineFreq 3149.606201"
 												}
 
 											}
@@ -3182,7 +3223,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 257.0, 153.0, 20.0 ],
-													"text" : "udpsend pifive.local 12345"
+													"text" : "udpsend pifive.local 10001"
 												}
 
 											}
@@ -3448,7 +3489,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 255.0, 165.0, 18.0 ],
-													"text" : "/sineGain 0."
+													"text" : "/sineGain 0.192308"
 												}
 
 											}
@@ -3753,7 +3794,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 180.0, 165.0, 18.0 ],
-													"text" : "/sineFreq 440."
+													"text" : "/sineFreq 4251.968262"
 												}
 
 											}
@@ -4072,7 +4113,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 255.0, 165.0, 18.0 ],
-													"text" : "/sineGain 0."
+													"text" : "/sineGain 1."
 												}
 
 											}
@@ -4125,7 +4166,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 332.0, 161.0, 20.0 ],
-													"text" : "udpsend pithree.local 12345"
+													"text" : "udpsend pithree.local 10001"
 												}
 
 											}
@@ -4377,7 +4418,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 180.0, 165.0, 18.0 ],
-													"text" : "/sineFreq 440."
+													"text" : "/sineFreq 5196.850586"
 												}
 
 											}
@@ -4430,7 +4471,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 257.0, 161.0, 20.0 ],
-													"text" : "udpsend pithree.local 12345"
+													"text" : "udpsend pithree.local 10001"
 												}
 
 											}
@@ -4696,7 +4737,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 255.0, 165.0, 18.0 ],
-													"text" : "/sineGain 0."
+													"text" : "/sineGain 0.007692"
 												}
 
 											}
@@ -4749,7 +4790,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 332.0, 153.0, 20.0 ],
-													"text" : "udpsend pitwo.local 12345"
+													"text" : "udpsend pitwo.local 10001"
 												}
 
 											}
@@ -5001,7 +5042,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 180.0, 165.0, 18.0 ],
-													"text" : "/sineFreq 472.440948"
+													"text" : "/sineFreq 2834.645752"
 												}
 
 											}
@@ -5054,7 +5095,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 257.0, 153.0, 20.0 ],
-													"text" : "udpsend pitwo.local 12345"
+													"text" : "udpsend pitwo.local 10001"
 												}
 
 											}
@@ -5334,7 +5375,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 255.0, 165.0, 18.0 ],
-													"text" : "/sineGain 0."
+													"text" : "/sineGain 0.576923"
 												}
 
 											}
@@ -5387,7 +5428,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 332.0, 154.0, 20.0 ],
-													"text" : "udpsend pione.local 12345"
+													"text" : "udpsend pione.local 10001"
 												}
 
 											}
@@ -5548,7 +5589,7 @@
 											"architecture" : "x86"
 										}
 ,
-										"rect" : [ 773.0, 45.0, 640.0, 368.0 ],
+										"rect" : [ 800.0, 138.0, 640.0, 368.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -5568,6 +5609,21 @@
 										"digest" : "",
 										"tags" : "",
 										"boxes" : [ 											{
+												"box" : 												{
+													"fontname" : "Arial",
+													"fontsize" : 12.0,
+													"frgb" : 0.0,
+													"id" : "obj-5",
+													"linecount" : 2,
+													"maxclass" : "comment",
+													"numinlets" : 1,
+													"numoutlets" : 0,
+													"patching_rect" : [ 240.0, 240.0, 150.0, 33.0 ],
+													"text" : "port number? 12345? 10001?"
+												}
+
+											}
+, 											{
 												"box" : 												{
 													"comment" : "",
 													"id" : "obj-1",
@@ -5639,7 +5695,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 180.0, 165.0, 18.0 ],
-													"text" : "/sineFreq 660."
+													"text" : "/sineFreq 10000."
 												}
 
 											}
@@ -5706,7 +5762,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 257.0, 154.0, 20.0 ],
-													"text" : "udpsend pione.local 12345"
+													"text" : "udpsend pione.local 10001"
 												}
 
 											}
@@ -5972,7 +6028,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 255.0, 165.0, 18.0 ],
-													"text" : "/sineGain 0."
+													"text" : "/sineGain 1."
 												}
 
 											}
@@ -6025,7 +6081,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 332.0, 160.0, 20.0 ],
-													"text" : "udpsend pieight.local 12345"
+													"text" : "udpsend pieight.local 10001"
 												}
 
 											}
@@ -6277,7 +6333,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 60.0, 180.0, 165.0, 18.0 ],
-													"text" : "/sineFreq 440."
+													"text" : "/sineFreq 7559.055176"
 												}
 
 											}
@@ -6330,7 +6386,7 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 30.0, 257.0, 160.0, 20.0 ],
-													"text" : "udpsend pieight.local 12345"
+													"text" : "udpsend pieight.local 10001"
 												}
 
 											}
@@ -14042,7 +14098,7 @@
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 60.0, 165.0, 165.0, 18.0 ],
-									"text" : "/envLength 0.070866"
+									"text" : "/envLength 0.417323"
 								}
 
 							}
