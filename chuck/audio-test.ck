@@ -4,6 +4,7 @@
 
 // still not working, will add more later to get it to a good state
 
+/*
 [
  "pione.local",
  "pitwo.local",
@@ -16,7 +17,7 @@
 ] @=> string IP[];
 
 IP.size() => int NUM_PIS;
-10001 => int OUT_PORT;
+7400 => int OUT_PORT;
 
 OscMsg msg;
 OscOut out[NUM_PIS];
@@ -47,4 +48,13 @@ while(true) {
         <<< "pi", i + 1, "" >>>;
     }
 }
+*/
 
+OscOut out;
+OscMsg msg;
+
+out.dest("127.0.0.1", 7400);
+
+out.start("/threshold" + 3);
+out.add(10.0);
+out.send();
