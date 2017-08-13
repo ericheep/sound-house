@@ -84,8 +84,8 @@ float threshold[NUM_PIS];
 adc => mic;
 for (0 => int i; i < NUM_PIS; i++) {
     // sound chain
-    //mic => gain[i] => res[i] => lp[i] => hp[i] => del[i] => blackhole;
-    mic => gain[i] => lp[i] => hp[i] => del[i] => blackhole;
+    mic => gain[i] => res[i] => lp[i] => hp[i] => del[i] => blackhole;
+    //mic => gain[i] => lp[i] => hp[i] => del[i] => blackhole;
     //mic => gain[i] => del[i] => blackhole;
     mic => pole[i] => blackhole;
 
@@ -192,7 +192,7 @@ fun void send(int idx) {
 
     for (0 => int j; j < BUFFER_SIZE; j++) {
         out[idx].add(del[idx].last());
-        1::samp => now;
+        2::samp => now;
     }
 
     out[idx].send();
