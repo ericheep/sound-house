@@ -84,7 +84,7 @@ float threshold[NUM_PIS];
 adc => mic;
 for (0 => int i; i < NUM_PIS; i++) {
     // sound chain
-    mic => gain[i] => res[i] => lp[i] => hp[i] => del[i] => blackhole;
+    mic => gain[i] => res[i] => del[i] => blackhole;
     //mic => gain[i] => lp[i] => hp[i] => del[i] => blackhole;
     //mic => gain[i] => del[i] => blackhole;
     mic => pole[i] => blackhole;
