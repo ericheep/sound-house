@@ -122,15 +122,15 @@ while (true) {
 
         if (msg.address == "/fieldPlay") {
             msg.getInt(0) => int idx;
-            if (idx > 0 && idx <= numBrickSamples) {
-                brickSamples[idx - 1].pos(0);
+            if (idx > 0 && idx <= numFieldRecordings) {
+                fieldRecordings[idx - 1].pos(0);
             }
         }
 
         if (msg.address == "/fieldStop") {
             msg.getInt(0) => int idx;
-            if (idx > 0 && idx <= numBrickSamples) {
-                brickSamples[idx - 1].pos(brickSamples[idx - 1].samples());
+            if (idx > 0 && idx <= numFieldRecordings) {
+                fieldRecordings[idx - 1].pos(fieldRecordings[idx - 1].samples());
             }
         }
     }
