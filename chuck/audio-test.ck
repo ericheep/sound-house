@@ -55,6 +55,6 @@ OscMsg msg;
 
 out.dest("pione.local", 10001);
 
-out.start("/fieldPlay");
-out.add(1);
+out.start("/brickPlay");
+out.add(2);
 out.send();
