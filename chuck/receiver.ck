@@ -100,8 +100,8 @@ while (true) {
         }
         if (msg.address == "/brickPlay") {
             msg.getInt(0) => int idx;
-            if (idx > 0 && idx < numBrickSamples) {
-                brickSamples[idx].pos(0);
+            if (idx > 0 && idx <= numBrickSamples) {
+                brickSamples[idx - 1].pos(0);
             }
         }
     }
