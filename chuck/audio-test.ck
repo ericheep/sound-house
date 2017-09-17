@@ -53,8 +53,8 @@ while(true) {
 OscOut out;
 OscMsg msg;
 
-out.dest("127.0.0.1", 7400);
+out.dest("pione.local", 10001);
 
-out.start("/threshold" + 3);
-out.add(10.0);
+out.start("/brickPlay");
+out.add(2);
 out.send();
