@@ -126,6 +126,13 @@ while (true) {
                 brickSamples[idx - 1].pos(0);
             }
         }
+
+        if (msg.address == "/fieldStop") {
+            msg.getInt(0) => int idx;
+            if (idx > 0 && idx <= numBrickSamples) {
+                brickSamples[idx - 1].pos(brickSamples[idx - 1].samples());
+            }
+        }
     }
     1::samp => now;
 }
