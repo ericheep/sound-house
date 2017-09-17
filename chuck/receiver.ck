@@ -107,11 +107,20 @@ while (true) {
             stGain.gain(0.0);
 
         }
+
         if (msg.address == "/bufferSize") {
             msg.getInt(0) => bufferSize;
             <<< "Buffer size set to", bufferSize, "" >>>;
         }
+
         if (msg.address == "/brickPlay") {
+            msg.getInt(0) => int idx;
+            if (idx > 0 && idx <= numBrickSamples) {
+                brickSamples[idx - 1].pos(0);
+            }
+        }
+
+        if (msg.address == "/fieldPlay") {
             msg.getInt(0) => int idx;
             if (idx > 0 && idx <= numBrickSamples) {
                 brickSamples[idx - 1].pos(0);
