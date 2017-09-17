@@ -25,13 +25,13 @@ envelope length
 // ip addresses
 [
  "pione.local",
- "pitwo.local",
- "pithree.local",
- "pifour.local",
- "pifive.local",
- "pisix.local",
- "piseven.local",
- "pieight.local"
+ "pitwo.local"
+// "pithree.local",
+// "pifour.local",
+// "pifive.local",
+// "pisix.local",
+// "piseven.local",
+// "pieight.local"
 ] @=> string IP[];
 
 IP.size() => int NUM_IPS;
