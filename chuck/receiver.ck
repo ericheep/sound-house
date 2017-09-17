@@ -5,6 +5,48 @@
 OscIn in;
 OscMsg msg;
 
+[
+ me.dir(-1) + "samples/fake-bricks/fake-brick-1.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-2.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-3.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-4.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-5.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-6.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-7.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-8.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-9.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-10.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-11.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-12.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-13.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-14.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-15.wav",
+ me.dir(-1) + "samples/fake-bricks/fake-brick-16.wav"
+] @=> string brickSamplePaths[];
+
+[
+ me.dir(-1) + "samples/fake-field/fake-field-1.wav",
+ me.dir(-1) + "samples/fake-field/fake-field-2.wav"
+] @=> string fieldRecordingPaths[];
+
+brickSamplePaths.size() => int numBrickSamples;
+fieldRecordingPaths.size() => int numFieldRecordings;
+
+SndBuf brickSamples[numBrickSamples];
+SndBuf fieldRecordings[numFieldRecordings];
+
+for (0 => int i; i < numBrickSamples; i++) {
+    brickSamples[i] => dac;
+    brickSamples[i].read(brickSamplePaths[i]);
+    brickSamples[i].pos(brickSamples[i].samples());
+}
+
+for (0 => int i; i < numFieldRecordings; i++) {
+    fieldRecordings[i] => dac;
+    fieldRecordings[i].read(fieldRecordingPaths[i]);
+    fieldRecordings[i].pos(fieldRecordings[i].samples());
+}
+
 10001 => in.port;
 in.listenAll();
 
@@ -65,9 +107,31 @@ while (true) {
             stGain.gain(0.0);
 
         }
+
         if (msg.address == "/bufferSize") {
             msg.getInt(0) => bufferSize;
             <<< "Buffer size set to", bufferSize, "" >>>;
+        }
+
+        if (msg.address == "/brickPlay") {
+            msg.getInt(0) => int idx;
+            if (idx > 0 && idx <= numBrickSamples) {
+                brickSamples[idx - 1].pos(0);
+            }
+        }
+
+        if (msg.address == "/fieldPlay") {
+            msg.getInt(0) => int idx;
+            if (idx > 0 && idx <= numBrickSamples) {
+                brickSamples[idx - 1].pos(0);
+            }
+        }
+
+        if (msg.address == "/fieldStop") {
+            msg.getInt(0) => int idx;
+            if (idx > 0 && idx <= numBrickSamples) {
+                brickSamples[idx - 1].pos(brickSamples[idx - 1].samples());
+            }
         }
     }
     1::samp => now;
