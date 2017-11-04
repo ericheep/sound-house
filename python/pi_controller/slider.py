@@ -78,6 +78,11 @@ class Slider():
             self.k_moving = False
             self.get_ctl_value()
 
+    def automate(self, value):
+        """Update knob position based on value."""
+        self.k_rect.bottom = self.rect.bottom - value
+        self.get_ctl_value()
+
     def prep_msg(self):
         """Turn msg into rendered image and center on knob."""
         self.msg_image = self.font.render(str(self.ctl_value), True,
