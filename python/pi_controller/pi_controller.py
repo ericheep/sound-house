@@ -1,3 +1,14 @@
+"""
+John Eagle
+pi_controller.py
+
+Main program for pi_controller system
+
+uses pygame 1.9.4.dev0 and custom modules:
+midi_functions.py, other_functions.py, network_functions.py, ctl_functions.py,
+settings.py, slider.py, wall_panel.py, scale_function.py
+"""
+
 import sys, pygame, pygame.midi
 import midi_functions as mf
 import other_functions as of
