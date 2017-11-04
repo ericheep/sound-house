@@ -1,0 +1,32 @@
+-Ternary wall mode:				x
+	-initialize port connection		x
+	-process MIDI				x
+	-scale amplitude with EQ curve
+	-send freqs/amplitudes			x
+
+-incoporate python distance finder into pi_controller
+
+Osc messages:
+
+/sineFreq
+/sineGain
+
+/thresholdx
+/packetLengthx
+/delayLengthx
+/micGainx
+/resx
+/hpCutoffx
+/lpCutoffx
+
+ping:
+/w to client
+receive:
+/w pi(one - eight)
+
+wav control:
+fieldPlay int(for sample) -> client
+fieldStop int
+brickPlay int (1-16)
+
+make slider rect object!
