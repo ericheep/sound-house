@@ -35,25 +35,25 @@ class Panel(): # 0-7
         # fix the way wall number is added to message (move to slider.py?)
         # fix display (maybe don't display wall_num in panel???)
         micGainSL = Slider(self.ctl_settings, self.screen, 0, 1, 85, 40,
-                           '/micGain', wall_index)
+                           '/micGain', wall_index, 'log')
         hpCutoffSL = Slider(self.ctl_settings, self.screen, 0, 10000,
                             micGainSL.rect.right + self.slider_spacing, 40,
-                            '/hpCutoff', wall_index)
+                            '/hpCutoff', wall_index, 'exp')
         lpCutoffSL = Slider(self.ctl_settings, self.screen, 0, 20000,
                             hpCutoffSL.rect.right + self.slider_spacing, 40,
-                            '/lpCutoff', wall_index)
+                            '/lpCutoff', wall_index, 'exp')
         resSL = Slider(self.ctl_settings, self.screen, 0, 1,
                        lpCutoffSL.rect.right + self.slider_spacing, 40,
-                       '/res', wall_index)
+                       '/res', wall_index, 'log')
         thresholdSL = Slider(self.ctl_settings, self.screen, 0.1, 50,
                              resSL.rect.right + self.slider_spacing, 40,
-                             '/threshold', wall_index)
+                             '/threshold', wall_index, 'linear')
         packetLengthSL = Slider(self.ctl_settings, self.screen, 0, 1000,
                                 thresholdSL.rect.right + self.slider_spacing,
-                                40, '/packetLength', wall_index)
+                                40, '/packetLength', wall_index, 'linear')
         delayLengthSL = Slider(self.ctl_settings, self.screen, 0, 10000,
                                packetLengthSL.rect.right + self.slider_spacing,
-                               40, '/delayLength', wall_index)
+                               40, '/delayLength', wall_index, 'linear')
         # Add all sliders to this list
         self.sliders = [micGainSL, hpCutoffSL, lpCutoffSL, resSL, thresholdSL,
                         packetLengthSL, delayLengthSL]

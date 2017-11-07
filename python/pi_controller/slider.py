@@ -6,7 +6,7 @@ class Slider():
     A class to handle graphical sliders for sound control in Sound House
     """
     def __init__(self, ctl_settings, screen, min_val, max_val, x, y, param,
-                 wall_index):
+                 wall_index, scale='linear'):
         """Initialize slider and starting position."""
         self.screen = screen
         self.screen_rect = screen.get_rect()
@@ -16,6 +16,13 @@ class Slider():
         self.x = x
         self.y = y
         self.wall_index = wall_index
+        #exponential or linear scale
+        if scale == 'linear':
+            self.scale = 'linear'
+        elif scale == 'exp':
+            self.scale = 'exp'
+        elif scale == 'log':
+            self.scale = 'log'
 
         # Set dimensions and properties of slider
         self.width, self.height = 20, 100
@@ -58,7 +65,7 @@ class Slider():
         knob_pos = self.rect.bottom - self.k_rect.bottom
         x0, x1 = 0, self.height
         y0, y1 = self.min_val, self.max_val
-        self.ctl_value = scale(knob_pos, x0, x1, y0, y1)
+        self.ctl_value = scale(knob_pos, x0, x1, y0, y1, self.scale)
         self.prep_msg() # replace with call to function for OSC sending
         param_message = self.param + ' ' + str(self.ctl_value)
         print(param_message)

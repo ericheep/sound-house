@@ -75,17 +75,17 @@ def check_events(ctl_settings, screen, panels, buttons, midi_input,
                     slider.k_moving = False
 
 def bandpass_automation(panels):
-    print("bandpass automation") # need to scale values!
-    hp = 0
-    lp = 12.5
+    print("bandpass automation") # not sure about the scaling here
+    hp = 6.3
+    lp = 9.7
     for panel in panels:
         panel.sliders[1].automate(hp)
         panel.sliders[2].automate(lp)
-        hp += 12.5
-        lp += 12.5
+        hp += 12
+        lp += 11
 
 def allpass_automation(panels):
-    print("bandpass automation") # need to scale values!
+    print("bandpass automation")
     for panel in panels:
         panel.sliders[1].automate(0)
         panel.sliders[2].automate(100)
