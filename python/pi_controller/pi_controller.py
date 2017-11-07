@@ -17,6 +17,7 @@ import ctl_functions as control
 from settings import Settings
 from slider import Slider
 from wall_panel import Panel
+from button import Button
 
 ctl_settings = Settings()
 
@@ -42,6 +43,11 @@ panel8 = Panel(ctl_settings, screen, 7)
 
 panels = [panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel8]
 
+# Make a test button
+bp_button = Button(ctl_settings, screen, 'Bandpass', 40, 200) # make this responsive to panel rect
+
+buttons = [bp_button] # add all buttons here
+
 midi_input = 0#pygame.midi.Input(0)
 
 
@@ -52,7 +58,7 @@ while True:
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
 
-    control.check_events(ctl_settings, screen, panels, midi_input,
+    control.check_events(ctl_settings, screen, panels, buttons, midi_input,
                          ternary_chain, mouse_x, mouse_y)
 
 
@@ -61,4 +67,4 @@ while True:
         # and then logic for changes
 
     # update screen
-    control.update_screen(ctl_settings, screen, panels, mouse_y)
+    control.update_screen(ctl_settings, screen, panels, buttons, mouse_y)
