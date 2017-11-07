@@ -5,7 +5,17 @@ def check_slider(slider, mouse_x, mouse_y):
     if knob_clicked:
         slider.k_moving = True
 
-def check_events(ctl_settings, screen, panels, midi_input,
+def check_button(button, panels, mouse_x, mouse_y):
+    button_clicked = button.rect.collidepoint(mouse_x, mouse_y)
+    if button_clicked:
+        button.update()
+        if button.title == 'Bandpass':
+            if button.on == True: # is this best way to do this?
+                bandpass_automation(panels)
+            elif button.on == False:
+                allpass_automation(panels)
+
+def check_events(ctl_settings, screen, panels, buttons, midi_input,
                  ternary_chain, mouse_x, mouse_y):
     # factor all this shit out
     for event in pygame.event.get():
@@ -43,6 +53,8 @@ def check_events(ctl_settings, screen, panels, midi_input,
             for panel in panels:
                 for slider in panel.sliders:
                     check_slider(slider, mouse_x, mouse_y)
+            for button in buttons:
+                check_button(button, panels, mouse_x, mouse_y)
         elif event.type == pygame.MOUSEBUTTONUP:
             for panel in panels:
                 for slider in panel.sliders:
@@ -75,6 +87,33 @@ def bandpass_automation(panels):
     panels[7].sliders[1].automate(87.5)
     panels[7].sliders[2].automate(100)
 
+def allpass_automation(panels):
+    print("bandpass automation") # reduce this to for loop, and scale values!
+    # wall 1
+    panels[0].sliders[1].automate(0) # should def be able to do this with for loop
+    panels[0].sliders[2].automate(100)
+    # wall 2
+    panels[1].sliders[1].automate(0)
+    panels[1].sliders[2].automate(100)
+    # wall 3
+    panels[2].sliders[1].automate(0)
+    panels[2].sliders[2].automate(100)
+    # wall 4
+    panels[3].sliders[1].automate(0)
+    panels[3].sliders[2].automate(100)
+    # wall 5
+    panels[4].sliders[1].automate(0)
+    panels[4].sliders[2].automate(100)
+    # wall 6
+    panels[5].sliders[1].automate(0)
+    panels[5].sliders[2].automate(100)
+    # wall 7
+    panels[6].sliders[1].automate(0)
+    panels[6].sliders[2].automate(100)
+    # wall 8
+    panels[7].sliders[1].automate(0)
+    panels[7].sliders[2].automate(100)
+
 
 """
     if midi_input.poll():
@@ -91,12 +130,13 @@ def bandpass_automation(panels):
                 # add call to function to convert to freq and send to walls
 """
 
-def update_screen(ctl_settings, screen, panels, mouse_y):
+def update_screen(ctl_settings, screen, panels, buttons, mouse_y):
 
     screen.fill(ctl_settings.bg_color)
 
     panels[ctl_settings.panel].update(mouse_y)
-#    for panel in panels:
-#        panel.update(mouse_y)
+
+    for button in buttons:
+        button.draw_button()
 
     pygame.display.flip()
