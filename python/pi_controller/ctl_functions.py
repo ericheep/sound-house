@@ -14,6 +14,12 @@ def check_button(button, panels, mouse_x, mouse_y):
                 bandpass_automation(panels)
             elif button.on == False:
                 allpass_automation(panels)
+        if button.title == 'Mic':
+            if button.on == True:
+                mic_on_off_automation(panels, 100) # turn mic on
+            elif button.on == False:
+                mic_on_off_automation(panels, 0) # turn off
+
 
 def check_events(ctl_settings, screen, panels, buttons, midi_input,
                  ternary_chain, mouse_x, mouse_y):
@@ -114,6 +120,10 @@ def allpass_automation(panels):
     panels[7].sliders[1].automate(0)
     panels[7].sliders[2].automate(100)
 
+def mic_on_off_automation(panels, gain_val):
+    print("Mic on/off")
+    for panel in panels:
+        panel.sliders[0].automate(gain_val)
 
 """
     if midi_input.poll():

@@ -45,8 +45,9 @@ panels = [panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel8]
 
 # Make a test button
 bp_button = Button(ctl_settings, screen, 'Bandpass', 40, 200) # make this responsive to panel rect
+mic_button = Button(ctl_settings, screen, 'Mic', bp_button.rect.right + 30, 200)
 
-buttons = [bp_button] # add all buttons here
+buttons = [bp_button, mic_button] # add all buttons here
 
 midi_input = 0#pygame.midi.Input(0)
 
