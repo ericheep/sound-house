@@ -27,8 +27,8 @@ class Slider():
 
         # Build the slider's rect object and move to specified location
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.top = y
-        self.rect.left = x
+        self.rect.top = self.y
+        self.rect.left = self.x
         # Knob rect
         self.k_rect = pygame.Rect(0, 0, self.k_width, self.k_height)
         self.k_rect.bottom = self.rect.bottom
