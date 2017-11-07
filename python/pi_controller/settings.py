@@ -21,7 +21,17 @@ class Settings():
         self.panel = 0 # Wall 1 by default
 
         # Modes
-        self.ternaryWallMode = True
+        self.ternaryWallMode = True # Initial setting
+        self.feedbackMode = False # Initial setting
+
+        # Feedback defaults
+        self.mic = 100 #starting vals, need to tech and set exactly
+        self.hp = 0
+        self.lp = 100
+        self.res = 100
+        self.threshold = 5
+        self.packetLength = 50
+        self.delayLength = 5
 
         # Ternary Wall Mode settings
         self.centerFreq = 440
