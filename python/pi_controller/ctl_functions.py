@@ -67,58 +67,20 @@ def check_events(ctl_settings, screen, panels, buttons, midi_input,
                     slider.k_moving = False
 
 def bandpass_automation(panels):
-    print("bandpass automation") # reduce this to for loop, and scale values!
-    # wall 1
-    panels[0].sliders[1].automate(0)
-    panels[0].sliders[2].automate(12.5)
-    # wall 2
-    panels[1].sliders[1].automate(12.5)
-    panels[1].sliders[2].automate(25)
-    # wall 3
-    panels[2].sliders[1].automate(25)
-    panels[2].sliders[2].automate(37.5)
-    # wall 4
-    panels[3].sliders[1].automate(37.5)
-    panels[3].sliders[2].automate(50)
-    # wall 5
-    panels[4].sliders[1].automate(50)
-    panels[4].sliders[2].automate(62.5)
-    # wall 6
-    panels[5].sliders[1].automate(62.5)
-    panels[5].sliders[2].automate(75)
-    # wall 7
-    panels[6].sliders[1].automate(75)
-    panels[6].sliders[2].automate(87.5)
-    # wall 8
-    panels[7].sliders[1].automate(87.5)
-    panels[7].sliders[2].automate(100)
+    print("bandpass automation") # need to scale values!
+    hp = 0
+    lp = 12.5
+    for panel in panels:
+        panel.sliders[1].automate(hp)
+        panel.sliders[2].automate(lp)
+        hp += 12.5
+        lp += 12.5
 
 def allpass_automation(panels):
-    print("bandpass automation") # reduce this to for loop, and scale values!
-    # wall 1
-    panels[0].sliders[1].automate(0) # should def be able to do this with for loop
-    panels[0].sliders[2].automate(100)
-    # wall 2
-    panels[1].sliders[1].automate(0)
-    panels[1].sliders[2].automate(100)
-    # wall 3
-    panels[2].sliders[1].automate(0)
-    panels[2].sliders[2].automate(100)
-    # wall 4
-    panels[3].sliders[1].automate(0)
-    panels[3].sliders[2].automate(100)
-    # wall 5
-    panels[4].sliders[1].automate(0)
-    panels[4].sliders[2].automate(100)
-    # wall 6
-    panels[5].sliders[1].automate(0)
-    panels[5].sliders[2].automate(100)
-    # wall 7
-    panels[6].sliders[1].automate(0)
-    panels[6].sliders[2].automate(100)
-    # wall 8
-    panels[7].sliders[1].automate(0)
-    panels[7].sliders[2].automate(100)
+    print("bandpass automation") # need to scale values!
+    for panel in panels:
+        panel.sliders[1].automate(0)
+        panel.sliders[2].automate(100)
 
 def mic_on_off_automation(panels, gain_val):
     print("Mic on/off")
