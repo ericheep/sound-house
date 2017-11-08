@@ -5,10 +5,22 @@ def check_slider(slider, mouse_x, mouse_y):
     if knob_clicked:
         slider.k_moving = True
 
-def check_button(button, ctl_settings, buttons, panels, mouse_x, mouse_y):
+def check_button(button, ctl_settings, buttons, panels, tc, mouse_x, mouse_y,
+                 column=None, check_column=False):
     button_clicked = button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked:
         button.update()
+
+        if check_column: # Turn other buttons off
+            none_on = True
+            for other_button in column.column:
+                if other_button != button and other_button.on == True:
+                    none_on = False
+                    other_button.update()
+            if none_on:
+                button.update()
+            column.update()
+
         if button.title == 'Bandpass':
             if button.on == True: # is this best way to do this?
                 bandpass_automation(panels)
@@ -28,9 +40,12 @@ def check_button(button, ctl_settings, buttons, panels, mouse_x, mouse_y):
                 all_off_automation(ctl_settings, panels)
                 if buttons[1].on == True:
                     buttons[1].update() # Turn 'Mic' off
+        elif button.title == 'Send Code':
+            if button.on == True:
+                tc.get_ternary_chain()
+                button.update()
 
-
-def check_events(ctl_settings, screen, panels, buttons, midi_input,
+def check_events(ctl_settings, screen, panels, buttons, tc, midi_input,
                  ternary_chain, mouse_x, mouse_y):
     # factor all this shit out
     for event in pygame.event.get():
@@ -67,8 +82,12 @@ def check_events(ctl_settings, screen, panels, buttons, midi_input,
                 for slider in panel.sliders:
                     check_slider(slider, mouse_x, mouse_y)
             for button in buttons:
-                check_button(button, ctl_settings, buttons, panels, mouse_x,
-                             mouse_y)
+                check_button(button, ctl_settings, buttons, panels, tc,
+                             mouse_x, mouse_y)
+            for column in tc.column_list:
+                for button in column.column:
+                    check_button(button, ctl_settings, buttons, panels, tc,
+                                 mouse_x, mouse_y, column, check_column=True)
         elif event.type == pygame.MOUSEBUTTONUP:
             for panel in panels:
                 for slider in panel.sliders:
@@ -132,7 +151,7 @@ def all_off_automation(ctl_settings, panels):
                 # add call to function to convert to freq and send to walls
 """
 
-def update_screen(ctl_settings, screen, panels, buttons, mouse_y):
+def update_screen(ctl_settings, screen, panels, buttons, tc, mouse_y):
 
     screen.fill(ctl_settings.bg_color)
 
@@ -140,5 +159,7 @@ def update_screen(ctl_settings, screen, panels, buttons, mouse_y):
 
     for button in buttons:
         button.draw_button()
+
+    tc.draw_controller()
 
     pygame.display.flip()

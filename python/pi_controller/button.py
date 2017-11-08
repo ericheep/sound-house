@@ -4,14 +4,13 @@ class Button():
     """
     A class to handle buttons in pi controller
     """
-    def __init__(self, ctl_settings, screen, title, x, y):
+    def __init__(self, ctl_settings, screen, x, y, title=None):
         """Initialize button and starting position."""
         self.screen = screen
         self.screen_rect = screen.get_rect()
         self.ctl_settings = ctl_settings
         self.x = x
         self.y = y
-        self.title = title
 
         # Set dimensions and properties of button
         self.width, self.height = 20, 20
@@ -23,14 +22,18 @@ class Button():
 
         # Build button's rect object and move to specified location
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.top = self.y
+        self.rect.top = self.y # top left corner
         self.rect.left = self.x
 
         # Clicked 'on' or not
         self.on = False
 
-        # Make title
-        self.prep_title()
+        if title:
+            # Make title
+            self.title = title
+            self.prep_title()
+        else:
+            self.title = None
 
     def update(self):
         if self.on == False: # then turn 'on'
@@ -51,4 +54,5 @@ class Button():
     def draw_button(self):
         # Draw button and title
         self.screen.fill(self.color, self.rect)
-        self.screen.blit(self.title_image, self.title_image_rect)
+        if self.title:
+            self.screen.blit(self.title_image, self.title_image_rect)

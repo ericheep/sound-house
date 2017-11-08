@@ -18,6 +18,7 @@ from settings import Settings
 from slider import Slider
 from wall_panel import Panel
 from button import Button
+from ternary_control import TernaryControl
 
 ctl_settings = Settings()
 
@@ -44,13 +45,18 @@ panel8 = Panel(ctl_settings, screen, 7)
 panels = [panel1, panel2, panel3, panel4, panel5, panel6, panel7, panel8]
 
 # Make a test button
-bp_button = Button(ctl_settings, screen, 'Bandpass', 40, 200) # make this responsive to panel rect
-mic_button = Button(ctl_settings, screen, 'Mic',
-                    bp_button.rect.right + 30, 200)
-fb_button = Button(ctl_settings, screen, 'Feedback',
-                   mic_button.rect.right + 30, 200)
+bp_button = Button(ctl_settings, screen, 40, 200, 'Bandpass') # make this responsive to panel rect and specify location in settings.py
+mic_button = Button(ctl_settings, screen,
+                    bp_button.rect.right + 30, 200, 'Mic')
+fb_button = Button(ctl_settings, screen,
+                   mic_button.rect.right + 30, 200, 'Feedback')
+send_code_button = Button(ctl_settings, screen,
+                          fb_button.rect.right + 80, 200, 'Send Code')
 
-buttons = [bp_button, mic_button, fb_button] # add all buttons here
+buttons = [bp_button, mic_button, fb_button, send_code_button] # add all buttons here
+
+# Make a ternary button controller
+tc = TernaryControl(ctl_settings, screen, 40, 300) # specify location in settings.py
 
 midi_input = 0#pygame.midi.Input(0)
 
@@ -62,7 +68,7 @@ while True:
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
 
-    control.check_events(ctl_settings, screen, panels, buttons, midi_input,
+    control.check_events(ctl_settings, screen, panels, buttons, tc, midi_input,
                          ternary_chain, mouse_x, mouse_y)
 
 
@@ -71,4 +77,4 @@ while True:
         # and then logic for changes
 
     # update screen
-    control.update_screen(ctl_settings, screen, panels, buttons, mouse_y)
+    control.update_screen(ctl_settings, screen, panels, buttons, tc, mouse_y)
