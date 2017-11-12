@@ -5,8 +5,20 @@ pi_controller.py
 Main program for pi_controller system
 
 uses pygame 1.9.4.dev0 and custom modules:
-midi_functions.py, other_functions.py, network_functions.py, ctl_functions.py,
-settings.py, slider.py, wall_panel.py, button.py, scale_function.py
+
+button.py
+ctl_functions.py
+drawing_functions.py
+lattice_chains.py # ????
+midi_functions.py
+network_functions.py
+other_functions.py
+panel.py
+scale_function.py
+settings.py
+slider.py
+ternary_control.py
+wall_panel.py ?????
 """
 
 import sys, pygame, pygame.midi
