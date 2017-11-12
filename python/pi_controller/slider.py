@@ -13,8 +13,8 @@ class Slider():
         self.ctl_settings = ctl_settings
         self.min_val = min_val
         self.max_val = max_val
-        self.x = x
-        self.y = y
+        self.x = x # left
+        self.y = y # bottom
         self.wall_index = wall_index
         #exponential or linear scale
         if scale == 'linear':
@@ -34,7 +34,7 @@ class Slider():
 
         # Build the slider's rect object and move to specified location
         self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.top = self.y
+        self.rect.bottom = self.y
         self.rect.left = self.x
         # Knob rect
         self.k_rect = pygame.Rect(0, 0, self.k_width, self.k_height)
@@ -100,7 +100,7 @@ class Slider():
     def prep_title(self):
         """Turn param title into rendered image and center atop slider."""
         self.title_image = self.font.render(self.param, True, self.text_color,
-                                            self.ctl_settings.bg_color)
+                                            self.ctl_settings.panel_bg_color)
         self.title_image_rect = self.title_image.get_rect()
         self.title_image_rect.centerx = self.rect.centerx
         self.title_image_rect.bottom = self.rect.top - 10

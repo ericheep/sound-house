@@ -4,8 +4,9 @@ class Settings():
     def __init__(self):
         """Initialize settings"""
         self.screen_width = 600 # change later when building interface window
-        self.screen_height = 400
+        self.screen_height = 500
         self.bg_color = (0, 0, 0)
+        self.panel_bg_color = (50, 50, 50)
 
         # Ports
         self.portFeedbackControl = 7400
@@ -18,7 +19,7 @@ class Settings():
             '127.00.5', '127.00.6', '127.00.7'] #Example only, need to add real IPs
 
         # Current wall panel to display
-        self.panel = 0 # Wall 1 by default
+        self.wall_panel = 0 # Wall 1 by default
 
         # Modes
         self.ternaryWallMode = True # Initial setting

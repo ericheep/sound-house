@@ -46,7 +46,7 @@ class Button():
     def prep_title(self):
         """Turn title into rendered image and center above button."""
         self.title_image = self.font.render(self.title, True, self.text_color,
-                                            self.ctl_settings.bg_color)
+                                            self.ctl_settings.panel_bg_color)
         self.title_image_rect = self.title_image.get_rect()
         self.title_image_rect.centerx = self.rect.centerx
         self.title_image_rect.bottom = self.rect.top - 10

@@ -22,7 +22,7 @@ class TernaryColumn():
         self.ternary_digit = 0 # starting value
         # text properties
         self.text_color = (255, 255, 255)
-        self.font = pygame.font.SysFont(None, 14)
+        self.font = pygame.font.SysFont(None, 16)
         # prep message
         self.prep_msg()
 
@@ -40,7 +40,7 @@ class TernaryColumn():
         """Turn ternary digit into rendered image and display below column."""
         self.msg_image = self.font.render(str(self.ternary_digit), True,
                                           self.text_color,
-                                          self.ctl_settings.bg_color)
+                                          self.ctl_settings.panel_bg_color)
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.centerx = self.column[0].rect.centerx
         self.msg_image_rect.top = self.column[0].rect.bottom + 5
