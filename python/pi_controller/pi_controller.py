@@ -31,7 +31,7 @@ import panel
 
 ctl_settings = Settings()
 
-sinOscWalls = nf.initialize_OscControl_ports(ctl_settings)
+nf.initialize_OscControl_ports(ctl_settings)
 
 pygame.init()
 pygame.midi.init()
@@ -59,8 +59,11 @@ automation_panel = panel.AutomationPanel(ctl_settings, screen, 'Automation', # L
 ternary_panel = panel.TernaryPanel(ctl_settings, screen, 'Sound Code',
                                    automation_panel.rect.bottom, height=120)
 
-midi_input = 0#pygame.midi.Input(0)
-
+try:
+    midi_input = pygame.midi.Input(0)
+except:
+    midi_input = 0
+    print("No midi devices found.")
 
 # Check midi devices
 mf.check_midi_devices()

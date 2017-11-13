@@ -91,4 +91,4 @@ class TernaryControl():
         self.ternary_chain = []
         for column in self.column_list:
             self.ternary_chain.append(column.ternary_digit)
-        print(self.ternary_chain)
+        #print(self.ternary_chain)

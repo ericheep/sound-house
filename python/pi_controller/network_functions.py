@@ -1,28 +1,52 @@
 import argparse
 from pythonosc import udp_client, osc_message_builder
+import other_functions as of
+from time import sleep
 
 def initialize_OscControl_ports(ctl_settings): # need to test this
     wallIPs = ctl_settings.wallIPs
     port = ctl_settings.portOscControl
     client_list = []
     for IP in wallIPs:
-        wallIP = '--' + IP # if this doesn't work, use 'default=wallIP' # will host names work?
+        #wallIP = '--' + IP # if this doesn't work, use 'default=wallIP' # will host names work?
+        wallIP = IP
         parser = argparse.ArgumentParser()
-        parser.add_argument("--ip", wallIP, help="The ip of the OSC"
+        parser.add_argument("--ip", default=wallIP, help="The ip of the OSC"
                                                           "server")
         parser.add_argument("--port", type=int, default=port,
                             help="The port the OSC server is listening on")
         args = parser.parse_args()
         client = udp_client.SimpleUDPClient(args.ip, args.port)
         client_list.append(client)
-    return client_list
+    ctl_settings.wallOSC_clients = client_list
 
-def send_OscControl_data(client_list, freq_list): # need to test this
+def send_OscControl_data(ctl_settings, switch, freq_list=None): # need to test this
     # add amplitude scaling?
-    for index, client in enumerate(client_list):
-        freq = freq_list[index]
-        amp = 0.8 # add coefficient or function here to generate EQ'd amp
-        freq_message = '/sineFreq'
-        amp_message = '/sineGain'
-        client.send_message(freq_message, freq)
-        client.send_message(amp_message, amp)
+    freq_message = "/sineFreq"
+    amp_message = "/sineGain"
+    print(switch)
+    #if switch == 'on':
+    #    amp = 0.2 # add coefficient or function here to generate EQ'd amp
+    #else:
+    #    amp = 0
+    for index, client in enumerate(ctl_settings.wallOSC_clients):
+        if switch == 'on':
+            freq = freq_list[index]
+            client.send_message(freq_message, freq)
+            client.send_message(amp_message, 0.2)
+        else:
+            client.send_message(amp_message, 0)
+
+        #client.send_message(amp_message, amp)
+
+def send_ternary_chain(ctl_settings, ternary_chain):
+    """
+    Sends freqs out to walls from ternary chain
+    """
+    freqs = of.convert_chain_to_freqs(ternary_chain, ctl_settings)
+    send_OscControl_data(ctl_settings, 'on', freqs)
+    print(freqs)
+
+def send_OscControl_off(ctl_settings):
+    freqs = [0, 0, 0, 0, 0, 0, 0, 0]        # debug this!
+    send_OscControl_data(ctl_settings, 'off')

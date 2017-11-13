@@ -1,5 +1,7 @@
 import sys, pygame, pygame.midi
 from time import sleep
+import network_functions as nf
+import other_functions as of
 
 def check_slider(slider, mouse_x, mouse_y):
     knob_clicked = slider.rect.collidepoint(mouse_x, mouse_y)
@@ -46,6 +48,13 @@ def check_button(button, screen, ctl_settings, wall_panels, automation_panel,
         elif button.title == 'Send Code':
             if button.on == True:
                 ternary_panel.controller.get_ternary_chain()
+                print(ternary_panel.controller.ternary_chain)
+
+                nf.send_ternary_chain(ctl_settings,
+                        ternary_panel.controller.ternary_chain)
+                #except:
+                #    print("Network error")
+
                 # update screen then turn off button - 'bang'
                 update_screen(ctl_settings, screen, wall_panels,
                               automation_panel, ternary_panel, mouse_y)
@@ -83,6 +92,9 @@ def check_events(ctl_settings, screen, wall_panels, automation_panel,
             elif event.key == pygame.K_8:
                 ctl_settings.wall_panel = 7
 
+            elif event.key == pygame.K_o:
+                nf.send_OscControl_off(ctl_settings)
+
         # Mouse events
         elif event.type == pygame.MOUSEBUTTONDOWN:
             for panel in wall_panels:
@@ -103,6 +115,23 @@ def check_events(ctl_settings, screen, wall_panels, automation_panel,
             for panel in wall_panels:
                 for slider in panel.sliders:
                     slider.k_moving = False
+
+    # MIDI events
+    if midi_input:  # factor and double-check this
+        if midi_input.poll():
+            ctl, val = mf.get_ctl_and_value(midi_input)
+            # print(ctl)
+
+            if ctl_settings.ternaryWallMode:
+                if ctl < 7:
+                    mf.midi_to_ternary(ternary_chain, ctl, val)
+                if ctl == 41 and val == 127:
+                    print(ternary_chain)
+                    freqs = of.convert_chain_to_freqs(ternary_chain,
+                                                      ctl_settings)
+                    print(freqs)
+                    # add call to function to convert to freq and send to walls
+
 
 def bandpass_automation(wall_panels):
     print("bandpass automation") # not sure about the scaling here
@@ -150,20 +179,6 @@ def all_off_automation(ctl_settings, wall_panels, automation_panel):
             panel.sliders[1].automate(0)
             panel.sliders[2].automate(0)
 
-"""
-    if midi_input.poll():
-        ctl, val = mf.get_ctl_and_value(midi_input)
-        #print(ctl)
-
-        if ctl_settings.ternaryWallMode:
-            if ctl < 7:
-                mf.midi_to_ternary(ternary_chain, ctl, val)
-            if ctl == 41 and val == 127:
-                print(ternary_chain)
-                freqs = of.convert_chain_to_freqs(ternary_chain, ctl_settings)
-                print(freqs)
-                # add call to function to convert to freq and send to walls
-"""
 
 def update_screen(ctl_settings, screen, wall_panels, automation_panel,
                   ternary_panel, mouse_y):

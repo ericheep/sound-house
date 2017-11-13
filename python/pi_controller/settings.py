@@ -15,8 +15,22 @@ class Settings():
         self.portGetSensorData = 12345
 
         #IPs
-        self.wallIPs = ['127.00.0', '127.00.1', '127.00.2', '127.00.3', '127.00.4',
-            '127.00.5', '127.00.6', '127.00.7'] #Example only, need to add real IPs
+
+        self.wallIPs = ['pione.local', 'pitwo.local', 'pithree.local',
+                        'pifour.local', 'pifive.local', 'pisix.local',
+                        'piseven.local', 'pieight.local']
+
+        #self.wallIPs = ["192.168.1.11",
+        #                "192.168.1.12",
+        #                "192.168.1.13",
+        #                "192.168.1.14",
+        #                "192.168.1.15",
+        #                "192.168.1.16",
+        #                "192.168.1.17",
+        #                "192.168.1.18"] # possible to use hostnames?
+
+        # Client lists
+        self.wallOSC_clients = []
 
         # Current wall panel to display
         self.wall_panel = 0 # Wall 1 by default
@@ -35,6 +49,6 @@ class Settings():
         self.delayLength = 5
 
         # Ternary Wall Mode settings
-        self.centerFreq = 440
-        self.interval = 1.1 # add fractions and selection availability
+        self.centerFreq = 440.01 # why does 440.01 work and not 440????
+        self.interval = 1.1667 # add fractions and selection availability
         self.u_interval = 1 / self.interval
