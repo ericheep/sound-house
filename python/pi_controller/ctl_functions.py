@@ -1,11 +1,12 @@
 import sys, pygame, pygame.midi
+from time import sleep
 
 def check_slider(slider, mouse_x, mouse_y):
     knob_clicked = slider.rect.collidepoint(mouse_x, mouse_y)
     if knob_clicked:
         slider.k_moving = True
 
-def check_button(button, ctl_settings, wall_panels, automation_panel,
+def check_button(button, screen, ctl_settings, wall_panels, automation_panel,
                  ternary_panel, mouse_x, mouse_y, column=None,
                  check_column=False):
     button_clicked = button.rect.collidepoint(mouse_x, mouse_y)
@@ -45,6 +46,10 @@ def check_button(button, ctl_settings, wall_panels, automation_panel,
         elif button.title == 'Send Code':
             if button.on == True:
                 ternary_panel.controller.get_ternary_chain()
+                # update screen then turn off button - 'bang'
+                update_screen(ctl_settings, screen, wall_panels,
+                              automation_panel, ternary_panel, mouse_y)
+                sleep(0.5)
                 button.update()
 
 def check_events(ctl_settings, screen, wall_panels, automation_panel,
@@ -84,14 +89,14 @@ def check_events(ctl_settings, screen, wall_panels, automation_panel,
                 for slider in panel.sliders:
                     check_slider(slider, mouse_x, mouse_y)
             for button in automation_panel.buttons:
-                check_button(button, ctl_settings, wall_panels,
+                check_button(button, screen, ctl_settings, wall_panels,
                              automation_panel, ternary_panel, mouse_x, mouse_y)
             for button in ternary_panel.buttons:
-                check_button(button, ctl_settings, wall_panels,
+                check_button(button, screen, ctl_settings, wall_panels,
                              automation_panel, ternary_panel, mouse_x, mouse_y)
             for column in ternary_panel.controller.column_list:
                 for button in column.column:
-                    check_button(button, ctl_settings, wall_panels,
+                    check_button(button, screen, ctl_settings, wall_panels,
                                  automation_panel, ternary_panel, mouse_x,
                                  mouse_y, column, check_column=True)
         elif event.type == pygame.MOUSEBUTTONUP:

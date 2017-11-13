@@ -66,18 +66,12 @@ midi_input = 0#pygame.midi.Input(0)
 mf.check_midi_devices()
 
 while True:
-
+    # get cursor position
     mouse_x, mouse_y = pygame.mouse.get_pos()
-
+    # check events
     control.check_events(ctl_settings, screen, wall_panels, automation_panel,
                          ternary_panel, midi_input, ternary_chain, mouse_x,
                          mouse_y)
-
-
-
-        # add logic here for mode selection (flag for ternary wall mode, etc.)
-        # and then logic for changes
-
     # update screen
     control.update_screen(ctl_settings, screen, wall_panels, automation_panel,
                           ternary_panel, mouse_y)
