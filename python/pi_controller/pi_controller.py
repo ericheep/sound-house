@@ -39,8 +39,6 @@ screen = pygame.display.set_mode(
     (ctl_settings.screen_width, ctl_settings.screen_height))
 pygame.display.set_caption("Sound House Pi Controller")
 
-ternary_chain = [0, 0, 0, 0, 0, 0, 0]
-
 # Make wall panel (1-8)
 panel1 = panel.WallPanel(ctl_settings, screen, 'Wall Controls', 0, 0)
 panel2 = panel.WallPanel(ctl_settings, screen, 'Wall Controls', 0, 1)
@@ -73,7 +71,7 @@ while True:
     mouse_x, mouse_y = pygame.mouse.get_pos()
     # check events
     control.check_events(ctl_settings, screen, wall_panels, automation_panel,
-                         ternary_panel, midi_input, ternary_chain, mouse_x,
+                         ternary_panel, midi_input, mouse_x,
                          mouse_y)
     # update screen
     control.update_screen(ctl_settings, screen, wall_panels, automation_panel,

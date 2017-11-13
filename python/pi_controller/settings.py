@@ -20,15 +20,6 @@ class Settings():
                         'pifour.local', 'pifive.local', 'pisix.local',
                         'piseven.local', 'pieight.local']
 
-        #self.wallIPs = ["192.168.1.11",
-        #                "192.168.1.12",
-        #                "192.168.1.13",
-        #                "192.168.1.14",
-        #                "192.168.1.15",
-        #                "192.168.1.16",
-        #                "192.168.1.17",
-        #                "192.168.1.18"] # possible to use hostnames?
-
         # Client lists
         self.wallOSC_clients = []
 
@@ -50,5 +41,6 @@ class Settings():
 
         # Ternary Wall Mode settings
         self.centerFreq = 440.01 # why does 440.01 work and not 440????
-        self.interval = 1.1667 # add fractions and selection availability
+        self.interval = 1.1667 # add fractions and selection availability, make control for this, a series of fractions? 7?
         self.u_interval = 1 / self.interval
+        self.ternary_chain = [0, 0, 0, 0, 0, 0, 0] # initial vals
