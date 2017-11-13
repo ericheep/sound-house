@@ -49,11 +49,11 @@ def check_button(button, screen, ctl_settings, wall_panels, automation_panel,
             if button.on == True:
                 ternary_panel.controller.get_ternary_chain()
                 print(ternary_panel.controller.ternary_chain)
-
-                nf.send_ternary_chain(ctl_settings,
-                        ternary_panel.controller.ternary_chain)
-                #except:
-                #    print("Network error")
+                try:
+                    nf.send_ternary_chain(ctl_settings,
+                            ternary_panel.controller.ternary_chain)
+                except:
+                    print("Network error")
 
                 # update screen then turn off button - 'bang'
                 update_screen(ctl_settings, screen, wall_panels,
@@ -93,7 +93,7 @@ def check_events(ctl_settings, screen, wall_panels, automation_panel,
                 ctl_settings.wall_panel = 7
 
             elif event.key == pygame.K_o:
-                nf.send_OscControl_off(ctl_settings)
+                nf.send_OscControl_off(ctl_settings) # add button for this
 
         # Mouse events
         elif event.type == pygame.MOUSEBUTTONDOWN:
