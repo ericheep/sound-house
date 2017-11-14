@@ -26,9 +26,11 @@ class Settings():
         # Current wall panel to display
         self.wall_panel = 0 # Wall 1 by default
 
-        # Modes
-        self.ternaryWallMode = True # Initial setting
-        self.feedbackMode = False # Initial setting
+        # Modes - all off to start
+        self.ternaryWallMode = False
+        self.feedbackMode = False
+        self.playbackMode = False
+        self.sensorTuningMode = False
 
         # Feedback defaults
         self.mic = 100 #starting vals, need to tech and set exactly

@@ -87,9 +87,60 @@ def check_button(button, screen, ctl_settings, wall_panels, automation_panel,
                  check_column=False):
     button_clicked = button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked:
-        button.update()
 
-        if check_column: # Turn other buttons off in ternary control array
+        # check modes first
+        if button.title == 'TC MODE':
+            button.update()
+            if button.on == True:
+                ctl_settings.ternaryWallMode = True
+            elif button.on == False:
+                ctl_settings.ternaryWallMode = False
+
+        elif button.title == 'FB MODE':
+            button.update()
+            if button.on == True:
+                ctl_settings.feedbackMode = True
+                feedback_default_automation(ctl_settings, wall_panels,
+                                            automation_panel)
+                if automation_panel.buttons[5].on == False:
+                    automation_panel.buttons[5].update() # Turn 'Mic' on
+            elif button.on == False:
+                ctl_settings.feedbackMode = False
+                all_off_automation(ctl_settings, wall_panels, automation_panel)
+                if automation_panel.buttons[5].on == True:
+                    automation_panel.buttons[5].update() # Turn 'Mic' off
+
+        elif button.title == 'PB MODE':
+            button.update()
+            if button.on == True:
+                ctl_settings.playbackMode = True
+            elif button.on == False:
+                ctl_settings.playbackMode = False
+
+        elif button.title == 'ST MODE':
+            button.update()
+            if button.on == True:
+                ctl_settings.sensorTuningMode = True
+            elif button.on == False:
+                ctl_settings.sensorTuningMode = False
+
+        # Next check Feedback Mode automation buttons
+        if button.title == 'Bandpass': # can be set with FB MODE off for presetting
+            button.update()
+            if button.on == True: # is this best way to do this?
+                bandpass_automation(wall_panels)
+            elif button.on == False:
+                allpass_automation(wall_panels)
+        elif button.title == 'Mic' and ctl_settings.feedbackMode: # can't be set without FB MODE on
+            button.update()
+            if button.on == True:
+                mic_on_off_automation(wall_panels, 100) # turn mic on
+            elif button.on == False:
+                mic_on_off_automation(wall_panels, 0) # turn off
+
+        # Next check Ternary Controller and button
+        if check_column and ctl_settings.ternaryWallMode: # Turn other buttons off in ternary control array
+            button.update()
             none_on = True
             for other_button in column.column:
                 if other_button != button and other_button.on == True:
@@ -99,27 +150,8 @@ def check_button(button, screen, ctl_settings, wall_panels, automation_panel,
                 button.update()
             column.update()
 
-        if button.title == 'Bandpass':
-            if button.on == True: # is this best way to do this?
-                bandpass_automation(wall_panels)
-            elif button.on == False:
-                allpass_automation(wall_panels)
-        elif button.title == 'Mic':
-            if button.on == True:
-                mic_on_off_automation(wall_panels, 100) # turn mic on
-            elif button.on == False:
-                mic_on_off_automation(wall_panels, 0) # turn off
-        elif button.title == 'Feedback':
-            if button.on == True:
-                feedback_default_automation(ctl_settings, wall_panels,
-                                            automation_panel)
-                if automation_panel.buttons[1].on == False:
-                    automation_panel.buttons[1].update() # Turn 'Mic' on
-            elif button.on == False:
-                all_off_automation(ctl_settings, wall_panels, automation_panel)
-                if automation_panel.buttons[1].on == True:
-                    automation_panel.buttons[1].update() # Turn 'Mic' off
-        elif button.title == 'Send Code':
+        elif button.title == 'Send Code' and ctl_settings.ternaryWallMode:
+            button.update()
             send_code_automation(button, ctl_settings, screen, wall_panels,
                                  automation_panel, ternary_panel, mouse_y)
 
@@ -165,7 +197,7 @@ def all_off_automation(ctl_settings, wall_panels, automation_panel):
         panel.sliders[4].automate(0)
         panel.sliders[5].automate(0)
         panel.sliders[6].automate(0)
-        if automation_panel.buttons[0].on == False: # Only turn off HP/LP if 'Bandpass' is off
+        if automation_panel.buttons[4].on == False: # Only turn off HP/LP if 'Bandpass' is off
             panel.sliders[1].automate(0)
             panel.sliders[2].automate(0)
 

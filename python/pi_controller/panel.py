@@ -114,16 +114,32 @@ class AutomationPanel(Panel):
 
         self.button_x_spacing = 30
 
-        bp_button = Button(ctl_settings, screen, 40, self.rect.top +
-                           self.padding, 'Bandpass')
+        # Mode buttons first
+        fb_button = Button(ctl_settings, screen, 40,
+                           self.rect.top + self.padding, 'FB MODE') # Feedback
+
+        tc_button = Button(ctl_settings, screen,
+                           fb_button.rect.right + self.button_x_spacing,
+                           self.rect.top + self.padding, 'TC MODE') # Ternary Sound Code
+
+        pb_button = Button(ctl_settings, screen,
+                           tc_button.rect.right + self.button_x_spacing,
+                           self.rect.top + self.padding, 'PB MODE') # Sound Playback
+
+        st_button = Button(ctl_settings, screen,
+                           pb_button.rect.right + self.button_x_spacing,
+                           self.rect.top + self.padding, 'ST MODE') # Sensor Tuning - shapes built on sensor data. better name?
+
+        bp_button = Button(ctl_settings, screen,
+                           st_button.rect.right + (self.button_x_spacing * 2),
+                           self.rect.top + self.padding, 'Bandpass')
         mic_button = Button(ctl_settings, screen,
                             bp_button.rect.right + self.button_x_spacing,
                             self.rect.top + self.padding, 'Mic')
-        fb_button = Button(ctl_settings, screen,
-                           mic_button.rect.right + self.button_x_spacing,
-                           self.rect.top + self.padding, 'Feedback')
 
-        self.buttons = [bp_button, mic_button, fb_button]  # add all buttons here
+
+        self.buttons = [fb_button, tc_button, pb_button, st_button, bp_button,
+                        mic_button]  # add all buttons here
 
     def update(self):
         # update each button
