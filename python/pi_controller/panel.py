@@ -2,6 +2,7 @@ import pygame
 from slider import Slider
 from button import Button
 from ternary_control import TernaryControl
+import map_objects
 
 class Panel():
     """A parent panel class."""
@@ -16,7 +17,7 @@ class Panel():
         # Set dimensions and color
         self.padding = 10
         self.color = self.ctl_settings.panel_bg_color
-        self.width, self.height = self.ctl_settings.screen_width - \
+        self.width, self.height = (self.ctl_settings.screen_width / 2) - \
                                   (self.padding * 2), height
         self.text_color = (255, 0, 0)
         self.font = pygame.font.SysFont(None, 22)
@@ -91,7 +92,7 @@ class WallPanel(Panel): # 0-7
                                             self.text_color, self.color)
         self.wall_label_image_rect = self.label_image.get_rect()
         self.wall_label_image_rect.top = self.rect.top + self.padding
-        self.wall_label_image_rect.centerx = self.screen_rect.centerx # center in screen
+        self.wall_label_image_rect.centerx = self.rect.centerx # center in screen
 
     def update(self, mouse_y): # updates every screen for mouse values
         self.draw_panel_and_sliders()
@@ -136,10 +137,14 @@ class AutomationPanel(Panel):
         mic_button = Button(ctl_settings, screen,
                             bp_button.rect.right + self.button_x_spacing,
                             self.rect.top + self.padding, 'Mic')
+        network_button = Button(ctl_settings, screen,
+                                self.rect.right - self.button_x_spacing -
+                                self.padding, self.rect.top + self.padding,
+                                'NETWORK')
 
 
         self.buttons = [fb_button, tc_button, pb_button, st_button, bp_button,
-                        mic_button]  # add all buttons here
+                        mic_button, network_button]  # add all buttons here
 
     def update(self):
         # update each button
@@ -179,3 +184,58 @@ class TernaryPanel(Panel):
         self.controller.draw_controller()
         for button in self.buttons:
             button.draw_button()
+
+
+class WallMapPanel(Panel):
+    """A Panel subclass for the wall mapping control."""
+    def __init__(self, ctl_settings, screen, label, top_y, height):
+        super().__init__(ctl_settings, screen, label, top_y, height)
+        # set panel properties
+        self.rect.right = self.screen_rect.right - self.padding
+        self.prep_label()
+
+        zero_x = self.rect.left
+        zero_y = self.rect.top
+
+        self.walls = []
+        # make 8 walls
+        x, y = zero_x + 5, zero_y + 60
+        for i in range(8):
+            label = str(i + 1)
+            wall = map_objects.Wall(ctl_settings, screen, self, x, y, label)
+            y += 40
+            self.walls.append(wall)
+        self.walls[ctl_settings.wall_panel].on = True
+
+        # make 2 puppets
+        x, y = self.rect.centerx, self.rect.centery
+        self.puppet1 = map_objects.Puppet(ctl_settings, screen, self, x, y,
+                                         'P1')
+        self.puppet2 = map_objects.Puppet(ctl_settings, screen, self, x,
+                                          y + 20, 'P2')
+        self.puppets = [self.puppet1, self.puppet2] # add all puppets to list
+        self.puppets[ctl_settings.puppet].onoff() # Turn default puppet on
+
+    def switch_wall(self):
+        for wall in self.walls:
+            if wall == self.walls[self.ctl_settings.wall_panel]:
+                wall.on = True
+            else:
+                wall.on = False
+                wall.moving_right = False
+                wall.moving_left = False
+                wall.moving_up = False
+                wall.moving_down = False
+                wall.update()
+
+    def update(self):
+        self.walls[self.ctl_settings.wall_panel].update()
+        for puppet in self.puppets:
+            puppet.update()
+
+    def draw_panel_and_contents(self):
+        self.draw_panel()
+        for wall in self.walls:
+            wall.draw_wall()
+        for puppet in self.puppets:
+            puppet.draw_puppet()

@@ -4,8 +4,7 @@ import network_functions as nf
 import midi_functions as mf
 import other_functions as of
 
-def check_events(ctl_settings, screen, wall_panels, automation_panel,
-                 ternary_panel, midi_input, mouse_x, mouse_y):
+def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
     # factor all this shit out
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -14,54 +13,32 @@ def check_events(ctl_settings, screen, wall_panels, automation_panel,
                 midi_input.close()
             sys.exit()
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                print('Goodbye')
-                if midi_input:
-                    midi_input.close()
-                sys.exit()
-            # select wall panel with num entry
-            elif event.key == pygame.K_1:
-                ctl_settings.wall_panel = 0
-            elif event.key == pygame.K_2:
-                ctl_settings.wall_panel = 1
-            elif event.key == pygame.K_3:
-                ctl_settings.wall_panel = 2
-            elif event.key == pygame.K_4:
-                ctl_settings.wall_panel = 3
-            elif event.key == pygame.K_5:
-                ctl_settings.wall_panel = 4
-            elif event.key == pygame.K_6:
-                ctl_settings.wall_panel = 5
-            elif event.key == pygame.K_7:
-                ctl_settings.wall_panel = 6
-            elif event.key == pygame.K_8:
-                ctl_settings.wall_panel = 7
+            check_keydown_events(event, ctl_settings, screen, panels,
+                                 midi_input)
+        elif event.type == pygame.KEYUP:
+            check_keyup_events(event, ctl_settings, screen, panels)
 
-            elif event.key == pygame.K_o:
-                nf.send_OscControl_off(ctl_settings) # add button for this
-
-        # Mouse events
+        # Mouse events --factor out!
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            for panel in wall_panels:
+            for panel in panels['Wall Panels']: # check wall panel clicks
                 for slider in panel.sliders:
                     check_slider(slider, mouse_x, mouse_y)
-            for button in automation_panel.buttons:
-                check_button(button, screen, ctl_settings, wall_panels,
-                             automation_panel, ternary_panel, mouse_x, mouse_y)
-            for button in ternary_panel.buttons:
-                check_button(button, screen, ctl_settings, wall_panels,
-                             automation_panel, ternary_panel, mouse_x, mouse_y)
-            for column in ternary_panel.controller.column_list:
+            for button in panels['Automation Panel'].buttons: # check automation panel clicks
+                check_button(button, screen, ctl_settings, panels, mouse_x,
+                             mouse_y)
+            for button in panels['Ternary Panel'].buttons: # check ternary code panel clicks
+                check_button(button, screen, ctl_settings, panels, mouse_x,
+                             mouse_y)
+            for column in panels['Ternary Panel'].controller.column_list: # check ternary controller clicks
                 for button in column.column:
-                    check_button(button, screen, ctl_settings, wall_panels,
-                                 automation_panel, ternary_panel, mouse_x,
+                    check_button(button, screen, ctl_settings, panels, mouse_x,
                                  mouse_y, column, check_column=True)
         elif event.type == pygame.MOUSEBUTTONUP:
-            for panel in wall_panels:
+            for panel in panels['Wall Panels']: # check wall panel click releases
                 for slider in panel.sliders:
                     slider.k_moving = False
 
-    # MIDI events
+    # MIDI events --factor out!
     if midi_input:  # factor and double-check this
         if midi_input.poll():
             ctl, val = mf.get_ctl_and_value(midi_input)
@@ -69,26 +46,120 @@ def check_events(ctl_settings, screen, wall_panels, automation_panel,
             if ctl_settings.ternaryWallMode:
                 if ctl < 7:
                     mf.midi_to_ternary(ctl_settings, ctl, val)
-                    mf.update_ternary_controller(ctl_settings, ternary_panel)# how to streamline this so it doesn't lag. update only when?
+                    mf.update_ternary_controller(ctl_settings,
+                                                 panel['Ternary Panel'])# how to streamline this so it doesn't lag. update only when?
                 if ctl == 41 and val == 127: # midi 'play' button
-                    button = ternary_panel.buttons[0]
+                    button = panel['Ternary Panel'].buttons[0]
                     button.update()
                     send_code_automation(button, ctl_settings, screen,
-                                         wall_panels, automation_panel,
-                                         ternary_panel, mouse_y)
+                                         panels, mouse_y)
+
+def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
+    if event.key == pygame.K_q:
+        print('Goodbye')
+        if midi_input:
+            midi_input.close()
+        sys.exit()
+    # select wall panel with num entry
+    elif event.key == pygame.K_1:
+        ctl_settings.wall_panel = 0
+        panels['Wall Map'].switch_wall()
+    elif event.key == pygame.K_2:
+        ctl_settings.wall_panel = 1
+        panels['Wall Map'].switch_wall()
+    elif event.key == pygame.K_3:
+        ctl_settings.wall_panel = 2
+        panels['Wall Map'].switch_wall()
+    elif event.key == pygame.K_4:
+        ctl_settings.wall_panel = 3
+        panels['Wall Map'].switch_wall()
+    elif event.key == pygame.K_5:
+        ctl_settings.wall_panel = 4
+        panels['Wall Map'].switch_wall()
+    elif event.key == pygame.K_6:
+        ctl_settings.wall_panel = 5
+        panels['Wall Map'].switch_wall()
+    elif event.key == pygame.K_7:
+        ctl_settings.wall_panel = 6
+        panels['Wall Map'].switch_wall()
+    elif event.key == pygame.K_8:
+        ctl_settings.wall_panel = 7
+        panels['Wall Map'].switch_wall()
+
+    elif event.key == pygame.K_o:
+        nf.send_OscControl_off(ctl_settings)  # add button for this
+
+    # Arrow keys to control wall position
+    if event.key == pygame.K_LEFT:
+        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_left = True
+    if event.key == pygame.K_RIGHT:
+        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_right = True
+    if event.key == pygame.K_UP:
+        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_up = True
+    if event.key == pygame.K_DOWN:
+        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_down = True
+
+    # 'r' rotates wall
+    if event.key == pygame.K_r:
+        panels['Wall Map'].walls[ctl_settings.wall_panel].rotate()
+
+    # 'p' selects puppet --cycles 1 and 2
+    if event.key == pygame.K_p:
+        # get current active puppet
+        on_puppet = ctl_settings.puppet
+        if on_puppet == 0:
+            off_puppet = 1
+        else:
+            off_puppet = 0
+        # trigger both to switch
+        panels['Wall Map'].puppets[on_puppet].onoff()
+        panels['Wall Map'].puppets[off_puppet].onoff()
+        # now update
+        ctl_settings.puppet = off_puppet
+
+    # w,a,s,d control puppet position
+    # maybe make a mode selector for this?
+    if event.key == pygame.K_a:
+        panels['Wall Map'].puppets[ctl_settings.puppet].moving_left = True
+    if event.key == pygame.K_d:
+        panels['Wall Map'].puppets[ctl_settings.puppet].moving_right = True
+    if event.key == pygame.K_w:
+        panels['Wall Map'].puppets[ctl_settings.puppet].moving_up = True
+    if event.key == pygame.K_s:
+        panels['Wall Map'].puppets[ctl_settings.puppet].moving_down = True
+
+def check_keyup_events(event, ctl_settings, screen, panels):
+    # Arrow keys to control wall position
+    if event.key == pygame.K_LEFT:
+        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_left = False
+    if event.key == pygame.K_RIGHT:
+        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_right = False
+    if event.key == pygame.K_UP:
+        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_up = False
+    if event.key == pygame.K_DOWN:
+        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_down = False
+
+    # w,a,s,d control puppet position
+    if event.key == pygame.K_a:
+        panels['Wall Map'].puppets[ctl_settings.puppet].moving_left = False
+    if event.key == pygame.K_d:
+        panels['Wall Map'].puppets[ctl_settings.puppet].moving_right = False
+    if event.key == pygame.K_w:
+        panels['Wall Map'].puppets[ctl_settings.puppet].moving_up = False
+    if event.key == pygame.K_s:
+        panels['Wall Map'].puppets[ctl_settings.puppet].moving_down = False
 
 def check_slider(slider, mouse_x, mouse_y):
     knob_clicked = slider.rect.collidepoint(mouse_x, mouse_y)
     if knob_clicked:
         slider.k_moving = True
 
-def check_button(button, screen, ctl_settings, wall_panels, automation_panel,
-                 ternary_panel, mouse_x, mouse_y, column=None,
-                 check_column=False):
+def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
+                 column=None, check_column=False):
     button_clicked = button.rect.collidepoint(mouse_x, mouse_y)
     if button_clicked:
 
-        # check modes first
+        # check modes first, right now activating one mode doesn't turn others off--add this behavior later
         if button.title == 'TC MODE':
             button.update()
             if button.on == True:
@@ -100,15 +171,14 @@ def check_button(button, screen, ctl_settings, wall_panels, automation_panel,
             button.update()
             if button.on == True:
                 ctl_settings.feedbackMode = True
-                feedback_default_automation(ctl_settings, wall_panels,
-                                            automation_panel)
-                if automation_panel.buttons[5].on == False:
-                    automation_panel.buttons[5].update() # Turn 'Mic' on
+                feedback_default_automation(ctl_settings, panels)
+                if panels['Automation Panel'].buttons[5].on == False:
+                    panels['Automation Panel'].buttons[5].update() # Turn 'Mic' on
             elif button.on == False:
                 ctl_settings.feedbackMode = False
-                all_off_automation(ctl_settings, wall_panels, automation_panel)
-                if automation_panel.buttons[5].on == True:
-                    automation_panel.buttons[5].update() # Turn 'Mic' off
+                all_off_automation(ctl_settings, panels)
+                if panels['Automation Panel'].buttons[5].on == True:
+                    panels['Automation Panel'].buttons[5].update() # Turn 'Mic' off
 
         elif button.title == 'PB MODE':
             button.update()
@@ -124,19 +194,27 @@ def check_button(button, screen, ctl_settings, wall_panels, automation_panel,
             elif button.on == False:
                 ctl_settings.sensorTuningMode = False
 
+        # Next check Network button
+        if button.title == 'NETWORK':
+            button.update()
+            if button.on == True:
+                ctl_settings.networkOn = True
+            elif button.on == False:
+                ctl_settings.networkOn = False
+
         # Next check Feedback Mode automation buttons
         if button.title == 'Bandpass': # can be set with FB MODE off for presetting
             button.update()
             if button.on == True: # is this best way to do this?
-                bandpass_automation(wall_panels)
+                bandpass_automation(panels['Wall Panels']) # send wall panels only
             elif button.on == False:
-                allpass_automation(wall_panels)
+                allpass_automation(panels['Wall Panels'])
         elif button.title == 'Mic' and ctl_settings.feedbackMode: # can't be set without FB MODE on
             button.update()
             if button.on == True:
-                mic_on_off_automation(wall_panels, 100) # turn mic on
+                mic_on_off_automation(panels['Wall Panels'], 100) # turn mic on
             elif button.on == False:
-                mic_on_off_automation(wall_panels, 0) # turn off
+                mic_on_off_automation(panels['Wall Panels'], 0) # turn off
 
         # Next check Ternary Controller and button
         if check_column and ctl_settings.ternaryWallMode: # Turn other buttons off in ternary control array
@@ -152,8 +230,7 @@ def check_button(button, screen, ctl_settings, wall_panels, automation_panel,
 
         elif button.title == 'Send Code' and ctl_settings.ternaryWallMode:
             button.update()
-            send_code_automation(button, ctl_settings, screen, wall_panels,
-                                 automation_panel, ternary_panel, mouse_y)
+            send_code_automation(button, ctl_settings, screen, panels, mouse_y)
 
 def bandpass_automation(wall_panels):
     print("bandpass automation") # not sure about the scaling here
@@ -176,59 +253,64 @@ def mic_on_off_automation(wall_panels, gain_val):
     for panel in wall_panels:
         panel.sliders[0].automate(gain_val)
 
-def feedback_default_automation(ctl_settings, wall_panels, automation_panel):
+def feedback_default_automation(ctl_settings, panels):
     print("Feedback Mode Default")
-    for panel in wall_panels:
+    for panel in panels['Wall Panels']:
         panel.sliders[0].automate(ctl_settings.mic)
         panel.sliders[3].automate(ctl_settings.res)
         panel.sliders[4].automate(ctl_settings.threshold)
         panel.sliders[5].automate(ctl_settings.packetLength)
         panel.sliders[6].automate(ctl_settings.delayLength)
-        if automation_panel.buttons[0].on == False: # Only set HP/LP if 'Bandpass' is off
+        if panels['Automation Panel'].buttons[0].on == False: # Only set HP/LP if 'Bandpass' is off
             panel.sliders[1].automate(ctl_settings.hp)
             panel.sliders[2].automate(ctl_settings.lp)
 
 
-def all_off_automation(ctl_settings, wall_panels, automation_panel):
+def all_off_automation(ctl_settings, panels):
     print("All Off")
-    for panel in wall_panels:
+    for panel in panels['Wall Panels']:
         panel.sliders[0].automate(0)
         panel.sliders[3].automate(0)
         panel.sliders[4].automate(0)
         panel.sliders[5].automate(0)
         panel.sliders[6].automate(0)
-        if automation_panel.buttons[4].on == False: # Only turn off HP/LP if 'Bandpass' is off
+        if panels['Automation Panel'].buttons[4].on == False: # Only turn off HP/LP if 'Bandpass' is off
             panel.sliders[1].automate(0)
             panel.sliders[2].automate(0)
 
-def send_code_automation(button, ctl_settings, screen, wall_panels,
-                         automation_panel, ternary_panel, mouse_y):
+def send_code_automation(button, ctl_settings, screen, panels, mouse_y):
     if button.on == True:
-        ternary_panel.controller.get_ternary_chain()
-        print(ternary_panel.controller.ternary_chain)
-        try:
-            nf.send_ternary_chain(ctl_settings,
-                                  ternary_panel.controller.ternary_chain)
-        except:
-            print("Network error")
+        panels['Ternary Panel'].controller.get_ternary_chain()
+        print(panels['Ternary Panel'].controller.ternary_chain)
+        if ctl_settings.networkOn:
+            try:
+                nf.send_ternary_chain(ctl_settings,
+                            panels['Ternary Panel'].controller.ternary_chain)
+            except:
+                print("Network error")
+        else:
+            print('Network Off')
 
         # update screen then turn off button - 'bang'
-        update_screen(ctl_settings, screen, wall_panels,
-                      automation_panel, ternary_panel, mouse_y)
+        update_screen(ctl_settings, screen, panels, mouse_y)
         sleep(0.5)
         button.update()
 
 
-def update_screen(ctl_settings, screen, wall_panels, automation_panel,
-                  ternary_panel, mouse_y):
+def update_screen(ctl_settings, screen, panels, mouse_y):
+
+    # Update Wall Map
+    panels['Wall Map'].update()
 
     # draw screen
     screen.fill(ctl_settings.bg_color)
     # draw wall panel
-    wall_panels[ctl_settings.wall_panel].update(mouse_y)
+    panels['Wall Panels'][ctl_settings.wall_panel].update(mouse_y)
     # draw automation panel
-    automation_panel.draw_panel_and_buttons()
+    panels['Automation Panel'].draw_panel_and_buttons()
     # draw sound code panel
-    ternary_panel.draw_panel_and_controller()
+    panels['Ternary Panel'].draw_panel_and_controller()
+    # draw wall map panel
+    panels['Wall Map'].draw_panel_and_contents()
 
     pygame.display.flip()

@@ -3,7 +3,7 @@ class Settings():
 
     def __init__(self):
         """Initialize settings"""
-        self.screen_width = 600 # change later when building interface window
+        self.screen_width = 1200 # change later when building interface window
         self.screen_height = 500
         self.bg_color = (0, 0, 0)
         self.panel_bg_color = (50, 50, 50)
@@ -25,6 +25,12 @@ class Settings():
 
         # Current wall panel to display
         self.wall_panel = 0 # Wall 1 by default
+        # Current selected puppet
+        self.puppet = 0 # P1 by default
+
+
+        # Network status
+        self.networkOn = False # when off, in 'dev' mode and sends things locally or not at all
 
         # Modes - all off to start
         self.ternaryWallMode = False
@@ -46,3 +52,6 @@ class Settings():
         self.interval = 1.1667 # add fractions and selection availability, make control for this, a series of fractions? 7?
         self.u_interval = 1 / self.interval
         self.ternary_chain = [0, 0, 0, 0, 0, 0, 0] # initial vals
+
+        # Wall Map settings
+        self.wall_speed_factor = 1

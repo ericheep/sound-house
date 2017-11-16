@@ -57,6 +57,14 @@ automation_panel = panel.AutomationPanel(ctl_settings, screen, 'Automation', # L
 ternary_panel = panel.TernaryPanel(ctl_settings, screen, 'Sound Code',
                                    automation_panel.rect.bottom, height=120)
 
+wall_map_panel = panel.WallMapPanel(ctl_settings, screen, 'Wall Map', 0,
+                                    height=400) # make responsive? or customizable?
+
+panels = {
+             'Wall Panels': wall_panels, 'Automation Panel': automation_panel,
+             'Ternary Panel': ternary_panel, 'Wall Map': wall_map_panel
+}
+
 try:
     midi_input = pygame.midi.Input(0)
 except:
@@ -70,9 +78,7 @@ while True:
     # get cursor position
     mouse_x, mouse_y = pygame.mouse.get_pos()
     # check events
-    control.check_events(ctl_settings, screen, wall_panels, automation_panel,
-                         ternary_panel, midi_input, mouse_x,
+    control.check_events(ctl_settings, screen, panels, midi_input, mouse_x,
                          mouse_y)
     # update screen
-    control.update_screen(ctl_settings, screen, wall_panels, automation_panel,
-                          ternary_panel, mouse_y)
+    control.update_screen(ctl_settings, screen, panels, mouse_y)
