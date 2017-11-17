@@ -62,10 +62,10 @@ class Slider():
                                      (0, 0, self.k_width, self.k_height), 0)
 
     def get_ctl_value(self):
-        knob_pos = self.rect.bottom - self.k_rect.bottom
+        self.knob_pos = self.rect.bottom - self.k_rect.bottom
         x0, x1 = 0, self.height
         y0, y1 = self.min_val, self.max_val
-        self.ctl_value = scale(knob_pos, x0, x1, y0, y1, self.scale)
+        self.ctl_value = scale(self.knob_pos, x0, x1, y0, y1, self.scale)
         self.prep_msg() # replace with call to function for OSC sending
         param_message = self.param + ' ' + str(self.ctl_value)
         print(param_message)
@@ -85,9 +85,12 @@ class Slider():
             self.k_moving = False
             self.get_ctl_value()
 
-    def automate(self, value):
+    def automate(self, value, reverse=False):
         """Update knob position based on value."""
-        self.k_rect.bottom = self.rect.bottom - value
+        if reverse:
+            self.k_rect.bottom = self.rect.top + value
+        else:
+            self.k_rect.bottom = self.rect.bottom - value
         self.get_ctl_value()
 
     def prep_msg(self):

@@ -89,73 +89,76 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
     elif event.key == pygame.K_o and ctl_settings.networkOn:
         nf.send_OscControl_off(ctl_settings)  # add button for this
 
-    # Arrow keys to control wall position
-    if event.key == pygame.K_LEFT:
-        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_left = True
-    if event.key == pygame.K_RIGHT:
-        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_right = True
-    if event.key == pygame.K_UP:
-        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_up = True
-    if event.key == pygame.K_DOWN:
-        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_down = True
+    if ctl_settings.mapping:
+        # Arrow keys to control wall position
+        if event.key == pygame.K_LEFT:
+            panels['Wall Map'].walls[ctl_settings.wall_panel].moving_left = True
+        if event.key == pygame.K_RIGHT:
+            panels['Wall Map'].walls[ctl_settings.wall_panel].moving_right = True
+        if event.key == pygame.K_UP:
+            panels['Wall Map'].walls[ctl_settings.wall_panel].moving_up = True
+        if event.key == pygame.K_DOWN:
+            panels['Wall Map'].walls[ctl_settings.wall_panel].moving_down = True
 
-    # Left shift slows down wall movement
-    if event.key == pygame.K_LSHIFT:
-        ctl_settings.wall_speed_factor = 0.25
+        # Left shift slows down wall movement
+        if event.key == pygame.K_LSHIFT:
+            ctl_settings.wall_speed_factor = 0.25
 
-    # 'r' rotates wall
-    if event.key == pygame.K_r:
-        panels['Wall Map'].walls[ctl_settings.wall_panel].rotate()
+        # 'r' rotates wall
+        if event.key == pygame.K_r:
+            panels['Wall Map'].walls[ctl_settings.wall_panel].rotate()
 
-    # 'p' selects puppet --cycles 1 and 2
-    if event.key == pygame.K_p:
-        # get current active puppet
-        on_puppet = ctl_settings.puppet
-        if on_puppet == 0:
-            off_puppet = 1
-        else:
-            off_puppet = 0
-        # trigger both to switch
-        panels['Wall Map'].puppets[on_puppet].onoff()
-        panels['Wall Map'].puppets[off_puppet].onoff()
-        # now update
-        ctl_settings.puppet = off_puppet
+        # 'p' selects puppet --cycles 1 and 2
+        if event.key == pygame.K_p:
+            # get current active puppet
+            on_puppet = ctl_settings.puppet
+            if on_puppet == 0:
+                off_puppet = 1
+            else:
+                off_puppet = 0
+            # trigger both to switch
+            panels['Wall Map'].puppets[on_puppet].onoff()
+            panels['Wall Map'].puppets[off_puppet].onoff()
+            # now update
+            ctl_settings.puppet = off_puppet
 
-    # w,a,s,d control puppet position
-    # maybe make a mode selector for this?
-    if event.key == pygame.K_a:
-        panels['Wall Map'].puppets[ctl_settings.puppet].moving_left = True
-    if event.key == pygame.K_d:
-        panels['Wall Map'].puppets[ctl_settings.puppet].moving_right = True
-    if event.key == pygame.K_w:
-        panels['Wall Map'].puppets[ctl_settings.puppet].moving_up = True
-    if event.key == pygame.K_s:
-        panels['Wall Map'].puppets[ctl_settings.puppet].moving_down = True
+        # w,a,s,d control puppet position
+        # maybe make a mode selector for this?
+        if event.key == pygame.K_a:
+            panels['Wall Map'].puppets[ctl_settings.puppet].moving_left = True
+        if event.key == pygame.K_d:
+            panels['Wall Map'].puppets[ctl_settings.puppet].moving_right = True
+        if event.key == pygame.K_w:
+            panels['Wall Map'].puppets[ctl_settings.puppet].moving_up = True
+        if event.key == pygame.K_s:
+            panels['Wall Map'].puppets[ctl_settings.puppet].moving_down = True
 
 def check_keyup_events(event, ctl_settings, screen, panels):
-    # Arrow keys to control wall position
-    if event.key == pygame.K_LEFT:
-        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_left = False
-    if event.key == pygame.K_RIGHT:
-        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_right = False
-    if event.key == pygame.K_UP:
-        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_up = False
-    if event.key == pygame.K_DOWN:
-        panels['Wall Map'].walls[ctl_settings.wall_panel].moving_down = False
 
-    # Returns wall speed to normal
-    if event.key == pygame.K_LSHIFT:
-        ctl_settings.wall_speed_factor = 1
+    if ctl_settings.mapping:
+        # Arrow keys to control wall position
+        if event.key == pygame.K_LEFT:
+            panels['Wall Map'].walls[ctl_settings.wall_panel].moving_left = False
+        if event.key == pygame.K_RIGHT:
+            panels['Wall Map'].walls[ctl_settings.wall_panel].moving_right = False
+        if event.key == pygame.K_UP:
+            panels['Wall Map'].walls[ctl_settings.wall_panel].moving_up = False
+        if event.key == pygame.K_DOWN:
+            panels['Wall Map'].walls[ctl_settings.wall_panel].moving_down = False
 
-    # w,a,s,d control puppet position
-    if event.key == pygame.K_a:
-        panels['Wall Map'].puppets[ctl_settings.puppet].moving_left = False
-    if event.key == pygame.K_d:
-        panels['Wall Map'].puppets[ctl_settings.puppet].moving_right = False
-    if event.key == pygame.K_w:
-        panels['Wall Map'].puppets[ctl_settings.puppet].moving_up = False
-    if event.key == pygame.K_s:
-        panels['Wall Map'].puppets[ctl_settings.puppet].moving_down = False
+        # Returns wall speed to normal
+        if event.key == pygame.K_LSHIFT:
+            ctl_settings.wall_speed_factor = 1
+
+        # w,a,s,d control puppet position
+        if event.key == pygame.K_a:
+            panels['Wall Map'].puppets[ctl_settings.puppet].moving_left = False
+        if event.key == pygame.K_d:
+            panels['Wall Map'].puppets[ctl_settings.puppet].moving_right = False
+        if event.key == pygame.K_w:
+            panels['Wall Map'].puppets[ctl_settings.puppet].moving_up = False
+        if event.key == pygame.K_s:
+            panels['Wall Map'].puppets[ctl_settings.puppet].moving_down = False
 
 def check_slider(slider, mouse_x, mouse_y):
     knob_clicked = slider.rect.collidepoint(mouse_x, mouse_y)
@@ -202,6 +205,13 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
             elif button.on == False:
                 ctl_settings.sensorTuningMode = False
 
+        elif button.title == 'MAP':
+            button.update()
+            if button.on == True:
+                ctl_settings.mapping = True
+            elif button.on == False:
+                ctl_settings.mappin = False
+
         # Next check Network button
         if button.title == 'NETWORK':
             button.update()
@@ -215,8 +225,11 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
             button.update()
             if button.on == True: # is this best way to do this?
                 bandpass_automation(panels['Wall Panels']) # send wall panels only
+                ctl_settings.bandpass = True
             elif button.on == False:
                 allpass_automation(panels['Wall Panels'])
+                ctl_settings.bandpass = False
+
         elif button.title == 'Mic' and ctl_settings.feedbackMode: # can't be set without FB MODE on
             button.update()
             if button.on == True:

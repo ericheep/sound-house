@@ -38,6 +38,8 @@ class Settings():
         self.playbackMode = False
         self.sensorTuningMode = False
 
+        self.bandpass = False
+
         # Feedback defaults
         self.mic = 100 #starting vals, need to tech and set exactly
         self.hp = 0
@@ -54,4 +56,5 @@ class Settings():
         self.ternary_chain = [0, 0, 0, 0, 0, 0, 0] # initial vals
 
         # Wall Map settings
+        self.mapping = False # Turn mapping on or off
         self.wall_speed_factor = 1

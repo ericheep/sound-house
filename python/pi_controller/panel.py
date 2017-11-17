@@ -3,6 +3,7 @@ from slider import Slider
 from button import Button
 from ternary_control import TernaryControl
 import map_objects
+from other_functions import find_distance
 
 class Panel():
     """A parent panel class."""
@@ -131,20 +132,26 @@ class AutomationPanel(Panel):
                            pb_button.rect.right + self.button_x_spacing,
                            self.rect.top + self.padding, 'ST MODE') # Sensor Tuning - shapes built on sensor data. better name?
 
+        map_button = Button(ctl_settings, screen,
+                            st_button.rect.right + self.button_x_spacing,
+                            self.rect.top + self.padding, 'MAP')
+
         bp_button = Button(ctl_settings, screen,
-                           st_button.rect.right + (self.button_x_spacing * 2),
+                           map_button.rect.right + (self.button_x_spacing * 2),
                            self.rect.top + self.padding, 'Bandpass')
+
         mic_button = Button(ctl_settings, screen,
                             bp_button.rect.right + self.button_x_spacing,
                             self.rect.top + self.padding, 'Mic')
+
         network_button = Button(ctl_settings, screen,
                                 self.rect.right - self.button_x_spacing -
                                 self.padding, self.rect.top + self.padding,
                                 'NETWORK')
 
 
-        self.buttons = [fb_button, tc_button, pb_button, st_button, bp_button,
-                        mic_button, network_button]  # add all buttons here
+        self.buttons = [fb_button, tc_button, pb_button, st_button, map_button,
+                        bp_button, mic_button, network_button]  # add all buttons here
 
     def update(self):
         # update each button
@@ -188,18 +195,20 @@ class TernaryPanel(Panel):
 
 class WallMapPanel(Panel):
     """A Panel subclass for the wall mapping control."""
-    def __init__(self, ctl_settings, screen, label, top_y, height):
+    def __init__(self, wall_panels, ctl_settings, screen, label, top_y, height):
         super().__init__(ctl_settings, screen, label, top_y, height)
+        # make all panels available
+        self.wall_panels = wall_panels
         # set panel properties
         self.rect.right = self.screen_rect.right - self.padding
         self.prep_label()
 
-        zero_x = self.rect.left
-        zero_y = self.rect.top
+        self.zero_x = self.rect.left
+        self.zero_y = self.rect.top
 
         self.walls = []
         # make 8 walls
-        x, y = zero_x + 5, zero_y + 60
+        x, y = self.zero_x + 5, self.zero_y + 60
         for i in range(8):
             label = str(i + 1)
             wall = map_objects.Wall(ctl_settings, screen, self, x, y, label)
@@ -215,6 +224,10 @@ class WallMapPanel(Panel):
                                           y + 20, 'P2')
         self.puppets = [self.puppet1, self.puppet2] # add all puppets to list
         self.puppets[ctl_settings.puppet].onoff() # Turn default puppet on
+
+        # stores distances between walls and puppets
+        self.p1_distances = [0, 0, 0, 0, 0, 0, 0, 0] # initialize with 8 values
+        self.p2_distances = [0, 0, 0, 0, 0, 0, 0, 0]
 
     def switch_wall(self):
         for wall in self.walls:
@@ -239,3 +252,20 @@ class WallMapPanel(Panel):
             wall.draw_wall()
         for puppet in self.puppets:
             puppet.draw_puppet()
+
+    def get_distances(self):
+        for index, wall in enumerate(self.walls):
+            self.p1_distances[index] = find_distance(wall, self.puppet1, self)
+            self.p2_distances[index] = find_distance(wall, self.puppet2, self)
+        if self.ctl_settings.bandpass:
+            self.scale_factor = 80 # val should be less than 100 so there's always a window
+            self.scale_offset = 20 # how wide a band
+            for index, wall in enumerate(self.wall_panels):
+                if self.ctl_settings.puppet == 0:
+                    val = (self.p1_distances[index] * self.scale_factor)
+                    wall.sliders[1].automate(val + self.scale_offset, reverse=True)
+                    wall.sliders[2].automate(val, reverse=True)
+                if self.ctl_settings.puppet == 1:
+                    val = self.p2_distances[index] * self.scale_factor
+                    wall.sliders[1].automate(val + self.scale_offset, reverse=True)
+                    wall.sliders[2].automate(val, reverse=True)

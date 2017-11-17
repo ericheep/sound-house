@@ -58,7 +58,7 @@ automation_panel = panel.AutomationPanel(ctl_settings, screen, 'Automation', # L
 ternary_panel = panel.TernaryPanel(ctl_settings, screen, 'Sound Code',
                                    automation_panel.rect.bottom, height=120)
 
-wall_map_panel = panel.WallMapPanel(ctl_settings, screen, 'Wall Map', 0,
+wall_map_panel = panel.WallMapPanel(wall_panels, ctl_settings, screen, 'Wall Map', 0,
                                     height=400) # make responsive? or customizable?
 
 panels = {

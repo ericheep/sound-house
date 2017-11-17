@@ -88,6 +88,11 @@ class Puppet(Object):
             if self.moving_down and self.rect.bottom < self.panel.rect.bottom:
                 self.centery += self.ctl_settings.wall_speed_factor
 
+            # if any movement, update position
+            if (self.moving_right or self.moving_left or self.moving_up or
+                    self.moving_down):
+                self.panel.get_distances()
+
             # Update rect object and label
             self.rect.centerx = float(self.centerx)
             self.rect.centery = float(self.centery)
@@ -106,8 +111,10 @@ class Wall(Object):
         self.vertical = True  # False = horizontal
         self.long = 40
         self.short = 10
+        self.width = self.short # start vertically initially
+        self.height = self.long
         super().__init__(ctl_settings, screen, panel, centerx, centery,
-                         self.short, self.long, label)
+                         self.width, self.height, label)
 
     def update(self):
         #Update the position based on movement flags and rotate with
@@ -148,6 +155,11 @@ class Wall(Object):
             else:
                 self.centery += self.ctl_settings.wall_speed_factor
 
+        # if any movement, update position
+        if (self.moving_right or self.moving_left or self.moving_up or
+            self.moving_down):
+            self.panel.get_distances()
+
         # Update rect object and label
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
@@ -167,13 +179,16 @@ class Wall(Object):
     def perform_rotation(self):
         if self.vertical == True:
             self.vertical = False
-            self.rect = pygame.Rect(self.centerx, self.centery, self.long,
-                                    self.short)
+            self.width = self.long
+            self.height = self.short
         else:
             self.vertical = True
-            self.rect = pygame.Rect(self.centerx, self.centery, self.short,
-                                    self.long)
-            self.update()
+            self.width = self.short
+            self.height = self.long
+
+        self.rect = pygame.Rect(self.centerx, self.centery, self.width,
+                                    self.height)
+        self.update()
 
     def check_collisions(self):
         # check collisions
