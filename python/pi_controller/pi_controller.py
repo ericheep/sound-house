@@ -10,6 +10,7 @@ button.py
 ctl_functions.py
 drawing_functions.py
 lattice_chains.py # ????
+map_objects.py
 midi_functions.py
 network_functions.py
 other_functions.py

@@ -89,13 +89,13 @@ class Puppet(Object):
                 self.centery += self.ctl_settings.wall_speed_factor
 
             # Update rect object and label
-            self.rect.centerx = self.centerx
-            self.rect.centery = self.centery
+            self.rect.centerx = float(self.centerx)
+            self.rect.centery = float(self.centery)
             self.prep_label()
 
     def draw_puppet(self):
         pygame.draw.circle(self.screen, self.color,
-                           (self.centerx, self.centery), self.radius, 0)
+                           (int(self.centerx), int(self.centery)), self.radius, 0)
         self.screen.blit(self.label_image, self.label_image_rect)
 
 

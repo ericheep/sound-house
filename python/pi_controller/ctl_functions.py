@@ -86,7 +86,7 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
         ctl_settings.wall_panel = 7
         panels['Wall Map'].switch_wall()
 
-    elif event.key == pygame.K_o:
+    elif event.key == pygame.K_o and ctl_settings.networkOn:
         nf.send_OscControl_off(ctl_settings)  # add button for this
 
     # Arrow keys to control wall position
@@ -98,6 +98,10 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
         panels['Wall Map'].walls[ctl_settings.wall_panel].moving_up = True
     if event.key == pygame.K_DOWN:
         panels['Wall Map'].walls[ctl_settings.wall_panel].moving_down = True
+
+    # Left shift slows down wall movement
+    if event.key == pygame.K_LSHIFT:
+        ctl_settings.wall_speed_factor = 0.25
 
     # 'r' rotates wall
     if event.key == pygame.K_r:
@@ -138,6 +142,10 @@ def check_keyup_events(event, ctl_settings, screen, panels):
         panels['Wall Map'].walls[ctl_settings.wall_panel].moving_up = False
     if event.key == pygame.K_DOWN:
         panels['Wall Map'].walls[ctl_settings.wall_panel].moving_down = False
+
+    # Returns wall speed to normal
+    if event.key == pygame.K_LSHIFT:
+        ctl_settings.wall_speed_factor = 1
 
     # w,a,s,d control puppet position
     if event.key == pygame.K_a:
