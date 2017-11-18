@@ -333,5 +333,7 @@ def update_screen(ctl_settings, screen, panels, mouse_y):
     panels['Ternary Panel'].draw_panel_and_controller()
     # draw wall map panel
     panels['Wall Map'].draw_panel_and_contents()
+    # draw playback panel
+    panels['Playback Panel'].draw_panel()
 
     pygame.display.flip()

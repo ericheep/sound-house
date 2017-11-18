@@ -61,9 +61,14 @@ ternary_panel = panel.TernaryPanel(ctl_settings, screen, 'Sound Code',
 wall_map_panel = panel.WallMapPanel(wall_panels, ctl_settings, screen, 'Wall Map', 0,
                                     height=400) # make responsive? or customizable?
 
+playback_panel = panel.PlaybackPanel(ctl_settings, screen, 'Playback',
+                                     ternary_panel.rect.bottom, height=170, 
+                                     fullsize=True)
+
 panels = {
              'Wall Panels': wall_panels, 'Automation Panel': automation_panel,
-             'Ternary Panel': ternary_panel, 'Wall Map': wall_map_panel
+             'Ternary Panel': ternary_panel, 'Wall Map': wall_map_panel,
+             'Playback Panel': playback_panel
 }
 
 try:

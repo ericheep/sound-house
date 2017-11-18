@@ -4,7 +4,7 @@ class Settings():
     def __init__(self):
         """Initialize settings"""
         self.screen_width = 1200 # change later when building interface window
-        self.screen_height = 500
+        self.screen_height = 600
         self.bg_color = (0, 0, 0)
         self.panel_bg_color = (50, 50, 50)
 

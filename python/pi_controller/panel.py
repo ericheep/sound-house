@@ -8,7 +8,8 @@ from other_functions import find_distance
 class Panel():
     """A parent panel class."""
 
-    def __init__(self, ctl_settings, screen, label, top_y, height=170): # can specify y-axis location but not x-axis
+    def __init__(self, ctl_settings, screen, label, top_y, height=170,
+                 full_length=False): # can specify y-axis location but not x-axis
         """Initialize panel and starting position."""
         self.screen = screen
         self.screen_rect = screen.get_rect()
@@ -18,8 +19,12 @@ class Panel():
         # Set dimensions and color
         self.padding = 10
         self.color = self.ctl_settings.panel_bg_color
-        self.width, self.height = (self.ctl_settings.screen_width / 2) - \
-                                  (self.padding * 2), height
+        if full_length:
+            self.width = self.ctl_settings.screen_width - self.padding * 2
+        else:
+            self.width = (self.ctl_settings.screen_width / 2) - \
+                                  (self.padding * 2)
+        self.height = height
         self.text_color = (255, 0, 0)
         self.font = pygame.font.SysFont(None, 22)
 
@@ -269,3 +274,12 @@ class WallMapPanel(Panel):
                     val = self.p2_distances[index] * self.scale_factor
                     wall.sliders[1].automate(val + self.scale_offset, reverse=True)
                     wall.sliders[2].automate(val, reverse=True)
+
+
+class PlaybackPanel(Panel):
+    """A Panel subclass for the ternary code control."""
+
+    def __init__(self, ctl_settings, screen, label, top_y, height, fullsize):
+        super().__init__(ctl_settings, screen, label, top_y, height,
+                         fullsize)
+
