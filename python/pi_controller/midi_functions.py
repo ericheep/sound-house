@@ -12,11 +12,12 @@ def midi_to_ternary(ctl_settings, index, integer):
     chain_list = ctl_settings.ternary_chain
     if integer < 10:
         chain_list[index] = 0
-    elif integer < 117:
-        chain_list[index] = 1
-    else:
+    elif integer > 116:
         chain_list[index] = 2
-    ctl_settings.ternary_chain = chain_list
+    else:
+        chain_list[index] = 1
+    if ctl_settings.ternary_chain != chain_list:
+        ctl_settings.ternary_chain = chain_list
 
 
 def update_ternary_controller(ctl_settings, ternary_panel):
@@ -40,7 +41,7 @@ def update_ternary_controller(ctl_settings, ternary_panel):
 
 def get_ctl_and_value(device_name):
     # returns control number and value for midi events
-    midi_event = device_name.read(1) # argument=number of events to read
+    midi_event = device_name.read(10) # argument=number of events to read
     ctl = midi_event[0][0][1]
     val = midi_event[0][0][2]
     return ctl, val

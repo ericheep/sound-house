@@ -62,7 +62,7 @@ wall_map_panel = panel.WallMapPanel(wall_panels, ctl_settings, screen, 'Wall Map
                                     height=400) # make responsive? or customizable?
 
 playback_panel = panel.PlaybackPanel(ctl_settings, screen, 'Playback',
-                                     ternary_panel.rect.bottom, height=170, 
+                                     ternary_panel.rect.bottom, height=170,
                                      fullsize=True)
 
 panels = {

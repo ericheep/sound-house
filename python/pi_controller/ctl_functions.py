@@ -38,21 +38,9 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
                 for slider in panel.sliders:
                     slider.k_moving = False
 
-    # MIDI events --factor out!
-    if midi_input:  # factor and double-check this
-        if midi_input.poll():
-            ctl, val = mf.get_ctl_and_value(midi_input)
-
-            if ctl_settings.ternaryWallMode:
-                if ctl < 7:
-                    mf.midi_to_ternary(ctl_settings, ctl, val)
-                    mf.update_ternary_controller(ctl_settings,
-                                                 panel['Ternary Panel'])# how to streamline this so it doesn't lag. update only when?
-                if ctl == 41 and val == 127: # midi 'play' button
-                    button = panel['Ternary Panel'].buttons[0]
-                    button.update()
-                    send_code_automation(button, ctl_settings, screen,
-                                         panels, mouse_y)
+    # MIDI events
+    if midi_input:
+        check_MIDI(ctl_settings, screen, panels, midi_input)
 
 def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
     if event.key == pygame.K_q:
@@ -159,6 +147,23 @@ def check_keyup_events(event, ctl_settings, screen, panels):
             panels['Wall Map'].puppets[ctl_settings.puppet].moving_up = False
         if event.key == pygame.K_s:
             panels['Wall Map'].puppets[ctl_settings.puppet].moving_down = False
+
+def check_MIDI(ctl_settings, screen, panels, midi_input):
+    # event processing for MIDI controls
+    if midi_input.poll():
+        ctl, val = mf.get_ctl_and_value(midi_input)
+
+        if ctl_settings.ternaryWallMode:
+            if ctl < 7:
+                mf.midi_to_ternary(ctl_settings, ctl, val)
+                mf.update_ternary_controller(ctl_settings,
+                                             panels['Ternary Panel'])  # how to streamline this so it doesn't lag. update only when?
+            if ctl == 41 and val == 127:  # midi 'play' button
+                button = panel['Ternary Panel'].buttons[0]
+                button.update()
+                send_code_automation(button, ctl_settings, screen,
+                                     panels, mouse_y)
+
 
 def check_slider(slider, mouse_x, mouse_y):
     knob_clicked = slider.rect.collidepoint(mouse_x, mouse_y)

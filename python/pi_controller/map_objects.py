@@ -172,7 +172,8 @@ class Wall(Object):
 
         # reverse rotation if collision
         self.check_collisions()
-        if self.collisions > -1:
+        self.check_inside_panel()
+        if self.collisions > -1 or self.outside:
             self.perform_rotation()
             self.update()
 
@@ -197,6 +198,18 @@ class Wall(Object):
             if wall != self:
                 self.other_walls.append(wall)
         self.collisions = self.rect.collidelist(self.other_walls)
+
+    def check_inside_panel(self):
+        # check to see that wall is still inside panel
+        self.outside = False
+        if self.rect.left < self.panel.rect.left:
+            self.outside = True
+        elif self.rect.right > self.panel.rect.right:
+            self.outside = True
+        elif self.rect.top < self.panel.rect.top:
+            self.outside = True
+        elif self.rect.bottom > self.panel.rect.bottom:
+            self.outside = True
 
     def draw_wall(self):
         # Draw wall and label
