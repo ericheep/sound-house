@@ -40,6 +40,9 @@ screen = pygame.display.set_mode(
     (ctl_settings.screen_width, ctl_settings.screen_height))
 pygame.display.set_caption("Sound House Pi Controller")
 
+# Make clock
+clock = pygame.time.Clock()
+
 # Make wall panel (1-8)
 panel1 = panel.WallPanel(ctl_settings, screen, 'Wall Controls', 0, 0)
 panel2 = panel.WallPanel(ctl_settings, screen, 'Wall Controls', 0, 1)
@@ -58,8 +61,8 @@ automation_panel = panel.AutomationPanel(ctl_settings, screen, 'Automation', # L
 ternary_panel = panel.TernaryPanel(ctl_settings, screen, 'Sound Code',
                                    automation_panel.rect.bottom, height=120)
 
-wall_map_panel = panel.WallMapPanel(wall_panels, ctl_settings, screen, 'Wall Map', 0,
-                                    height=400) # make responsive? or customizable?
+wall_map_panel = panel.WallMapPanel(wall_panels, ctl_settings, screen,
+                                    'Wall Map', 0, height=400) # make responsive? or customizable?
 
 playback_panel = panel.PlaybackPanel(ctl_settings, screen, 'Playback',
                                      ternary_panel.rect.bottom, height=170,
@@ -81,6 +84,7 @@ except:
 mf.check_midi_devices()
 
 while True:
+    clock.tick(60)
     # get cursor position
     mouse_x, mouse_y = pygame.mouse.get_pos()
     # check events

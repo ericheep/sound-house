@@ -1,11 +1,10 @@
 import sys, pygame, pygame.midi
-from time import sleep
 import network_functions as nf
 import midi_functions as mf
 import other_functions as of
 
 def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
-    # factor all this shit out
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             print('Goodbye')
@@ -37,6 +36,15 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
             for panel in panels['Wall Panels']: # check wall panel click releases
                 for slider in panel.sliders:
                     slider.k_moving = False
+
+        # PB Events
+        elif event.type == ctl_settings.PB_EVENT:
+            if panels['Playback Panel'].buttons[ctl_settings.count - 1].on:
+                panels['Playback Panel'].buttons[ctl_settings.count - 1].update()
+            panels['Playback Panel'].buttons[ctl_settings.count].update()
+            ctl_settings.count += 1
+            if ctl_settings.count == 8:
+                ctl_settings.count = 0
 
     # MIDI events
     if midi_input:
@@ -120,6 +128,17 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
             panels['Wall Map'].puppets[ctl_settings.puppet].moving_up = True
         if event.key == pygame.K_s:
             panels['Wall Map'].puppets[ctl_settings.puppet].moving_down = True
+
+    # start timer
+    if event.key == pygame.K_SPACE:
+        # Turns off timer if on
+        if panels['Playback Panel'].timer:
+            panels['Playback Panel'].timer = False
+            pygame.time.set_timer(ctl_settings.PB_EVENT, 0)
+        # Else turns timer on
+        else:
+            panels['Playback Panel'].timer = True
+            pygame.time.set_timer(ctl_settings.PB_EVENT, ctl_settings.bpm)
 
 def check_keyup_events(event, ctl_settings, screen, panels):
 
@@ -319,7 +338,7 @@ def send_code_automation(button, ctl_settings, screen, panels, mouse_y):
 
         # update screen then turn off button - 'bang'
         update_screen(ctl_settings, screen, panels, mouse_y)
-        sleep(0.5)
+        pygame.time.wait(500)
         button.update()
 
 
@@ -339,6 +358,6 @@ def update_screen(ctl_settings, screen, panels, mouse_y):
     # draw wall map panel
     panels['Wall Map'].draw_panel_and_contents()
     # draw playback panel
-    panels['Playback Panel'].draw_panel()
+    panels['Playback Panel'].draw_panel_and_buttons()
 
     pygame.display.flip()

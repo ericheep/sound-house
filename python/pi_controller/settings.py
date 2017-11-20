@@ -1,3 +1,5 @@
+import pygame
+
 class Settings():
     """A class to store all settings for Sound House pi controller."""
 
@@ -28,6 +30,9 @@ class Settings():
         # Current selected puppet
         self.puppet = 0 # P1 by default
 
+        self.PB_EVENT = pygame.USEREVENT
+        self.bpm = 1000 # ms, need to convert to bpm
+        self.count = 0
 
         # Network status
         self.networkOn = False # when off, in 'dev' mode and sends things locally or not at all

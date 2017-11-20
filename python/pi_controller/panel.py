@@ -158,11 +158,6 @@ class AutomationPanel(Panel):
         self.buttons = [fb_button, tc_button, pb_button, st_button, map_button,
                         bp_button, mic_button, network_button]  # add all buttons here
 
-    def update(self):
-        # update each button
-        for button in self.buttons:
-            button.update()
-
     def draw_panel_and_buttons(self):
         self.draw_panel()
         for button in self.buttons:
@@ -185,11 +180,6 @@ class TernaryPanel(Panel):
         self.controller = TernaryControl(ctl_settings, screen,
                                          send_code_button.rect.right + 30,
                                          self.rect.top + 30)
-
-    def update(self):
-        # update each button
-        for button in self.buttons:
-            button.update()
 
     def draw_panel_and_controller(self):
         self.draw_panel()
@@ -279,7 +269,52 @@ class WallMapPanel(Panel):
 class PlaybackPanel(Panel):
     """A Panel subclass for the ternary code control."""
 
-    def __init__(self, ctl_settings, screen, label, top_y, height, fullsize):
+    def __init__(self, ctl_settings, screen, label, top_y, height,
+                 fullsize):
         super().__init__(ctl_settings, screen, label, top_y, height,
                          fullsize)
 
+        self.timer = False
+
+        self.padding = 50  # custom padding here
+
+        self.button_x_spacing = 30
+
+        # Mode buttons first
+        pb1 = Button(ctl_settings, screen, 40, self.rect.top + self.padding,
+                     '1')  # Feedback
+
+        pb2 = Button(ctl_settings, screen,
+                     pb1.rect.right + self.button_x_spacing,
+                     self.rect.top + self.padding, '2')
+
+        pb3 = Button(ctl_settings, screen,
+                     pb2.rect.right + self.button_x_spacing,
+                     self.rect.top + self.padding, '3')
+
+        pb4 = Button(ctl_settings, screen,
+                     pb3.rect.right + self.button_x_spacing,
+                     self.rect.top + self.padding, '4')
+
+        pb5 = Button(ctl_settings, screen,
+                     pb4.rect.right + self.button_x_spacing,
+                     self.rect.top + self.padding, '5')
+
+        pb6 = Button(ctl_settings, screen,
+                     pb5.rect.right + self.button_x_spacing,
+                     self.rect.top + self.padding, '6')
+
+        pb7 = Button(ctl_settings, screen,
+                     pb6.rect.right + self.button_x_spacing,
+                     self.rect.top + self.padding, '7')
+
+        pb8 = Button(ctl_settings, screen,
+                     pb7.rect.right + self.button_x_spacing,
+                     self.rect.top + self.padding, '8')
+
+        self.buttons = [pb1, pb2, pb3, pb4, pb5, pb6, pb7, pb8]  # add all buttons here
+
+    def draw_panel_and_buttons(self):
+        self.draw_panel()
+        for button in self.buttons:
+            button.draw_button()
