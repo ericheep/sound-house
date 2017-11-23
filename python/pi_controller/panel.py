@@ -101,14 +101,14 @@ class WallPanel(Panel): # 0-7
         self.wall_label_image_rect.centerx = self.rect.centerx # center in screen
 
     def update(self, mouse_y): # updates every screen for mouse values
-        self.draw_panel_and_sliders()
         for slider in self.sliders:
             slider.update(mouse_y)
-            slider.draw_slider()
 
     def draw_panel_and_sliders(self):
         # Draw panel and label and wall label
         self.draw_panel()
+        for slider in self.sliders:
+            slider.draw_slider()
         self.screen.blit(self.wall_label_image, self.wall_label_image_rect)
 
 
@@ -280,41 +280,70 @@ class PlaybackPanel(Panel):
 
         self.button_x_spacing = 30
 
-        # Mode buttons first
-        pb1 = Button(ctl_settings, screen, 40, self.rect.top + self.padding,
-                     '1')  # Feedback
+        # add slider to control playback speed: ctl_settings.bpm
+        self.slider_bottom = self.rect.bottom - 10
 
+        self.BPM = Slider(self.ctl_settings, self.screen, 0, 200,
+                          self.rect.left + self.button_x_spacing,
+                          self.slider_bottom, 'BPM', 'linear')
+        self.BPM.automate(30) # set initial value
+
+        # Display buttons in sequencer - to show sequence
+        row1_y = self.rect.top + self.padding
+        pb1 = Button(ctl_settings, screen,
+                     self.BPM.rect.right + self.button_x_spacing, row1_y, '1')
         pb2 = Button(ctl_settings, screen,
-                     pb1.rect.right + self.button_x_spacing,
-                     self.rect.top + self.padding, '2')
-
+                     pb1.rect.right + self.button_x_spacing, row1_y, '2')
         pb3 = Button(ctl_settings, screen,
-                     pb2.rect.right + self.button_x_spacing,
-                     self.rect.top + self.padding, '3')
-
+                     pb2.rect.right + self.button_x_spacing, row1_y, '3')
         pb4 = Button(ctl_settings, screen,
-                     pb3.rect.right + self.button_x_spacing,
-                     self.rect.top + self.padding, '4')
-
+                     pb3.rect.right + self.button_x_spacing, row1_y, '4')
         pb5 = Button(ctl_settings, screen,
-                     pb4.rect.right + self.button_x_spacing,
-                     self.rect.top + self.padding, '5')
-
+                     pb4.rect.right + self.button_x_spacing, row1_y, '5')
         pb6 = Button(ctl_settings, screen,
-                     pb5.rect.right + self.button_x_spacing,
-                     self.rect.top + self.padding, '6')
-
+                     pb5.rect.right + self.button_x_spacing, row1_y, '6')
         pb7 = Button(ctl_settings, screen,
-                     pb6.rect.right + self.button_x_spacing,
-                     self.rect.top + self.padding, '7')
-
+                     pb6.rect.right + self.button_x_spacing, row1_y, '7')
         pb8 = Button(ctl_settings, screen,
-                     pb7.rect.right + self.button_x_spacing,
-                     self.rect.top + self.padding, '8')
+                     pb7.rect.right + self.button_x_spacing, row1_y, '8')
 
         self.buttons = [pb1, pb2, pb3, pb4, pb5, pb6, pb7, pb8]  # add all buttons here
+
+        # Control buttons in sequencer - to show sequence
+        row2_y = pb1.rect.bottom + 13
+        brick1 = Button(ctl_settings, screen,
+                        self.BPM.rect.right + self.button_x_spacing, row2_y, 'brick')
+        brick2 = Button(ctl_settings, screen,
+                        brick1.rect.right + self.button_x_spacing, row2_y, 'brick')
+        brick3 = Button(ctl_settings, screen,
+                        brick2.rect.right + self.button_x_spacing, row2_y, 'brick')
+        brick4 = Button(ctl_settings, screen,
+                        brick3.rect.right + self.button_x_spacing, row2_y, 'brick')
+        brick5 = Button(ctl_settings, screen,
+                        brick4.rect.right + self.button_x_spacing, row2_y, 'brick')
+        brick6 = Button(ctl_settings, screen,
+                        brick5.rect.right + self.button_x_spacing, row2_y, 'brick')
+        brick7 = Button(ctl_settings, screen,
+                        brick6.rect.right + self.button_x_spacing, row2_y, 'brick')
+        brick8 = Button(ctl_settings, screen,
+                        brick7.rect.right + self.button_x_spacing, row2_y, 'brick')
+        self.brick_buttons = [brick1, brick2, brick3, brick4, brick5, brick6,
+                              brick7, brick8]
+
+
+    def update(self, mouse_y): # updates every screen for mouse values
+        self.BPM.update(mouse_y)
+        # convert BPM to ms
+        try:
+            self.ctl_settings.bpm_ms = int(60000 / self.BPM.ctl_value)
+        except ZeroDivisionError:
+            self.ctl_settings.bpm_ms = 0
+
 
     def draw_panel_and_buttons(self):
         self.draw_panel()
         for button in self.buttons:
             button.draw_button()
+        for button in self.brick_buttons:
+            button.draw_button()
+        self.BPM.draw_slider()

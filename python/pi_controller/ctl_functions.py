@@ -32,16 +32,31 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
                 for button in column.column:
                     check_button(button, screen, ctl_settings, panels, mouse_x,
                                  mouse_y, column, check_column=True)
+            for button in panels['Playback Panel'].brick_buttons: # check sequencer buttons
+                check_button(button, screen, ctl_settings, panels, mouse_x,
+                             mouse_y)
+            check_slider(panels['Playback Panel'].BPM, mouse_x, mouse_y) # check BPM slider
+
         elif event.type == pygame.MOUSEBUTTONUP:
             for panel in panels['Wall Panels']: # check wall panel click releases
                 for slider in panel.sliders:
                     slider.k_moving = False
+            if panels['Playback Panel'].BPM.k_moving:
+                if ctl_settings.playbackMode:
+                    # Updates timer
+                    if panels['Playback Panel'].timer:
+                        pygame.time.set_timer(ctl_settings.PB_EVENT,
+                                              ctl_settings.bpm_ms)
+                panels['Playback Panel'].BPM.k_moving = False
 
-        # PB Events
+        # PB Events --factor out
         elif event.type == ctl_settings.PB_EVENT:
             if panels['Playback Panel'].buttons[ctl_settings.count - 1].on:
-                panels['Playback Panel'].buttons[ctl_settings.count - 1].update()
-            panels['Playback Panel'].buttons[ctl_settings.count].update()
+                panels['Playback Panel'].buttons[ctl_settings.count - 1].update() # turn off last button
+            panels['Playback Panel'].buttons[ctl_settings.count].update() # turn on new button
+            if panels['Playback Panel'].brick_buttons[ctl_settings.count].on: # trigger brick sound
+                nf.send_brickplay(ctl_settings)
+                #print(ctl_settings.count) # replace with function to randomly select brick sample and send osc message
             ctl_settings.count += 1
             if ctl_settings.count == 8:
                 ctl_settings.count = 0
@@ -130,15 +145,17 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
             panels['Wall Map'].puppets[ctl_settings.puppet].moving_down = True
 
     # start timer
-    if event.key == pygame.K_SPACE:
-        # Turns off timer if on
-        if panels['Playback Panel'].timer:
-            panels['Playback Panel'].timer = False
-            pygame.time.set_timer(ctl_settings.PB_EVENT, 0)
-        # Else turns timer on
-        else:
-            panels['Playback Panel'].timer = True
-            pygame.time.set_timer(ctl_settings.PB_EVENT, ctl_settings.bpm)
+    if ctl_settings.playbackMode:
+        if event.key == pygame.K_SPACE:
+            # Turns off timer if on
+            if panels['Playback Panel'].timer:
+                panels['Playback Panel'].timer = False
+                pygame.time.set_timer(ctl_settings.PB_EVENT, 0)
+            # Else turns timer on
+            else:
+                panels['Playback Panel'].timer = True
+                pygame.time.set_timer(ctl_settings.PB_EVENT,
+                                      ctl_settings.bpm_ms)
 
 def check_keyup_events(event, ctl_settings, screen, panels):
 
@@ -237,7 +254,7 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
                 ctl_settings.mappin = False
 
         # Next check Network button
-        if button.title == 'NETWORK':
+        elif button.title == 'NETWORK':
             button.update()
             if button.on == True:
                 ctl_settings.networkOn = True
@@ -245,7 +262,7 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
                 ctl_settings.networkOn = False
 
         # Next check Feedback Mode automation buttons
-        if button.title == 'Bandpass': # can be set with FB MODE off for presetting
+        elif button.title == 'Bandpass': # can be set with FB MODE off for presetting
             button.update()
             if button.on == True: # is this best way to do this?
                 bandpass_automation(panels['Wall Panels']) # send wall panels only
@@ -262,7 +279,7 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
                 mic_on_off_automation(panels['Wall Panels'], 0) # turn off
 
         # Next check Ternary Controller and button
-        if check_column and ctl_settings.ternaryWallMode: # Turn other buttons off in ternary control array
+        elif check_column and ctl_settings.ternaryWallMode: # Turn other buttons off in ternary control array
             button.update()
             none_on = True
             for other_button in column.column:
@@ -276,6 +293,9 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
         elif button.title == 'Send Code' and ctl_settings.ternaryWallMode:
             button.update()
             send_code_automation(button, ctl_settings, screen, panels, mouse_y)
+
+        elif button.title == 'brick' and ctl_settings.playbackMode:
+            button.update()
 
 def bandpass_automation(wall_panels):
     print("bandpass automation") # not sure about the scaling here
@@ -344,13 +364,18 @@ def send_code_automation(button, ctl_settings, screen, panels, mouse_y):
 
 def update_screen(ctl_settings, screen, panels, mouse_y):
 
+
+    # Update Wall Panel
+    panels['Wall Panels'][ctl_settings.wall_panel].update(mouse_y)
     # Update Wall Map
     panels['Wall Map'].update()
+    # Update Playback Panel
+    panels['Playback Panel'].update(mouse_y)
 
     # draw screen
     screen.fill(ctl_settings.bg_color)
     # draw wall panel
-    panels['Wall Panels'][ctl_settings.wall_panel].update(mouse_y)
+    panels['Wall Panels'][ctl_settings.wall_panel].draw_panel_and_sliders()
     # draw automation panel
     panels['Automation Panel'].draw_panel_and_buttons()
     # draw sound code panel

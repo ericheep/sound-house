@@ -6,7 +6,7 @@ class Slider():
     A class to handle graphical sliders for sound control in Sound House
     """
     def __init__(self, ctl_settings, screen, min_val, max_val, x, y, param,
-                 wall_index, scale='linear'):
+                 wall_index=None, scale='linear'):
         """Initialize slider and starting position."""
         self.screen = screen
         self.screen_rect = screen.get_rect()
@@ -15,7 +15,10 @@ class Slider():
         self.max_val = max_val
         self.x = x # left
         self.y = y # bottom
-        self.wall_index = wall_index
+        if type(wall_index) == int:
+            self.wall_index = wall_index
+        else:
+            self.wall_index = ''
         #exponential or linear scale
         if scale == 'linear':
             self.scale = 'linear'
@@ -47,7 +50,10 @@ class Slider():
         self.ctl_value = 0
 
         # Specify parameter for OSC message
-        self.param = param + str(self.wall_index)
+        if type(wall_index) == int:
+            self.param = param + str(self.wall_index)
+        else:
+            self.param = param
 
         # Make visual label, use 'param'
         self.prep_title()
@@ -68,7 +74,7 @@ class Slider():
         self.ctl_value = scale(self.knob_pos, x0, x1, y0, y1, self.scale)
         self.prep_msg() # replace with call to function for OSC sending
         param_message = self.param + ' ' + str(self.ctl_value)
-        print(param_message)
+        print(param_message) #add network function here
 
     def update(self, mouse_y):
         """Update knob position based on mouse click and movement."""
@@ -114,4 +120,3 @@ class Slider():
         self.screen.fill(self.k_color, self.k_rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)
         self.screen.blit(self.title_image, self.title_image_rect)
-

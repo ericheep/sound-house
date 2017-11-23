@@ -49,7 +49,7 @@ class Button():
                                             self.ctl_settings.panel_bg_color)
         self.title_image_rect = self.title_image.get_rect()
         self.title_image_rect.centerx = self.rect.centerx
-        self.title_image_rect.bottom = self.rect.top - 10
+        self.title_image_rect.bottom = self.rect.top - 1
 
     def draw_button(self):
         # Draw button and title

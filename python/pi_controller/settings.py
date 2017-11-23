@@ -12,7 +12,7 @@ class Settings():
 
         # Ports
         self.portFeedbackControl = 7400
-        self.portOscControl = 10001
+        self.portOscControl = 10001 # also for playback control
         self.portPingSensors = 5000
         self.portGetSensorData = 12345
 
@@ -23,7 +23,7 @@ class Settings():
                         'piseven.local', 'pieight.local']
 
         # Client lists
-        self.wallOSC_clients = []
+        self.wallOsc_clients = []
 
         # Current wall panel to display
         self.wall_panel = 0 # Wall 1 by default
@@ -31,7 +31,7 @@ class Settings():
         self.puppet = 0 # P1 by default
 
         self.PB_EVENT = pygame.USEREVENT
-        self.bpm = 1000 # ms, need to convert to bpm
+        self.bpm_ms = 1000 # BPM converted to ms interval
         self.count = 0
 
         # Network status
