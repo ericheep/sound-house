@@ -157,6 +157,10 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
                 pygame.time.set_timer(ctl_settings.PB_EVENT,
                                       ctl_settings.bpm_ms)
 
+    # 'v' to send trigger to video -- for testing only
+    if event.key == pygame.K_v:
+        nf.sendVideoTrigger(ctl_settings)
+
 def check_keyup_events(event, ctl_settings, screen, panels):
 
     if ctl_settings.mapping:

@@ -15,6 +15,7 @@ class Settings():
         self.portOscControl = 10001 # also for playback control
         self.portPingSensors = 5000
         self.portGetSensorData = 12345
+        self.portVideo = 10002
 
         #IPs
 
@@ -22,8 +23,11 @@ class Settings():
                         'pifour.local', 'pifive.local', 'pisix.local',
                         'piseven.local', 'pieight.local']
 
+        self.videoIP = 'John-Eagle-MBP.local' # enter video hostname here
+
         # Client lists
         self.wallOsc_clients = []
+        self.video_client = 0 # initialize variable
 
         # Current wall panel to display
         self.wall_panel = 0 # Wall 1 by default

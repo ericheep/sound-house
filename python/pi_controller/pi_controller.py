@@ -32,7 +32,9 @@ import panel
 
 ctl_settings = Settings()
 
+# initialize port connections
 nf.initialize_OscControl_ports(ctl_settings)
+nf.initialize_video_port(ctl_settings)
 
 pygame.init()
 pygame.midi.init()

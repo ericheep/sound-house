@@ -21,6 +21,17 @@ def initialize_OscControl_ports(ctl_settings): # need to test this
         client_list.append(client)
     ctl_settings.wallOsc_clients = client_list
 
+def initialize_video_port(ctl_settings):
+    IP = ctl_settings.videoIP
+    port = ctl_settings.portVideo
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ip", default=IP, help="The ip of the OSC"
+                                                     "server")
+    parser.add_argument("--port", type=int, default=port,
+                        help="The port the OSC server is listening on")
+    args = parser.parse_args()
+    ctl_settings.video_client = udp_client.SimpleUDPClient(args.ip, args.port)
+
 def send_OscControl_data(ctl_settings, switch, freq_list=None): # need to test this
     # add amplitude scaling?
     freq_message = "/sineFreq"
@@ -60,3 +71,11 @@ def send_brickplay(ctl_settings):
         ctl_settings.wallOscClients[wall_index].send_message(msg, sample) # need to test this
     else:
         print(wall_index, msg, sample)
+
+def sendVideoTrigger(ctl_settings): # placeholder function for testing video OSC messages
+    msg = '/video' # placeholders
+    sample = 1
+    if ctl_settings.networkOn:
+        ctl_settings.video_client.send_message(msg, sample)
+    else:
+        print(msg, sample)
