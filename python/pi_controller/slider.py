@@ -1,5 +1,6 @@
 import pygame
 from scale_function import scale
+from network_functions import send_audioControl_data
 
 class Slider():
     """
@@ -72,9 +73,10 @@ class Slider():
         x0, x1 = 0, self.height
         y0, y1 = self.min_val, self.max_val
         self.ctl_value = scale(self.knob_pos, x0, x1, y0, y1, self.scale)
-        self.prep_msg() # replace with call to function for OSC sending
-        param_message = self.param + ' ' + str(self.ctl_value)
-        print(param_message) #add network function here
+        self.prep_msg()
+        msg = self.param
+        val = self.ctl_value
+        send_audioControl_data(self.ctl_settings, msg, val)
 
     def update(self, mouse_y):
         """Update knob position based on mouse click and movement."""

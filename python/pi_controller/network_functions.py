@@ -4,6 +4,17 @@ import other_functions as of
 from time import sleep
 from random import randrange
 
+def initialize_audioControl_port(ctl_settings): # sends to sender.ck
+    IP = ctl_settings.localIP
+    port = ctl_settings.portFeedbackControl # 7400
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ip", default=IP, help="The ip of the OSC"
+                                                 "server")
+    parser.add_argument("--port", type=int, default=port,
+                        help="The port the OSC server is listening on")
+    args = parser.parse_args()
+    ctl_settings.senderCK_client = udp_client.SimpleUDPClient(args.ip, args.port)
+
 def initialize_OscControl_ports(ctl_settings): # need to test this
     wallIPs = ctl_settings.wallIPs
     port = ctl_settings.portOscControl
@@ -31,6 +42,13 @@ def initialize_video_port(ctl_settings):
                         help="The port the OSC server is listening on")
     args = parser.parse_args()
     ctl_settings.video_client = udp_client.SimpleUDPClient(args.ip, args.port)
+
+def send_audioControl_data(ctl_settings, msg, val):
+    # sends to sender.ck
+    if ctl_settings.networkOn:
+        ctl_settings.senderCK_client.send_message(msg, val)
+    else:
+        print(msg, val)
 
 def send_OscControl_data(ctl_settings, switch, freq_list=None): # need to test this
     # add amplitude scaling?

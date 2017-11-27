@@ -11,14 +11,14 @@ class Settings():
         self.panel_bg_color = (50, 50, 50)
 
         # Ports
-        self.portFeedbackControl = 7400
-        self.portOscControl = 10001 # also for playback control
-        self.portPingSensors = 5000
-        self.portGetSensorData = 12345
-        self.portVideo = 10002
+        self.portFeedbackControl = 7400 # local to sender.ck
+        self.portOscControl = 10001 # also for playback control, send to pi's directly
+        self.portPingSensors = 5000  # ping pi's
+        self.portGetSensorData = 12345 # receive from pi's
+        self.portVideo = 10002 # to video
 
         #IPs
-
+        self.localIP = '127.0.0.1' # local IP
         self.wallIPs = ['pione.local', 'pitwo.local', 'pithree.local',
                         'pifour.local', 'pifive.local', 'pisix.local',
                         'piseven.local', 'pieight.local']
@@ -26,7 +26,8 @@ class Settings():
         self.videoIP = 'John-Eagle-MBP.local' # enter video hostname here
 
         # Client lists
-        self.wallOsc_clients = []
+        self.senderCK_client = 0 # initialize variable
+        self.wallOsc_clients = [] # initialize list
         self.video_client = 0 # initialize variable
 
         # Current wall panel to display
