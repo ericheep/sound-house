@@ -154,9 +154,13 @@ class AutomationPanel(Panel):
                                 self.padding, self.rect.top + self.padding,
                                 'NETWORK')
 
+        video_button = Button(ctl_settings, screen,  # where to put this??
+                              mic_button.rect.right + self.button_x_spacing,
+                              self.rect.top + self.padding, 'Video')
+
 
         self.buttons = [fb_button, tc_button, pb_button, st_button, map_button,
-                        bp_button, mic_button, network_button]  # add all buttons here
+                        bp_button, mic_button, network_button, video_button]  # add all buttons here
 
     def draw_panel_and_buttons(self):
         self.draw_panel()

@@ -1,8 +1,43 @@
 import argparse
-from pythonosc import udp_client, osc_message_builder
+from pythonosc import udp_client, osc_message_builder, dispatcher, osc_server
+import threading
 import other_functions as of
 from time import sleep
 from random import randrange
+
+import pygame
+
+import math
+
+ # need to test this with walls running
+
+def initialize_sensorReceiver_port(ctl_settings):
+    ip = ctl_settings.localIP
+    port = ctl_settings.portGetSensorData
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ip", default=ip, help="The ip to listen on")
+    parser.add_argument("--port", type=int, default=port,
+                        help="The port to listen on")
+    args = parser.parse_args()
+    
+    #receives two messages and a value (/w pione 216.3)
+    address = "/w"
+
+    # the thread that listens for the OSC messages
+    dispatcherX = dispatcher.Dispatcher()
+    dispatcherX.map(address, ctl_settings.update_wall_amps)#ctl_settings.update_wall_amps)
+
+    ctl_settings.server = osc_server.ThreadingOSCUDPServer((ip, port),
+                                                         dispatcherX)
+    ctl_settings.server_thread = threading.Thread(
+        target=ctl_settings.server.serve_forever)
+    ctl_settings.server_thread.start()
+
+    print("Serving on {}".format(ctl_settings.server.server_address))
+
+def stopServer(ctl_settings):
+    if ctl_settings.server:
+        ctl_settings.server.shutdown()
 
 def initialize_audioControl_port(ctl_settings): # sends to sender.ck
     IP = ctl_settings.localIP
@@ -31,6 +66,22 @@ def initialize_OscControl_ports(ctl_settings): # need to test this
         client = udp_client.SimpleUDPClient(args.ip, args.port)
         client_list.append(client)
     ctl_settings.wallOsc_clients = client_list
+
+def initialize_sensorPing_ports(ctl_settings):
+    wallIPs = ctl_settings.wallIPs
+    port = ctl_settings.portPingSensors
+    client_list = []
+    for IP in wallIPs:
+        wallIP = IP
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--ip", default=wallIP, help="The ip of the OSC"
+                                                         "server")
+        parser.add_argument("--port", type=int, default=port,
+                            help="The port the OSC server is listening on")
+        args = parser.parse_args()
+        client = udp_client.SimpleUDPClient(args.ip, args.port)
+        client_list.append(client)
+    ctl_settings.wallSensor_clients = client_list
 
 def initialize_video_port(ctl_settings):
     IP = ctl_settings.videoIP
@@ -62,12 +113,11 @@ def send_OscControl_data(ctl_settings, switch, freq_list=None): # need to test t
     for index, client in enumerate(ctl_settings.wallOsc_clients):
         if switch == 'on':
             freq = freq_list[index]
+            amp = ctl_settings.wall_amps[index]
             client.send_message(freq_message, freq)
-            client.send_message(amp_message, 0.2)
+            client.send_message(amp_message, amp)
         else:
             client.send_message(amp_message, 0)
-
-        #client.send_message(amp_message, amp)
 
 def send_ternary_chain(ctl_settings, ternary_chain):
     """
@@ -81,6 +131,14 @@ def send_OscControl_off(ctl_settings):
     freqs = [0, 0, 0, 0, 0, 0, 0, 0]        # debug this!
     send_OscControl_data(ctl_settings, 'off')
 
+def ping_sensors(ctl_settings):
+    msg = "/w"
+    if ctl_settings.networkOn:
+        for index, client in enumerate(ctl_settings.wallSensor_clients):
+            client.send_message(msg, '') # is a val needed here?
+    else:
+        print(msg)
+
 def send_brickplay(ctl_settings):
     wall_index = ctl_settings.count
     sample = str(randrange(1, 17))
@@ -90,10 +148,9 @@ def send_brickplay(ctl_settings):
     else:
         print(wall_index, msg, sample)
 
-def sendVideoTrigger(ctl_settings): # placeholder function for testing video OSC messages
-    msg = '/video' # placeholders
-    sample = 1
+def sendVideoTrigger(ctl_settings, channel, val): # placeholder function for testing video OSC messages
+    msg = '/video/' + str(channel) # placeholders
     if ctl_settings.networkOn:
-        ctl_settings.video_client.send_message(msg, sample)
+        ctl_settings.video_client.send_message(msg, val)
     else:
-        print(msg, sample)
+        print(msg, val)

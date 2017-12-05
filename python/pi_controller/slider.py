@@ -1,6 +1,6 @@
 import pygame
 from scale_function import scale
-from network_functions import send_audioControl_data
+from network_functions import send_audioControl_data, sendVideoTrigger # update vidoe function later
 
 class Slider():
     """
@@ -77,6 +77,7 @@ class Slider():
         msg = self.param
         val = self.ctl_value
         send_audioControl_data(self.ctl_settings, msg, val)
+        sendVideoTrigger(self.ctl_settings, self.wall_index, val)
 
     def update(self, mouse_y):
         """Update knob position based on mouse click and movement."""

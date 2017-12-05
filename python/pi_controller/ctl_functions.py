@@ -7,10 +7,7 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            print('Goodbye')
-            if midi_input:
-                midi_input.close()
-            sys.exit()
+            shutdown(ctl_settings, midi_input)
         elif event.type == pygame.KEYDOWN:
             check_keydown_events(event, ctl_settings, screen, panels,
                                  midi_input)
@@ -61,16 +58,30 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
             if ctl_settings.count == 8:
                 ctl_settings.count = 0
 
+        # PING Events
+        elif event.type == ctl_settings.PING_EVENT:
+            #nf.ping_sensors(ctl_settings)
+            pass
+
+        elif event.type == pygame.USEREVENT+2:
+            print('boom?')
+            print(event.message)
+
     # MIDI events
     if midi_input:
         check_MIDI(ctl_settings, screen, panels, midi_input)
 
+def shutdown(ctl_settings, midi_input):
+    # shutdown procedures
+    print('Goodbye')
+    nf.stopServer(ctl_settings)
+    if midi_input:
+        midi_input.close()
+    sys.exit()
+
 def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
     if event.key == pygame.K_q:
-        print('Goodbye')
-        if midi_input:
-            midi_input.close()
-        sys.exit()
+        shutdown(ctl_settings, midi_input)
     # select wall panel with num entry
     elif event.key == pygame.K_1:
         ctl_settings.wall_panel = 0
@@ -97,6 +108,7 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
         ctl_settings.wall_panel = 7
         panels['Wall Map'].switch_wall()
 
+    # turn off sine tones
     elif event.key == pygame.K_o and ctl_settings.networkOn:
         nf.send_OscControl_off(ctl_settings)  # add button for this
 
@@ -159,7 +171,11 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
 
     # 'v' to send trigger to video -- for testing only
     if event.key == pygame.K_v:
-        nf.sendVideoTrigger(ctl_settings)
+        nf.sendVideoTrigger(ctl_settings, 1, 1)
+    elif event.key == pygame.K_b:
+        nf.sendVideoTrigger(ctl_settings, 2, 0)
+    elif event.key == pygame.K_n:
+        nf.sendVideoTrigger(ctl_settings, 3, str(ctl_settings.ternary_chain))
 
 def check_keyup_events(event, ctl_settings, screen, panels):
 
@@ -220,8 +236,13 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
             button.update()
             if button.on == True:
                 ctl_settings.ternaryWallMode = True
+                # start timer for pinging sensors
+                pygame.time.set_timer(ctl_settings.PING_EVENT,
+                                      ctl_settings.ping_interval)
             elif button.on == False:
                 ctl_settings.ternaryWallMode = False
+                # turn timer off
+                pygame.time.set_timer(ctl_settings.PING_EVENT, 0)
 
         elif button.title == 'FB MODE':
             button.update()
@@ -300,6 +321,13 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
 
         elif button.title == 'brick' and ctl_settings.playbackMode:
             button.update()
+
+        elif button.title == 'Video':
+            button.update()
+            if button.on:
+                ctl_settings.sendVideo = True
+            else:
+                ctl_settings.sendVideo = False
 
 def bandpass_automation(wall_panels):
     print("bandpass automation") # not sure about the scaling here

@@ -35,6 +35,8 @@ ctl_settings = Settings()
 # initialize port connections
 nf.initialize_audioControl_port(ctl_settings)
 nf.initialize_OscControl_ports(ctl_settings)
+nf.initialize_sensorPing_ports(ctl_settings)
+nf.initialize_sensorReceiver_port(ctl_settings)
 nf.initialize_video_port(ctl_settings)
 
 pygame.init()
