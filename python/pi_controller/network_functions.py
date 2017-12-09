@@ -25,7 +25,7 @@ def initialize_sensorReceiver_port(ctl_settings):
 
     # the thread that listens for the OSC messages
     dispatcherX = dispatcher.Dispatcher()
-    dispatcherX.map(address, ctl_settings.update_wall_amps)#ctl_settings.update_wall_amps)
+    dispatcherX.map(address, ctl_settings.update_wall_sensors)
 
     ctl_settings.server = osc_server.ThreadingOSCUDPServer((ip, port),
                                                          dispatcherX)
@@ -101,16 +101,14 @@ def send_audioControl_data(ctl_settings, msg, val):
     else:
         print(msg, val)
 
-def send_OscControl_data(ctl_settings, switch, freq_list=None): # need to test this
+def send_OscControl_data(ctl_settings, freq_list=None): # need to test this
     # add amplitude scaling?
     freq_message = "/sineFreq"
     amp_message = "/sineGain"
-    print(switch)
-    #if switch == 'on':
-    #    amp = 0.2 # add coefficient or function here to generate EQ'd amp
-    #else:
-    #    amp = 0
+
     for index, client in enumerate(ctl_settings.wallOsc_clients):
+        amp = ctl_settings.wall_amps[index]
+        # add coeffecient or function here to EQ amp val
         if switch == 'on':
             freq = freq_list[index]
             amp = ctl_settings.wall_amps[index]
@@ -124,7 +122,7 @@ def send_ternary_chain(ctl_settings, ternary_chain):
     Sends freqs out to walls from ternary chain
     """
     freqs = of.convert_chain_to_freqs(ternary_chain, ctl_settings)
-    send_OscControl_data(ctl_settings, 'on', freqs)
+    send_OscControl_data(ctl_settings, freqs)
     print(freqs)
 
 def send_OscControl_off(ctl_settings):

@@ -76,8 +76,8 @@ class Slider():
         self.prep_msg()
         msg = self.param
         val = self.ctl_value
-        send_audioControl_data(self.ctl_settings, msg, val)
-        sendVideoTrigger(self.ctl_settings, self.wall_index, val)
+        send_audioControl_data(self.ctl_settings, msg, val) #
+        sendVideoTrigger(self.ctl_settings, self.wall_index, val) #get rid of this
 
     def update(self, mouse_y):
         """Update knob position based on mouse click and movement."""

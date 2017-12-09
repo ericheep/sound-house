@@ -19,7 +19,7 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
             for panel in panels['Wall Panels']: # check wall panel clicks
                 for slider in panel.sliders:
                     check_slider(slider, mouse_x, mouse_y)
-            for button in panels['Automation Panel'].buttons: # check automation panel clicks
+            for button in panels['Automation Panel'].buttons.values(): # check automation panel clicks
                 check_button(button, screen, ctl_settings, panels, mouse_x,
                              mouse_y)
             for button in panels['Ternary Panel'].buttons: # check ternary code panel clicks
@@ -60,12 +60,7 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
 
         # PING Events
         elif event.type == ctl_settings.PING_EVENT:
-            #nf.ping_sensors(ctl_settings)
-            pass
-
-        elif event.type == pygame.USEREVENT+2:
-            print('boom?')
-            print(event.message)
+            nf.ping_sensors(ctl_settings)
 
     # MIDI events
     if midi_input:
@@ -126,6 +121,8 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
         # Left shift slows down wall movement
         if event.key == pygame.K_LSHIFT:
             ctl_settings.wall_speed_factor = 0.25
+            print(ctl_settings.wall_sensors) # delete this
+            print(ctl_settings.wall_amps)
 
         # 'r' rotates wall
         if event.key == pygame.K_r:
@@ -168,14 +165,6 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
                 panels['Playback Panel'].timer = True
                 pygame.time.set_timer(ctl_settings.PB_EVENT,
                                       ctl_settings.bpm_ms)
-
-    # 'v' to send trigger to video -- for testing only
-    if event.key == pygame.K_v:
-        nf.sendVideoTrigger(ctl_settings, 1, 1)
-    elif event.key == pygame.K_b:
-        nf.sendVideoTrigger(ctl_settings, 2, 0)
-    elif event.key == pygame.K_n:
-        nf.sendVideoTrigger(ctl_settings, 3, str(ctl_settings.ternary_chain))
 
 def check_keyup_events(event, ctl_settings, screen, panels):
 
@@ -236,26 +225,34 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
             button.update()
             if button.on == True:
                 ctl_settings.ternaryWallMode = True
-                # start timer for pinging sensors
-                pygame.time.set_timer(ctl_settings.PING_EVENT,
-                                      ctl_settings.ping_interval)
+                if ctl_settings.networkOn:
+                    if panels['Automation Panel'].buttons['SENSORS'].on == False:
+                        panels['Automation Panel'].buttons['SENSORS'].update()
+                        for panel in panels['Wall Panels']:
+                            panel.sensor_reading.update()
+                        # start timer for pinging sensors
+                        pygame.time.set_timer(ctl_settings.PING_EVENT,
+                                              ctl_settings.ping_interval)
+                else:
+                    ctl_settings.wall_amps = [ctl_settings.amp_high for wall
+                                              in range(8)]
+
             elif button.on == False:
                 ctl_settings.ternaryWallMode = False
-                # turn timer off
-                pygame.time.set_timer(ctl_settings.PING_EVENT, 0)
+                ctl_settings.wall_amps = [0 for wall in range(8)]
 
         elif button.title == 'FB MODE':
             button.update()
             if button.on == True:
                 ctl_settings.feedbackMode = True
                 feedback_default_automation(ctl_settings, panels)
-                if panels['Automation Panel'].buttons[5].on == False:
-                    panels['Automation Panel'].buttons[5].update() # Turn 'Mic' on
+                if panels['Automation Panel'].buttons['MIC'].on == False:
+                    panels['Automation Panel'].buttons['MIC'].update() # Turn 'Mic' on
             elif button.on == False:
                 ctl_settings.feedbackMode = False
                 all_off_automation(ctl_settings, panels)
-                if panels['Automation Panel'].buttons[5].on == True:
-                    panels['Automation Panel'].buttons[5].update() # Turn 'Mic' off
+                if panels['Automation Panel'].buttons['MIC'].on:
+                    panels['Automation Panel'].buttons['MIC'].update() # Turn 'Mic' off
 
         elif button.title == 'PB MODE':
             button.update()
@@ -276,7 +273,24 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
             if button.on == True:
                 ctl_settings.mapping = True
             elif button.on == False:
-                ctl_settings.mappin = False
+                ctl_settings.mapping = False
+
+        elif button.title == 'Sensors':
+            if ctl_settings.networkOn == True:
+                button.update()
+                for panel in panels['Wall Panels']:
+                    panel.sensor_reading.update()
+                if button.on == True:
+                    ctl_settings.sensors = True
+                    # start timer for pinging sensors
+                    pygame.time.set_timer(ctl_settings.PING_EVENT,
+                                          ctl_settings.ping_interval)
+                elif button.on == False:
+                    ctl_settings.sensors = False
+                    # turn timer off
+                    pygame.time.set_timer(ctl_settings.PING_EVENT, 0)
+            else:
+                print("Network must be running to ping sensors.")
 
         # Next check Network button
         elif button.title == 'NETWORK':
@@ -285,6 +299,12 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
                 ctl_settings.networkOn = True
             elif button.on == False:
                 ctl_settings.networkOn = False
+                if ctl_settings.sensors:
+                    # turn sensors off
+                    panels['Automation Panel'].buttons['SENSORS'].update()
+                    ctl_settings.sensors = False
+                    for panel in panels['Wall Panels']:
+                        panel.sensor_reading.update()
 
         # Next check Feedback Mode automation buttons
         elif button.title == 'Bandpass': # can be set with FB MODE off for presetting

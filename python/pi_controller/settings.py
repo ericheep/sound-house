@@ -38,11 +38,13 @@ class Settings():
         self.ping_interval = 100 # interval in ms for pinging sensors
         self.PING_EVENT = pygame.USEREVENT
 
-        self.SENSOR_EVENT = pygame.USEREVENT+2
-
         # Current wall panel to display
         self.wall_panel = 0 # Wall 1 by default
+        self.wall_sensors = [0, 0, 0, 0, 0, 0, 0, 0] # stores most recent sensor readings
         self.wall_amps = [0, 0, 0, 0, 0, 0, 0, 0] # stores amplitude for each wall
+        self.amp_high = 0.5 # need to test and set these vals
+        self.amp_low = 0.2 # test this
+
         # Current selected puppet
         self.puppet = 0 # P1 by default
 
@@ -57,6 +59,7 @@ class Settings():
         self.ternaryWallMode = False
         self.feedbackMode = False
         self.playbackMode = False
+        self.sensors = False
         self.sensorTuningMode = False
         self.sendVideo = False
 
@@ -87,13 +90,21 @@ class Settings():
         self.save_this = 0
         self.server_thread = 0
 
-    def update_wall_amps(self, address, wall_string, val):
+    def update_wall_sensors(self, address, wall_string, val):
         # gets OSC messages and converts to wall/amp info
         walls = ['pione', 'pitwo', 'pithree', 'pifour', 'pifive', 'pisix',
                  'piseven', 'pieight']
         wall_index = walls.index(wall_string)
+        val = round(val, 2)
+        self.wall_sensors[wall_index] = val
+
+        if self.ternaryWallMode:
+            self.set_wall_amps(self, wall_index, val)
+
+    def set_wall_amps(self, wall_index, val):
+        # takes sensor vals and determines amp
         if val > self.distance_threshold:
-            self.wall_amps[wall_index] = 0.5  # store these vals in settings
+            self.wall_amps[wall_index] = self.amp_high
         elif val <= self.distance_threshold:
-            self.wall_amps[wall_index] = 0.2
+            self.wall_amps[wall_index] = self.amp_low
         print(self.wall_amps) # network function call goes here

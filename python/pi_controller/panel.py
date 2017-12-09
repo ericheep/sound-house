@@ -1,6 +1,7 @@
 import pygame
 from slider import Slider
 from button import Button
+from display_value import DisplayValue
 from ternary_control import TernaryControl
 import map_objects
 from other_functions import find_distance
@@ -56,12 +57,19 @@ class WallPanel(Panel): # 0-7
         self.wall_index = wall_index
         self.wall_label = "Wall " + str(wall_index + 1)
 
+        # sensor reading
+
+        self.sensor_reading = DisplayValue(ctl_settings, self.screen, 40,
+                                           self.rect.bottom - self.padding,
+                                           wall_index, 'Sensor')
+
         self.slider_spacing = 50  # distance between sliders
 
         # fix the way wall number is added to message (move to slider.py?)
         self.slider_bottom = self.rect.bottom - self.padding
 
-        micGainSL = Slider(self.ctl_settings, self.screen, 0, 1, 85,
+        micGainSL = Slider(self.ctl_settings, self.screen, 0, 1,
+                           self.sensor_reading.rect.right + 10,
                            self.slider_bottom, '/micGain', wall_index, 'log')
         hpCutoffSL = Slider(self.ctl_settings, self.screen, 0, 10000,
                             micGainSL.rect.right + self.slider_spacing,
@@ -107,6 +115,7 @@ class WallPanel(Panel): # 0-7
     def draw_panel_and_sliders(self):
         # Draw panel and label and wall label
         self.draw_panel()
+        self.sensor_reading.draw_display()
         for slider in self.sliders:
             slider.draw_slider()
         self.screen.blit(self.wall_label_image, self.wall_label_image_rect)
@@ -141,8 +150,12 @@ class AutomationPanel(Panel):
                             st_button.rect.right + self.button_x_spacing,
                             self.rect.top + self.padding, 'MAP')
 
+        sensor_button = Button(ctl_settings, screen,
+                               map_button.rect.right + self.button_x_spacing,
+                               self.rect.top + self.padding, 'Sensors')
+
         bp_button = Button(ctl_settings, screen,
-                           map_button.rect.right + (self.button_x_spacing * 2),
+                           sensor_button.rect.right + self.button_x_spacing,
                            self.rect.top + self.padding, 'Bandpass')
 
         mic_button = Button(ctl_settings, screen,
@@ -158,13 +171,16 @@ class AutomationPanel(Panel):
                               mic_button.rect.right + self.button_x_spacing,
                               self.rect.top + self.padding, 'Video')
 
-
-        self.buttons = [fb_button, tc_button, pb_button, st_button, map_button,
-                        bp_button, mic_button, network_button, video_button]  # add all buttons here
+        self.buttons = {
+            'FEEDBACK': fb_button, 'TERNARY': tc_button, 'PLAYBACK': pb_button,
+            'TUNING': st_button, 'MAP': map_button, 'SENSORS': sensor_button,
+            'BANDPASS': bp_button, 'MIC': mic_button,
+            'NETWORK': network_button, 'VIDEO': video_button
+        } # add all buttons here
 
     def draw_panel_and_buttons(self):
         self.draw_panel()
-        for button in self.buttons:
+        for button in self.buttons.values():
             button.draw_button()
 
 
