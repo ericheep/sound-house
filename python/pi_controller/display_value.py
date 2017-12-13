@@ -76,6 +76,8 @@ class DisplayValue():
         self.screen.fill(self.color, self.rect)
         if self.title:
             self.screen.blit(self.title_image, self.title_image_rect)
+        elif self.target: #
+            self.target = self.target #
         #if self.ctl_settings.sensors:
         self.prep_value()
         self.screen.blit(self.value_image, self.value_image_rect)

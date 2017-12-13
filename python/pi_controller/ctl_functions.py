@@ -105,8 +105,9 @@ def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
     elif ctl_settings.key_entry:
         keyname = pygame.key.name(event.key)
         if keyname == 'return':
-            convert_to_fraction(ctl_settings.entry, ctl_settings.interval)
-            ctl_settings.keyname = '' # reset
+            convert_to_fraction(ctl_settings)
+            ctl_settings.entry = '' # reset
+            panels['Ternary Panel'].display_interval.target = ctl_settings.interval
         else:
             ctl_settings.entry += keyname
 
@@ -217,27 +218,21 @@ def check_MIDI(ctl_settings, screen, panels, midi_input):
                 send_code_automation(button, ctl_settings, screen,
                                      panels, mouse_y)
 
-def convert_to_fraction(string_fraction, target):
+def convert_to_fraction(ctl_settings):
     # convert fraction string to fraction
-    #try:
-    strings = string_fraction.split('/')
-    num = int(strings[0])
-    den = int(strings[1])
-    frac = Fraction(num, den)
-    target = frac
-    print(num, den)
-    # !!!!
-
-    #except:
-    #    print('Invalid Entry')
-    #    print(string_fraction)
+    try:
+        strings = ctl_settings.entry.split('/')
+        num = int(strings[0])
+        den = int(strings[1])
+        ctl_settings.interval = Fraction(num, den)
+    except:
+        print('Invalid Entry')
 
 def check_wall_sliders(ctl_settings, panels, mouse_x, mouse_y):
     for index, slider in \
             enumerate(panels['Wall Panels'][ctl_settings.wall_panel].sliders):
         check_slider(slider, ctl_settings, panels, mouse_x, mouse_y,
                      slider_index=index)
-
 
 def check_slider(slider, ctl_settings, panels, mouse_x, mouse_y,
                  slider_index=None):
