@@ -4,7 +4,8 @@ class DisplayValue():
     """
     A class to handle displayed values in pi controller
     """
-    def __init__(self, ctl_settings, screen, x, y, wall_index, title=None):
+    def __init__(self, ctl_settings, screen, x, y, wall_index=None, title=None,
+                 target=None):
         """Initialize button and starting position."""
         self.screen = screen
         self.screen_rect = screen.get_rect()
@@ -12,7 +13,9 @@ class DisplayValue():
         self.x = x
         self.y = y
 
+        # can't have wall_index and target
         self.wall_index = wall_index
+        self.target = target
 
         # Set dimensions and properties of button
         self.width, self.height = 40, 20
@@ -58,7 +61,10 @@ class DisplayValue():
 
     def prep_value(self):
         """Turn value into rendered image and center below button."""
-        self.value = self.ctl_settings.wall_sensors[self.wall_index]
+        if self.wall_index:
+            self.value = self.ctl_settings.wall_sensors[self.wall_index]
+        else:
+            self.value = self.target
         self.value_image = self.font.render(str(self.value), True,
                                             self.display_color, self.color)
         self.value_image_rect = self.value_image.get_rect()
@@ -70,6 +76,6 @@ class DisplayValue():
         self.screen.fill(self.color, self.rect)
         if self.title:
             self.screen.blit(self.title_image, self.title_image_rect)
-        if self.ctl_settings.sensors:
-            self.prep_value()
-            self.screen.blit(self.value_image, self.value_image_rect)
+        #if self.ctl_settings.sensors:
+        self.prep_value()
+        self.screen.blit(self.value_image, self.value_image_rect)

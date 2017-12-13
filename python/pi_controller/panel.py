@@ -61,7 +61,8 @@ class WallPanel(Panel): # 0-7
 
         self.sensor_reading = DisplayValue(ctl_settings, self.screen, 40,
                                            self.rect.bottom - self.padding,
-                                           wall_index, 'Sensor')
+                                           wall_index=wall_index,
+                                           title='Sensor')
 
         self.slider_spacing = 50  # distance between sliders
 
@@ -162,20 +163,27 @@ class AutomationPanel(Panel):
                             bp_button.rect.right + self.button_x_spacing,
                             self.rect.top + self.padding, 'Mic')
 
-        network_button = Button(ctl_settings, screen,
-                                self.rect.right - self.button_x_spacing -
-                                self.padding, self.rect.top + self.padding,
-                                'NETWORK')
-
         video_button = Button(ctl_settings, screen,  # where to put this??
                               mic_button.rect.right + self.button_x_spacing,
                               self.rect.top + self.padding, 'Video')
+
+        set_all_button = Button(ctl_settings, screen,
+                                video_button.rect.right +
+                                self.button_x_spacing,
+                                self.rect.top + self.padding, 'Set All')
+
+        network_button = Button(ctl_settings, screen,
+                                set_all_button.rect.right +
+                                self.button_x_spacing,
+                                self.rect.top + self.padding,
+                                'NETWORK')
 
         self.buttons = {
             'FEEDBACK': fb_button, 'TERNARY': tc_button, 'PLAYBACK': pb_button,
             'TUNING': st_button, 'MAP': map_button, 'SENSORS': sensor_button,
             'BANDPASS': bp_button, 'MIC': mic_button,
-            'NETWORK': network_button, 'VIDEO': video_button
+            'NETWORK': network_button, 'VIDEO': video_button,
+            'SET ALL': set_all_button
         } # add all buttons here
 
     def draw_panel_and_buttons(self):
@@ -192,20 +200,33 @@ class TernaryPanel(Panel):
         self.padding = 50 # custom padding here
 
         send_code_button = Button(ctl_settings, screen,
-                                  40, self.rect.top + self.padding, 'Send Code')
+                                  40, self.rect.top + self.padding,
+                                  'Send Code')
 
-        self.buttons = [send_code_button]
+
+        self.display_interval = DisplayValue(ctl_settings, screen,
+                                             send_code_button.rect.right + 30,
+                                             send_code_button.rect.bottom,
+                                             title='Interval',
+                                             target=ctl_settings.interval)
+
+        self.buttons = [send_code_button, self.display_interval]
+
 
         # Make a ternary button controller
         self.controller = TernaryControl(ctl_settings, screen,
-                                         send_code_button.rect.right + 30,
+                                         self.display_interval.rect.right + 30,
                                          self.rect.top + 30)
 
     def draw_panel_and_controller(self):
         self.draw_panel()
+        #self.display_interval.draw_display()
         self.controller.draw_controller()
         for button in self.buttons:
-            button.draw_button()
+            try:
+                button.draw_button()
+            except:
+                button.draw_display()
 
 
 class WallMapPanel(Panel):

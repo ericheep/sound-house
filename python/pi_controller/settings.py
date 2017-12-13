@@ -1,4 +1,5 @@
 import pygame
+from fractions import Fraction
 
 class Settings():
     """A class to store all settings for Sound House pi controller."""
@@ -38,6 +39,9 @@ class Settings():
         self.ping_interval = 100 # interval in ms for pinging sensors
         self.PING_EVENT = pygame.USEREVENT
 
+        # Sets all wall settings at same time
+        self.set_all = False
+
         # Current wall panel to display
         self.wall_panel = 0 # Wall 1 by default
         self.wall_sensors = [0, 0, 0, 0, 0, 0, 0, 0] # stores most recent sensor readings
@@ -54,6 +58,10 @@ class Settings():
 
         # Network status
         self.networkOn = False # when off, in 'dev' mode and sends things locally or not at all
+
+        # keyboard entry of interval
+        self.key_entry = False
+        self.entry = ''
 
         # Modes - all off to start
         self.ternaryWallMode = False
@@ -75,9 +83,9 @@ class Settings():
         self.delayLength = 5
 
         # Ternary Wall Mode settings
-        self.centerFreq = 440.01 # why does 440.01 work and not 440????
-        self.interval = 1.1667 # add fractions and selection availability, make control for this, a series of fractions? 7?
-        self.u_interval = 1 / self.interval
+        self.centerFreq = 440.01 # why does 440.01 work and not 440???? #speaker range = 100 -18k Hz
+        self.interval = Fraction(7, 6) # 1.1667 # add fractions and selection availability, make control for this, a series of fractions? 7?
+        self.u_interval = Fraction(1 / self.interval)
         self.ternary_chain = [0, 0, 0, 0, 0, 0, 0] # initial vals
 
         self.distance_threshold = 30 # set later--for turning up sine amp.

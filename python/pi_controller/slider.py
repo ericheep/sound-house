@@ -77,19 +77,19 @@ class Slider():
         msg = self.param
         val = self.ctl_value
         send_audioControl_data(self.ctl_settings, msg, val) #
-        sendVideoTrigger(self.ctl_settings, self.wall_index, val) #get rid of this
+        #sendVideoTrigger(self.ctl_settings, self.wall_index, val) #get rid of this
 
     def update(self, mouse_y):
         """Update knob position based on mouse click and movement."""
-        if self.k_moving == True and self.k_rect.bottom <= self.rect.bottom \
+        if self.k_moving and self.k_rect.bottom <= self.rect.bottom \
                 and self.k_rect.bottom >= self.rect.top:
             self.k_rect.centery = mouse_y
             self.get_ctl_value()
-        elif self.k_moving == True and self.k_rect.bottom > self.rect.bottom:
+        elif self.k_moving and self.k_rect.bottom > self.rect.bottom:
             self.k_rect.bottom = self.rect.bottom
             self.k_moving = False
             self.get_ctl_value()
-        elif self.k_moving == True and self.k_rect.bottom < self.rect.top:
+        elif self.k_moving and self.k_rect.bottom < self.rect.top:
             self.k_rect.bottom = self.rect.top
             self.k_moving = False
             self.get_ctl_value()

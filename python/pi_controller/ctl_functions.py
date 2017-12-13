@@ -2,6 +2,7 @@ import sys, pygame, pygame.midi
 import network_functions as nf
 import midi_functions as mf
 import other_functions as of
+from fractions import Fraction
 
 def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
 
@@ -16,9 +17,7 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
 
         # Mouse events --factor out!
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            for panel in panels['Wall Panels']: # check wall panel clicks
-                for slider in panel.sliders:
-                    check_slider(slider, mouse_x, mouse_y)
+            check_wall_sliders(ctl_settings, panels, mouse_x, mouse_y) # check wall panel clicks
             for button in panels['Automation Panel'].buttons.values(): # check automation panel clicks
                 check_button(button, screen, ctl_settings, panels, mouse_x,
                              mouse_y)
@@ -32,12 +31,11 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
             for button in panels['Playback Panel'].brick_buttons: # check sequencer buttons
                 check_button(button, screen, ctl_settings, panels, mouse_x,
                              mouse_y)
-            check_slider(panels['Playback Panel'].BPM, mouse_x, mouse_y) # check BPM slider
+            check_slider(panels['Playback Panel'].BPM, ctl_settings, panels,
+                         mouse_x, mouse_y) # check BPM slider
 
         elif event.type == pygame.MOUSEBUTTONUP:
-            for panel in panels['Wall Panels']: # check wall panel click releases
-                for slider in panel.sliders:
-                    slider.k_moving = False
+            wall_sliders_stop(ctl_settings, panels)
             if panels['Playback Panel'].BPM.k_moving:
                 if ctl_settings.playbackMode:
                     # Updates timer
@@ -77,31 +75,41 @@ def shutdown(ctl_settings, midi_input):
 def check_keydown_events(event, ctl_settings, screen, panels, midi_input):
     if event.key == pygame.K_q:
         shutdown(ctl_settings, midi_input)
-    # select wall panel with num entry
-    elif event.key == pygame.K_1:
-        ctl_settings.wall_panel = 0
-        panels['Wall Map'].switch_wall()
-    elif event.key == pygame.K_2:
-        ctl_settings.wall_panel = 1
-        panels['Wall Map'].switch_wall()
-    elif event.key == pygame.K_3:
-        ctl_settings.wall_panel = 2
-        panels['Wall Map'].switch_wall()
-    elif event.key == pygame.K_4:
-        ctl_settings.wall_panel = 3
-        panels['Wall Map'].switch_wall()
-    elif event.key == pygame.K_5:
-        ctl_settings.wall_panel = 4
-        panels['Wall Map'].switch_wall()
-    elif event.key == pygame.K_6:
-        ctl_settings.wall_panel = 5
-        panels['Wall Map'].switch_wall()
-    elif event.key == pygame.K_7:
-        ctl_settings.wall_panel = 6
-        panels['Wall Map'].switch_wall()
-    elif event.key == pygame.K_8:
-        ctl_settings.wall_panel = 7
-        panels['Wall Map'].switch_wall()
+    if ctl_settings.key_entry == False:
+        # select wall panel with num entry
+        if event.key == pygame.K_1:
+            ctl_settings.wall_panel = 0
+            panels['Wall Map'].switch_wall()
+        elif event.key == pygame.K_2:
+            ctl_settings.wall_panel = 1
+            panels['Wall Map'].switch_wall()
+        elif event.key == pygame.K_3:
+            ctl_settings.wall_panel = 2
+            panels['Wall Map'].switch_wall()
+        elif event.key == pygame.K_4:
+            ctl_settings.wall_panel = 3
+            panels['Wall Map'].switch_wall()
+        elif event.key == pygame.K_5:
+            ctl_settings.wall_panel = 4
+            panels['Wall Map'].switch_wall()
+        elif event.key == pygame.K_6:
+            ctl_settings.wall_panel = 5
+            panels['Wall Map'].switch_wall()
+        elif event.key == pygame.K_7:
+            ctl_settings.wall_panel = 6
+            panels['Wall Map'].switch_wall()
+        elif event.key == pygame.K_8:
+            ctl_settings.wall_panel = 7
+            panels['Wall Map'].switch_wall()
+
+    elif ctl_settings.key_entry:
+        keyname = pygame.key.name(event.key)
+        if keyname == 'return':
+            convert_to_fraction(ctl_settings.entry, ctl_settings.interval)
+            ctl_settings.keyname = '' # reset
+        else:
+            ctl_settings.entry += keyname
+
 
     # turn off sine tones
     elif event.key == pygame.K_o and ctl_settings.networkOn:
@@ -209,11 +217,43 @@ def check_MIDI(ctl_settings, screen, panels, midi_input):
                 send_code_automation(button, ctl_settings, screen,
                                      panels, mouse_y)
 
+def convert_to_fraction(string_fraction, target):
+    # convert fraction string to fraction
+    #try:
+    strings = string_fraction.split('/')
+    num = int(strings[0])
+    den = int(strings[1])
+    frac = Fraction(num, den)
+    target = frac
+    print(num, den)
+    # !!!!
 
-def check_slider(slider, mouse_x, mouse_y):
+    #except:
+    #    print('Invalid Entry')
+    #    print(string_fraction)
+
+def check_wall_sliders(ctl_settings, panels, mouse_x, mouse_y):
+    for index, slider in \
+            enumerate(panels['Wall Panels'][ctl_settings.wall_panel].sliders):
+        check_slider(slider, ctl_settings, panels, mouse_x, mouse_y,
+                     slider_index=index)
+
+
+def check_slider(slider, ctl_settings, panels, mouse_x, mouse_y,
+                 slider_index=None):
     knob_clicked = slider.rect.collidepoint(mouse_x, mouse_y)
     if knob_clicked:
-        slider.k_moving = True
+        if slider_index >= 0 and ctl_settings.set_all:
+            for panel in panels['Wall Panels']:
+                panel.sliders[slider_index].k_moving = True
+        else:
+            slider.k_moving = True
+
+def wall_sliders_stop(ctl_settings, panels):
+    for panel in panels['Wall Panels']:  # check wall panel click releases
+        for slider in panel.sliders:
+            slider.k_moving = False
+
 
 def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
                  column=None, check_column=False):
@@ -339,6 +379,13 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
             button.update()
             send_code_automation(button, ctl_settings, screen, panels, mouse_y)
 
+        elif button.title == 'Interval':
+            button.update()
+            if button.on:
+                ctl_settings.key_entry = True
+            elif button.on == False:
+                ctl_settings.key_entry = False
+
         elif button.title == 'brick' and ctl_settings.playbackMode:
             button.update()
 
@@ -348,6 +395,13 @@ def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
                 ctl_settings.sendVideo = True
             else:
                 ctl_settings.sendVideo = False
+
+        elif button.title == 'Set All':
+            button.update()
+            if button.on:
+                ctl_settings.set_all = True
+            else:
+                ctl_settings.set_all = False
 
 def bandpass_automation(wall_panels):
     print("bandpass automation") # not sure about the scaling here
@@ -417,8 +471,10 @@ def send_code_automation(button, ctl_settings, screen, panels, mouse_y):
 def update_screen(ctl_settings, screen, panels, mouse_y):
 
 
-    # Update Wall Panel
-    panels['Wall Panels'][ctl_settings.wall_panel].update(mouse_y)
+    # Update Wall Panels
+    for panel in panels['Wall Panels']:
+        panel.update(mouse_y)
+#    panels['Wall Panels'][ctl_settings.wall_panel].update(mouse_y)
     # Update Wall Map
     panels['Wall Map'].update()
     # Update Playback Panel
