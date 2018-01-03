@@ -33,6 +33,8 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
                              mouse_y)
             check_slider(panels['Playback Panel'].BPM, ctl_settings, panels,
                          mouse_x, mouse_y) # check BPM slider
+            if ctl_settings.mapping:
+                check_map_clicks(ctl_settings, panels, mouse_x, mouse_y)
 
         elif event.type == pygame.MOUSEBUTTONUP:
             wall_sliders_stop(ctl_settings, panels)
@@ -43,6 +45,11 @@ def check_events(ctl_settings, screen, panels, midi_input, mouse_x, mouse_y):
                         pygame.time.set_timer(ctl_settings.PB_EVENT,
                                               ctl_settings.bpm_ms)
                 panels['Playback Panel'].BPM.k_moving = False
+            # Stop all walls and puppets
+            for wall in panels['Wall Map'].walls:
+                wall.mouse_move = False
+            for puppet in panels['Wall Map'].puppets:
+                puppet.mouse_move = False
 
         # PB Events --factor out
         elif event.type == ctl_settings.PB_EVENT:
@@ -238,16 +245,44 @@ def check_slider(slider, ctl_settings, panels, mouse_x, mouse_y,
                  slider_index=None):
     knob_clicked = slider.rect.collidepoint(mouse_x, mouse_y)
     if knob_clicked:
-        if slider_index >= 0 and ctl_settings.set_all:
+        if slider_index == None:
+            slider.k_moving = True
+        elif slider_index >= 0 and ctl_settings.set_all:
             for panel in panels['Wall Panels']:
                 panel.sliders[slider_index].k_moving = True
-        else:
+
+        else: # can this be cleared?
             slider.k_moving = True
 
 def wall_sliders_stop(ctl_settings, panels):
     for panel in panels['Wall Panels']:  # check wall panel click releases
         for slider in panel.sliders:
             slider.k_moving = False
+
+def check_map_clicks(ctl_settings, panels, mouse_x, mouse_y):
+    for wall in panels['Wall Map'].walls:
+        wall_clicked = wall.rect.collidepoint(mouse_x, mouse_y)
+        if wall_clicked:
+            wall_index = int(wall.label) - 1
+            ctl_settings.wall_panel = wall_index
+            panels['Wall Map'].switch_wall()
+            panels['Wall Map'].walls[wall_index].mouse_move = True
+
+    for index, puppet in enumerate(panels['Wall Map'].puppets):
+        puppet_clicked = puppet.rect.collidepoint(mouse_x, mouse_y)
+        if puppet_clicked:
+            on_puppet = ctl_settings.puppet
+            if on_puppet == 0:
+                off_puppet = 1
+            else:
+                off_puppet = 0
+
+            if puppet.on == False:
+                puppet.onoff()
+                panels['Wall Map'].puppets[on_puppet].onoff()
+                ctl_settings.puppet = off_puppet
+
+            puppet.mouse_move = True
 
 
 def check_button(button, screen, ctl_settings, panels, mouse_x, mouse_y,
@@ -427,7 +462,7 @@ def feedback_default_automation(ctl_settings, panels):
         panel.sliders[4].automate(ctl_settings.threshold)
         panel.sliders[5].automate(ctl_settings.packetLength)
         panel.sliders[6].automate(ctl_settings.delayLength)
-        if panels['Automation Panel'].buttons[0].on == False: # Only set HP/LP if 'Bandpass' is off
+        if panels['Automation Panel'].buttons['BANDPASS'].on == False: # Only set HP/LP if 'Bandpass' is off
             panel.sliders[1].automate(ctl_settings.hp)
             panel.sliders[2].automate(ctl_settings.lp)
 
@@ -463,7 +498,7 @@ def send_code_automation(button, ctl_settings, screen, panels, mouse_y):
         button.update()
 
 
-def update_screen(ctl_settings, screen, panels, mouse_y):
+def update_screen(ctl_settings, screen, panels, mouse_x, mouse_y):
 
 
     # Update Wall Panels
@@ -471,7 +506,7 @@ def update_screen(ctl_settings, screen, panels, mouse_y):
         panel.update(mouse_y)
 #    panels['Wall Panels'][ctl_settings.wall_panel].update(mouse_y)
     # Update Wall Map
-    panels['Wall Map'].update()
+    panels['Wall Map'].update(mouse_x, mouse_y)
     # Update Playback Panel
     panels['Playback Panel'].update(mouse_y)
 

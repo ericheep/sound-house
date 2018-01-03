@@ -277,10 +277,10 @@ class WallMapPanel(Panel):
                 wall.moving_down = False
                 wall.update()
 
-    def update(self):
-        self.walls[self.ctl_settings.wall_panel].update()
+    def update(self, mouse_x, mouse_y):
+        self.walls[self.ctl_settings.wall_panel].update(mouse_x, mouse_y)
         for puppet in self.puppets:
-            puppet.update()
+            puppet.update(mouse_x, mouse_y)
 
     def draw_panel_and_contents(self):
         self.draw_panel()

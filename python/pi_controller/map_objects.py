@@ -37,6 +37,9 @@ class Object():
         self.moving_up = False
         self.moving_down = False
 
+        # Mouse movement
+        self.mouse_move = False
+
         # Prep wall label
         self.prep_label()
 
@@ -75,10 +78,11 @@ class Puppet(Object):
             self.moving_up = False
             self.moving_down = False
 
-    def update(self):
+    def update(self, mouse_x, mouse_y):
         #Update the position based on movement flags
         if self.on:
             # Update center value not the rect
+            # keyboard movement
             if self.moving_right and self.rect.right < self.panel.rect.right:
                 self.centerx += self.ctl_settings.wall_speed_factor
             if self.moving_left and self.rect.left > self.panel.rect.left:
@@ -88,14 +92,34 @@ class Puppet(Object):
             if self.moving_down and self.rect.bottom < self.panel.rect.bottom:
                 self.centery += self.ctl_settings.wall_speed_factor
 
+            # Mouse movement
+            if self.mouse_move and mouse_x and mouse_y and \
+                    (self.rect.right <= self.panel.rect.right) and \
+                    (self.rect.left >= self.panel.rect.left) and \
+                    (self.rect.top >= self.panel.rect.top) and \
+                    (self.rect.bottom <= self.panel.rect.bottom):
+                self.centerx = mouse_x
+                self.centery = mouse_y
+
             # if any movement, update position
             if (self.moving_right or self.moving_left or self.moving_up or
-                    self.moving_down):
+                    self.moving_down or self.mouse_move):
                 self.panel.get_distances()
 
             # Update rect object and label
             self.rect.centerx = float(self.centerx)
             self.rect.centery = float(self.centery)
+
+            # Correct boundary crossings
+            if self.rect.right > self.panel.rect.right:
+                self.rect.right = self.panel.rect.right
+            if self.rect.left < self.panel.rect.left:
+                self.rect.left = self.panel.rect.left
+            if self.rect.top < self.panel.rect.top:
+                self.rect.top = self.panel.rect.top
+            if self.rect.bottom > self.panel.rect.bottom:
+                self.rect.bottom = self.panel.rect.bottom
+
             self.prep_label()
 
     def draw_puppet(self):
@@ -116,7 +140,7 @@ class Wall(Object):
         super().__init__(ctl_settings, screen, panel, centerx, centery,
                          self.width, self.height, label)
 
-    def update(self):
+    def update(self, mouse_x=0, mouse_y=0):
         #Update the position based on movement flags and rotate with
         # turn 'on' or not
         if self.on == True:
@@ -155,14 +179,34 @@ class Wall(Object):
             else:
                 self.centery += self.ctl_settings.wall_speed_factor
 
+        # Mouse movement
+        if self.mouse_move and mouse_x and mouse_y and \
+                (self.rect.right <= self.panel.rect.right) and \
+                (self.rect.left >= self.panel.rect.left) and \
+                (self.rect.top >= self.panel.rect.top) and \
+                (self.rect.bottom <= self.panel.rect.bottom):
+            self.centerx = mouse_x
+            self.centery = mouse_y
+
         # if any movement, update position
         if (self.moving_right or self.moving_left or self.moving_up or
-            self.moving_down):
+            self.moving_down or self.mouse_move):
             self.panel.get_distances()
 
         # Update rect object and label
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
+
+        # Correct boundary crossings
+        if self.rect.right > self.panel.rect.right:
+            self.rect.right = self.panel.rect.right
+        if self.rect.left < self.panel.rect.left:
+            self.rect.left = self.panel.rect.left
+        if self.rect.top < self.panel.rect.top:
+            self.rect.top = self.panel.rect.top
+        if self.rect.bottom > self.panel.rect.bottom:
+            self.rect.bottom = self.panel.rect.bottom
+
         self.prep_label()
 
     def rotate(self):

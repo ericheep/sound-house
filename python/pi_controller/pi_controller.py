@@ -96,4 +96,4 @@ while True:
     control.check_events(ctl_settings, screen, panels, midi_input, mouse_x,
                          mouse_y)
     # update screen
-    control.update_screen(ctl_settings, screen, panels, mouse_y)
+    control.update_screen(ctl_settings, screen, panels, mouse_x, mouse_y)
