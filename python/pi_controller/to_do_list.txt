@@ -4,8 +4,6 @@
 	-scale amplitude with EQ curve
 	-send freqs/amplitudes			x
 
--incoporate python distance finder into pi_controller
-
 Osc messages:
 
 /sineFreq
@@ -28,5 +26,3 @@ wav control:
 fieldPlay int(for sample) -> client
 fieldStop int
 brickPlay int (1-16)
-
-make slider rect object!
