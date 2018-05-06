@@ -69,7 +69,7 @@ fun void ultrasonicListener() {
                             0.0 => ultrasonicValue;
                         }
                         (ultrasonicValue - 20.0)/280.0 => float gain;
-                        setTargetMasterGain(i, gain);
+                        setTargetMasterGain(i, 1.0);
                     }
                 }
             }

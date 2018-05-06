@@ -17,7 +17,7 @@ in.listenAll();
 // ~-~-
 // audio chain
 
-0.2 => float sineToneGain;
+0.03 => float sineToneGain;
 0.3 => float pinkNoiseGain;
 0.3 => float whiteNoiseGain;
 1.0 => float textureGain;
