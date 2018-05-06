@@ -22,7 +22,7 @@ from pythonosc import udp_client
 
 # osc vars
 piWall = "/w"
-hostIp = "192.168.0.15"
+hostIp = "e.local"
 piPort = 5000
 hostPort = 12345
 
@@ -98,7 +98,9 @@ def send(self):
 
     # adds whichPi to the OSC message
     hostname = socket.gethostname()
-    print(hostname)
+
+    # print(hostname)
+
     packet.add_arg(hostname, arg_type='s')
 
     # adds distance reading to the OSC message

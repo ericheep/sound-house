@@ -18,6 +18,19 @@
     "pieight.local"
 ] @=> string IPS[];
 
+[
+    "pione",
+    "pitwo",
+    "pithree",
+    "pifour",
+    "pifive",
+    "pisix",
+    "piseven",
+    "pieight"
+] @=> string hostnames[];
+
+float ultrasonicValues[hostnames.size()];
+
 IPS.size() => int NUM_IPS;
 
 // the port for outgoing messages
@@ -32,7 +45,6 @@ OscMsg ultrasonicMsg;
 ULTRASONIC_IN_PORT => ultrasonicIn.port;
 ultrasonicIn.listenAll();
 
-
 OscOut out[NUM_IPS];
 OscMsg msg;
 
@@ -41,15 +53,24 @@ for (0 => int i; i < NUM_IPS; i++) {
     ultrasonicOut[i].dest(IPS[i], ULTRASONIC_OUT_PORT);
 }
 
+
 spork ~ ultrasonicListener();
 spork ~ ultrasonicPing();
 
 fun void ultrasonicListener() {
     while (true) {
-        <<< "!" >>>;
         ultrasonicIn => now;
         while (ultrasonicIn.recv(msg)) {
-            <<< msg.address, "" >>>;
+            if (msg.address == "/w") {
+                for (0 => int i; i < hostnames.size(); i++) {
+                    if (msg.getString(0) == hostnames[i]) {
+                        msg.getFloat(1) => float ultrasonicValue;
+                        Std.clampf(ultrasonicValue, 0.0, 300.0) => ultrasonicValue;
+                        ultrasonicValue/300.0 => float gain;
+                        setTargetMasterGain(i, gain);
+                    }
+                }
+            }
         }
         1::samp => now;
     }
@@ -60,7 +81,7 @@ fun void ultrasonicPing() {
         for (0 => int i; i < NUM_IPS; i++) {
             ultrasonicOut[i].start("/w");
             ultrasonicOut[i].send();
-            20::ms => now;
+            50::ms => now;
         }
     }
 }
