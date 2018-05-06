@@ -67,6 +67,7 @@ fun void ultrasonicListener() {
                         msg.getFloat(1) => float ultrasonicValue;
                         Std.clampf(ultrasonicValue, 0.0, 300.0) => ultrasonicValue;
                         ultrasonicValue/300.0 => float gain;
+                        <<< i, gain >>>;
                         setTargetMasterGain(i, gain);
                     }
                 }
