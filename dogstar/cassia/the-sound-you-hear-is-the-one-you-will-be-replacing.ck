@@ -8,27 +8,66 @@
 // ~-~-
 
 [
-  "127.0.0.1"
+    "pione.local",
+    "pitwo.local",
+    "pithree.local",
+    "pifour.local",
+    "pifive.local",
+    "pisix.local",
+    "piseven.local",
+    "pieight.local"
 ] @=> string IPS[];
 
 IPS.size() => int NUM_IPS;
 
 // the port for outgoing messages
 10001 => int OUT_PORT;
-7400 => int IN_PORT;
+12345 => int ULTRASONIC_IN_PORT;
+5000 => int ULTRASONIC_OUT_PORT;
+
+OscOut ultrasonicOut[IPS.size()];
+OscIn ultrasonicIn;
+OscMsg ultrasonicMsg;
+
+ULTRASONIC_IN_PORT => ultrasonicIn.port;
+ultrasonicIn.listenAll();
+
 
 OscOut out[NUM_IPS];
-OscOut in;
-
 OscMsg msg;
 
 for (0 => int i; i < NUM_IPS; i++) {
     out[i].dest(IPS[i], OUT_PORT);
+    ultrasonicOut[i].dest(IPS[i], ULTRASONIC_OUT_PORT);
+}
+
+spork ~ ultrasonicListener();
+spork ~ ultrasonicPing();
+
+fun void ultrasonicListener() {
+    while (true) {
+        <<< "!" >>>;
+        ultrasonicIn => now;
+        while (ultrasonicIn.recv(msg)) {
+            <<< msg.address, "" >>>;
+        }
+        1::samp => now;
+    }
+}
+
+fun void ultrasonicPing() {
+    while (true) {
+        for (0 => int i; i < NUM_IPS; i++) {
+            ultrasonicOut[i].start("/w");
+            ultrasonicOut[i].send();
+            20::ms => now;
+        }
+    }
 }
 
 // ~-~-
 
-16.0::second => dur pieceDuration;
+16.0::minute => dur pieceDuration;
 1.0::minute => dur whiteNoiseDuration;
 pieceDuration + whiteNoiseDuration => dur totalDuration;
 

@@ -22,7 +22,7 @@ from pythonosc import udp_client
 
 # osc vars
 piWall = "/w"
-hostIp = "192.168.0.100"
+hostIp = "192.168.0.15"
 piPort = 5000
 hostPort = 12345
 
