@@ -21,6 +21,7 @@ in.listenAll();
 0.1 => float pinkNoiseGain;
 0.03 => float whiteNoiseGain;
 0.7 => float textureGain;
+0.3 => float whiteNoiseFadeOutGain;
 
 SinOsc sineTone => Gain master => dac;
 Noise whiteNoise => master => dac;
@@ -99,7 +100,7 @@ fun void oscReceive() {
             if (msg.address == "/whiteNoiseFadeOut") {
                 clearAllSound();
                 msg.getFloat(0) => float seconds;
-                whiteNoiseFadeOut.gain(whiteNoiseGain);
+                whiteNoiseFadeOut.gain(whiteNoisFadeOuteGain);
                 env.set(1::ms, 0::ms, 0.0, seconds::second);
                 env.keyOn();
                 samp => now;

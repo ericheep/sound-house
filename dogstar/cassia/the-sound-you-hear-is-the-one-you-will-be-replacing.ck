@@ -90,7 +90,7 @@ fun void ultrasonicPing() {
 
 // ~-~-
 
-16.0::minute => dur pieceDuration;
+5.0::second => dur pieceDuration;
 1.0::minute => dur whiteNoiseDuration;
 pieceDuration + whiteNoiseDuration => dur totalDuration;
 
