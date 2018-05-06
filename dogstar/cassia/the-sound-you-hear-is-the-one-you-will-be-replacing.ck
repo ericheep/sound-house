@@ -29,8 +29,6 @@
     "pieight"
 ] @=> string hostnames[];
 
-float ultrasonicValues[hostnames.size()];
-
 IPS.size() => int NUM_IPS;
 
 // the port for outgoing messages
@@ -68,8 +66,12 @@ fun void ultrasonicListener() {
                         if (ultrasonicValue > 500.0) {
                             0.0 => ultrasonicValue;
                         }
-                        (ultrasonicValue - 20.0)/280.0 => float gain;
-                        setTargetMasterGain(i, 1.0);
+                        Std.clampf(ultrasonicValue, 0.0, 300.0) => ultrasonicValue;
+                        (ultrasonicValue - 20.0)/300.0 => float gain;
+                        if (gain < 0.0) {
+                            0.0 => gain;
+                        }
+                        setTargetMasterGain(i, gain);
                     }
                 }
             }
@@ -90,11 +92,11 @@ fun void ultrasonicPing() {
 
 // ~-~-
 
-5.0::second => dur pieceDuration;
+16::minute => dur pieceDuration;
 1.0::minute => dur whiteNoiseDuration;
 pieceDuration + whiteNoiseDuration => dur totalDuration;
 
-15::second => dur minCellDuration;
+30::minute => dur minCellDuration;
 2::minute => dur maxCellDuration;
 
 [ 174.5,    // F3
