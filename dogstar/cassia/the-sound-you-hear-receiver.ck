@@ -27,7 +27,7 @@ Noise whiteNoise => master => dac;
 CNoise pinkNoise => master => dac;
 Noise whiteNoiseFadeOut => ADSR env => master => dac;
 
-1.0 => float targetMasterGain;
+0.0 => float targetMasterGain;
 master.gain(targetMasterGain);
 
 SndBuf textures[4];

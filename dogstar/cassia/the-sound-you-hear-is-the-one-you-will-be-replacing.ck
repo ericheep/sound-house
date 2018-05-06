@@ -65,6 +65,9 @@ fun void ultrasonicListener() {
                 for (0 => int i; i < hostnames.size(); i++) {
                     if (msg.getString(0) == hostnames[i]) {
                         msg.getFloat(1) => float ultrasonicValue;
+                        if (ultrasonicValue > 500.0) {
+                            0.0 => ultrasonicValue;
+                        }
                         Std.clampf(ultrasonicValue, 0.0, 300.0) => ultrasonicValue;
                         ultrasonicValue/300.0 => float gain;
                         <<< i, gain >>>;
