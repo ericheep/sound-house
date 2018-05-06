@@ -100,7 +100,7 @@ fun void oscReceive() {
             if (msg.address == "/whiteNoiseFadeOut") {
                 clearAllSound();
                 msg.getFloat(0) => float seconds;
-                whiteNoiseFadeOut.gain(whiteNoiseFadeOuteGain);
+                whiteNoiseFadeOut.gain(whiteNoiseFadeOutGain);
                 env.set(1::ms, 0::ms, 0.0, seconds::second);
                 env.keyOn();
                 samp => now;
