@@ -17,10 +17,10 @@ in.listenAll();
 // ~-~-
 // audio chain
 
-0.03 => float sineToneGain;
+0.08 => float sineToneGain;
 0.1 => float pinkNoiseGain;
 0.1 => float whiteNoiseGain;
-1.0 => float textureGain;
+0.7 => float textureGain;
 
 SinOsc sineTone => Gain master => dac;
 Noise whiteNoise => master => dac;
