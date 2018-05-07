@@ -67,7 +67,7 @@ fun void ultrasonicListener() {
                             0.0 => ultrasonicValue;
                         }
                         Std.clampf(ultrasonicValue, 0.0, 300.0) => ultrasonicValue;
-                        (ultrasonicValue - 20.0)/300.0 => float gain;
+                        (ultrasonicValue - 20.0)/280.0 => float gain;
                         if (gain < 0.0) {
                             0.0 => gain;
                         }
