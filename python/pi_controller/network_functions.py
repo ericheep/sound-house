@@ -12,22 +12,38 @@ import math
  # need to test this with walls running
 
 def initialize_sensorReceiver_port(ctl_settings):
-    ip = ctl_settings.localIP
+
+    wallIPs = ctl_settings.wallIPs
     port = ctl_settings.portGetSensorData
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--ip", default=ip, help="The ip to listen on")
-    parser.add_argument("--port", type=int, default=port,
-                        help="The port to listen on")
-    args = parser.parse_args()
+    client_list = []
+    for IP in wallIPs:
+        wallIP = IP
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--ip", default=wallIP, help="The ip of the OSC"
+                                                         "server")
+        parser.add_argument("--port", type=int, default=port,
+                            help="The port the OSC server is listening on")
+        args = parser.parse_args()
+        client = udp_client.SimpleUDPClient(args.ip, args.port)
+        client_list.append(client)
+    ctl_settings.wallSensor_clients = client_list
+
+    #ip = ctl_settings.localIP
+    #port = ctl_settings.portGetSensorData
+    #parser = argparse.ArgumentParser()
+    #parser.add_argument("--ip", default=ip, help="The ip to listen on")
+    #parser.add_argument("--port", type=int, default=port,
+    #                    help="The port to listen on")
+    #args = parser.parse_args()
     
     #receives two messages and a value (/w pione 216.3)
     address = "/w"
 
     # the thread that listens for the OSC messages
     dispatcherX = dispatcher.Dispatcher()
-    dispatcherX.map(address, ctl_settings.update_wall_sensors)
+    dispatcherX.map(address, print)#ctl_settings.update_wall_sensors)
 
-    ctl_settings.server = osc_server.ThreadingOSCUDPServer((ip, port),
+    ctl_settings.server = osc_server.ThreadingOSCUDPServer((args.ip, args.port),
                                                          dispatcherX)
     ctl_settings.server_thread = threading.Thread(
         target=ctl_settings.server.serve_forever)

@@ -19,7 +19,7 @@ class Settings():
         self.portVideo = 1234 # to video
 
         #IPs
-        self.localIP = '127.0.0.1' # local IP
+        self.localIP = '192.168.0.7' # local IP
         self.wallIPs = ['pione.local', 'pitwo.local', 'pithree.local',
                         'pifour.local', 'pifive.local', 'pisix.local',
                         'piseven.local', 'pieight.local']
@@ -29,7 +29,7 @@ class Settings():
         # Client lists
         self.senderCK_client = 0 # initialize variable
         self.wallOsc_clients = [] # initialize list
-        self.wallSensor_clinets = []
+        self.wallSensor_clients = []
         #self.video_client = '192.168.1.79' # initialize variable
         self.video_client = 0
 
