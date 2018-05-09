@@ -6,8 +6,6 @@
 
 public class UltrasonicHandler {
 
-
-
     [
         "pione.local", "pitwo.local", "pithree.local", "pifour.local",
         "pifive.local", "pisix.local", "piseven.local", "pieight.local"
@@ -30,7 +28,7 @@ public class UltrasonicHandler {
 
     fun void setOutPort(int port) {
         for (0 => int i; i < NUM_PIS; i++) {
-            ultrasonicOut[i].dest(hostnames[i], DEFAULT_OUT_PORT);
+            ultrasonicOut[i].dest(hostnames[i], port);
         }
     }
 
@@ -41,19 +39,22 @@ public class UltrasonicHandler {
         spork ~ listener();
     }
 
+    fun void parseOsc() {
+        if (msg.address == "/w") {
+            for (0 => int i; i < hostnames.size(); i++) {
+                if ((msg.getString(0) + ".local") == hostnames[i]) {
+                    msg.getFloat(1) => values[i];
+                }
+            }
+        }
+    }
+
     fun void listener() {
         while (true) {
             ultrasonicIn => now;
             while (ultrasonicIn.recv(msg)) {
-                if (msg.address == "/w") {
-                    for (0 => int i; i < hostnames.size(); i++) {
-                        if ((msg.getString(0) + ".local") == hostnames[i]) {
-                            msg.getFloat(1) => values[i];
-                        }
-                    }
-                }
+                parseOsc();
             }
-            1::samp => now;
         }
     }
 }
