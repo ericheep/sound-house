@@ -91,7 +91,7 @@ def getReading():
     distance = pulse_duration * 17150
     return round(distance, 2)
 
-def send(self):
+def send(self, junk):
     # we send the Pi's IP address as the OSC address
     # so the host computer knows which Pi sent a message
     packet = osc_message_builder.OscMessageBuilder(address=piWall)
