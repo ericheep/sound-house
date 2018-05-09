@@ -1,15 +1,11 @@
-// the sound you hear is the one you will be replacing
+// let it
 // sender script
 
-// written by Cassia Streb
-// ChucK realization by Eric Heep
-
+// written by Eric Heep
 // Dog Star 2018
 // ~-~-
 
 UltrasonicHandler uh;
-uh.setInPort(12345);
-uh.setOutPort(5000);
 uh.listen();
 
 PiHandler ph;
