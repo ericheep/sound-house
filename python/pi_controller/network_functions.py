@@ -1,13 +1,79 @@
+# john eagle
+
 import argparse
 from pythonosc import udp_client, osc_message_builder, dispatcher, osc_server
 import threading
 import other_functions as of
 from time import sleep
-from random import randrange
+from random import randrange, choice
 
 import pygame
 
 import math
+
+
+#### new functions from may 2018
+
+def make_client(IP, port):
+    # creates osc client
+    # set IP and port
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ip", default=IP, help="The ip of the OSC server")
+    parser.add_argument("--port", type=int, default=port,
+                        help="The port the OSC server is listening on")
+    args = parser.parse_args()
+    # make client
+    client = udp_client.SimpleUDPClient(args.ip, args.port)
+    return client
+
+def send(client, msg, mode):
+    # sends message to osc client
+    msg1 = msg
+    if mode == 'pis':
+        # this is a nul value just to make send work
+        msg2 = 0
+    # for dev mode only
+    elif mode == 'local':
+        pi = choice(["pione", "pitwo", "pithree", "pifour", "pifive", "pisix",
+                     "piseven", "pieight"])
+        val = randrange(0, 100)
+        msg2 = pi + " " + str(val)
+    client.send_message(msg1, msg2)
+    print(msg1, msg2)
+
+def make_server(IP, port, address):
+    # creates server on thread for receiving osc messages
+    # set IP and port to listen on
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--ip", default=IP, help="The ip of the OSC server")
+    parser.add_argument("--port", type=int, default=port,
+                        help="The port the OSC server is listening on")
+    args = parser.parse_args()
+
+    # the thread that listens for the OSC messages
+    dispatcherX = dispatcher.Dispatcher()
+    dispatcherX.map(address, parse_sensors)
+
+    server = osc_server.ThreadingOSCUDPServer((args.ip, args.port),
+                                              dispatcherX)
+    server_thread = threading.Thread(target=server.serve_forever)
+    server_thread.start()
+
+    print("Serving on {}".format(server.server_address))
+
+    return server
+
+def parse_sensors():
+    #dder = address
+    #print(adder)
+    print("we made it!")
+    print("pi: ", pi)
+    print("val: ", val)
+
+#### old functions
+
+
+
 
  # need to test this with walls running
 
