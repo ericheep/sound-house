@@ -2,8 +2,9 @@
 oscDistance.py
 Eric Heep
 
-Waits for an OSC message from a host, then sends back a distance measurement to the host
+Waits for an OSC message from a host, then sends back a distance measurement to the host.
 """
+
 # standard imports
 import socket
 import argparse
@@ -19,12 +20,6 @@ from pythonosc import dispatcher
 from pythonosc import osc_server
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
-
-# osc vars
-piWall = "/w"
-hostIp = "192.168.0.7"
-piPort = 5000
-hostPort = 12345
 
 # ultrasonic stuff
 GPIO.setmode(GPIO.BCM)
@@ -43,8 +38,6 @@ GPIO.output(TRIG, True)
 time.sleep(0.00001)
 GPIO.output(TRIG, False)
 
-# this IP is set to send out
-client = udp_client.UDPClient(hostIp, hostPort)
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -58,7 +51,6 @@ def get_ip():
         s.close()
         return IP
 
-piIp = get_ip()
 
 def getReading():
     """Gets a reading from the attached Ultrasonic sensor.
@@ -91,16 +83,15 @@ def getReading():
     distance = pulse_duration * 17150
     return round(distance, 2)
 
+
 def send(self, junk):
-    # we send the Pi's IP address as the OSC address
-    # so the host computer knows which Pi sent a message
     packet = osc_message_builder.OscMessageBuilder(address=piWall)
 
     # adds whichPi to the OSC message
     hostname = socket.gethostname()
 
-    # print(hostname)
-
+    # we send the Pi's IP address as the OSC address
+    # so the host computer knows which Pi sent a message
     packet.add_arg(hostname, arg_type='s')
 
     # adds distance reading to the OSC message
@@ -114,23 +105,35 @@ def send(self, junk):
 
 
 if __name__ == "__main__":
+    # osc vars
+    piWall = "/w"
+    hostIp = "192.168.0.7"
+    piPort = 5000
+    hostPort = 12345
+
+    piIp = get_ip()
+
     # sets up arguments for the dispatcher
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ip",
-                        default=piIp, help="The ip to listen to")
-    parser.add_argument("--port",
-                        type=int, default=piPort, help="The port to listen on")
+    parser.add_argument("--hostIp",
+                        type=str, default=hostIp, help="The IP address to send back to")
+    parser.add_argument("--hostPort",
+                        type=int, default=hostPort, help="The port to send back to")
     args = parser.parse_args()
+
+    # this IP is set to send out
+    client = udp_client.UDPClient(args.hostIp, args.hostPort)
 
     # the thread that listens for the OSC messages
     dispatcher = dispatcher.Dispatcher()
-    dispatcher.map("/w", send)
+    dispatcher.map(piWall, send)
 
     # the server we're listening on
     server = osc_server.ThreadingOSCUDPServer(
-        (args.ip, args.port), dispatcher)
+        (piIp, piPort), dispatcher)
 
-    print("Serving on {}".format(server.server_address))
+    print("Serving on " + piIp + " (" + socket.gethostname() + ")" +  " on port " + str(piPort))
+    print("Sending back to " + args.hostIp + " to port " + str(args.hostPort))
 
     # here we go!
     server.serve_forever()
