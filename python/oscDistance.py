@@ -2,8 +2,9 @@
 oscDistance.py
 Eric Heep
 
-Waits for an OSC message from a host, then sends back a distance measurement to the host
+Waits for an OSC message from a host, then sends back a distance measurement to the host.
 """
+
 # standard imports
 import socket
 import argparse
@@ -36,6 +37,7 @@ time.sleep(2)
 GPIO.output(TRIG, True)
 time.sleep(0.00001)
 GPIO.output(TRIG, False)
+
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -81,16 +83,15 @@ def getReading():
     distance = pulse_duration * 17150
     return round(distance, 2)
 
+
 def send(self, junk):
-    # we send the Pi's IP address as the OSC address
-    # so the host computer knows which Pi sent a message
     packet = osc_message_builder.OscMessageBuilder(address=piWall)
 
     # adds whichPi to the OSC message
     hostname = socket.gethostname()
 
-    # print(hostname)
-
+    # we send the Pi's IP address as the OSC address
+    # so the host computer knows which Pi sent a message
     packet.add_arg(hostname, arg_type='s')
 
     # adds distance reading to the OSC message
@@ -131,8 +132,8 @@ if __name__ == "__main__":
     server = osc_server.ThreadingOSCUDPServer(
         (piIp, piPort), dispatcher)
 
-    print("Serving on {}".format(server.server_address))
-    print("Sending back to " + args.hostIp + " on port " + str(args.hostPort))
+    print("Serving on " + piIp + " (" + socket.gethostname() + ")" +  " on port " + str(piPort))
+    print("Sending back to " + args.hostIp + " to port " + str(args.hostPort))
 
     # here we go!
     server.serve_forever()
