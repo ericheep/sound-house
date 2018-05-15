@@ -6,44 +6,52 @@
 
 public class UltrasonicHandler {
 
-    [
-        "pione.local", "pitwo.local", "pithree.local", "pifour.local",
-        "pifive.local", "pisix.local", "piseven.local", "pieight.local"
-    ] @=> string hostnames[];
-
-    hostnames.size() => int NUM_PIS;
-    float values[NUM_PIS];
-
     OscIn ultrasonicIn;
     OscMsg msg;
 
-    OscOut ultrasonicOut[NUM_PIS];
+    OscOut ultrasonicOut[0];
+    float values[0];
+    string hostnames[0];
+    0 => int NUM_PIS;
 
-    12345 => int DEFAULT_IN_PORT;
-    5000 => int DEFAULT_OUT_PORT;
-
-    fun void setInPort(int port) {
-        port => ultrasonicIn.port;
-    }
-
-    fun void setOutPort(int port) {
-        for (0 => int i; i < NUM_PIS; i++) {
-            ultrasonicOut[i].dest(hostnames[i], port);
+    fun void init(string _hostnames[], int outPort, int inPort) {
+        _hostnames @=> hostnames;
+        inPort => ultrasonicIn.port;
+        ultrasonicIn.listenAll();
+        for (0 => int i; i < hostnames.size(); i++) {
+            OscOut oscOut;
+            ultrasonicOut << oscOut;
+            ultrasonicOut[i].dest(hostnames[i], outPort);
         }
+        hostnames.size() => NUM_PIS;
+        values.size(NUM_PIS);
     }
-
-    setInPort(DEFAULT_IN_PORT);
-    setOutPort(DEFAULT_OUT_PORT);
 
     fun void listen() {
         spork ~ listener();
     }
 
-    fun void parseOsc() {
+    fun void ping(dur cycleDuration) {
+        spork ~ pinger(cycleDuration);
+    }
+
+    fun void pinger(dur cycleDuration) {
+        while (true) {
+            for (0 => int i; i < NUM_PIS; i++) {
+                ultrasonicOut[i].start("/w");
+                ultrasonicOut[i].add(0);
+                ultrasonicOut[i].send();
+                cycleDuration => now;
+            }
+        }
+    }
+
+    fun void parseOsc(OscMsg msg) {
         if (msg.address == "/w") {
-            for (0 => int i; i < hostnames.size(); i++) {
+            for (0 => int i; i < NUM_PIS; i++) {
                 if ((msg.getString(0) + ".local") == hostnames[i]) {
                     msg.getFloat(1) => values[i];
+                    <<< values[i] >>>;
                 }
             }
         }
@@ -53,7 +61,7 @@ public class UltrasonicHandler {
         while (true) {
             ultrasonicIn => now;
             while (ultrasonicIn.recv(msg)) {
-                parseOsc();
+                parseOsc(msg);
             }
         }
     }

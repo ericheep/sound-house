@@ -6,20 +6,14 @@
 
 public class PiHandler {
 
-    [
-        "pione.local", "pitwo.local", "pithree.local", "pifour.local",
-        "pifive.local", "pisix.local", "piseven.local", "pieight.local"
-    ] @=> string hostnames[];
-
-    hostnames.size() => int NUM_PIS;
-
-    OscOut piOut[8];
+    OscOut piOut[0];
     OscMsg msg;
 
-    fun void setOutPort(int port) {
-        for (0 => int i; i < NUM_PIS; i++) {
+    fun void init(string hostnames[], int port) {
+        for (0 => int i; i < hostnames.size(); i++) {
+            OscOut oscOut;
+            piOut << oscOut;
             piOut[i].dest(hostnames[i], port);
         }
     }
-
 }
