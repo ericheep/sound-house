@@ -6,37 +6,27 @@ Waits for an OSC message from a host, then sends back a distance measurement to 
 """
 
 # standard imports
-import socket
-import argparse
-import random
-import time
+import socket, argparse, random, time
 from datetime import datetime, timedelta
 
 # pi import
 import RPi.GPIO as GPIO
 
 # osc imports
-from pythonosc import dispatcher
-from pythonosc import osc_server
-from pythonosc import osc_message_builder
-from pythonosc import udp_client
-
-# ultrasonic stuff
-GPIO.setmode(GPIO.BCM)
+from pythonosc import dispatcher, osc_server, osc_message_builder, udp_client
 
 TRIG = 23
 ECHO = 24
 
-GPIO.setup(TRIG, GPIO.OUT)
-GPIO.setup(ECHO, GPIO.IN)
 
-GPIO.output(TRIG, False)
-time.sleep(2)
+def ultrasonic_init():
+    GPIO.setmode(GPIO.BCM)
 
-# initial readout, probably not necessary
-GPIO.output(TRIG, True)
-time.sleep(0.00001)
-GPIO.output(TRIG, False)
+    GPIO.setup(TRIG, GPIO.OUT)
+    GPIO.setup(ECHO, GPIO.IN)
+
+    GPIO.output(TRIG, False)
+    time.sleep(2)
 
 
 def get_ip():
@@ -52,10 +42,7 @@ def get_ip():
         return IP
 
 
-def getReading():
-    """Gets a reading from the attached Ultrasonic sensor.
-    """
-
+def get_reading():
     # does a ping or something
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
@@ -65,6 +52,7 @@ def getReading():
     timeout = datetime.now() + timedelta(seconds=1)
 
     pulse_end = 0
+    pulse_start = 0
 
     # finds the time measurements?
     while GPIO.input(ECHO)==0:
@@ -95,7 +83,7 @@ def send(self, junk):
     packet.add_arg(hostname, arg_type='s')
 
     # adds distance reading to the OSC message
-    packet.add_arg(getReading(), arg_type='f')
+    packet.add_arg(get_reading(), arg_type='f')
 
     # completes the OSC message
     packet = packet.build()
@@ -112,6 +100,7 @@ if __name__ == "__main__":
     hostPort = 12345
 
     piIp = get_ip()
+    ultrasonic_init()
 
     # sets up arguments for the dispatcher
     parser = argparse.ArgumentParser()
