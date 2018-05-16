@@ -13,13 +13,12 @@
 [ "liafd.local" ] @=> string hostnames[];
 
 UltrasonicHandler uh;
-uh.listen();
-uh.ping(40::ms);
 uh.init(hostnames, 5000, 12345);
 
 PiHandler ph;
 ph.init(hostnames, 10001);
 
 while (true) {
-    second => now;
+    uh.passingEvent => now;
+    <<< uh.passingEvent.value >>>;
 }
