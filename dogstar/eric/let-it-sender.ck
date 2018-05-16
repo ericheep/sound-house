@@ -20,5 +20,5 @@ ph.init(hostnames, 10001);
 
 while (true) {
     uh.passingEvent => now;
-    <<< uh.passingEvent.value >>>;
+    <<< uh.passingEvent.value, uh.passingEvent.reading >>>;
 }

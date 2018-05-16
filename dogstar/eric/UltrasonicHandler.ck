@@ -21,6 +21,7 @@ public class UltrasonicHandler {
 
     class PassingEvent extends Event {
         int value;
+        float reading;
     }
     PassingEvent passingEvent;
 
@@ -40,6 +41,7 @@ public class UltrasonicHandler {
             float filterArray[filterSize];
             filterArray @=> values[i];
         }
+
         spork ~ ping();
         spork ~ listen();
     }
@@ -93,12 +95,17 @@ public class UltrasonicHandler {
     fun void schmidtTrigger(float val, int index) {
         if (val > schmidtMax && schmidtLatch[index]) {
             0 => schmidtLatch[index];
-            index => passingEvent.value;
-            passingEvent.signal();
+            handleEvent(val, index);
         }
         if (val < schmidtMin) {
             1 => schmidtLatch[index];
         }
+    }
+
+    fun void handleEvent(float val, int index) {
+        index => passingEvent.value;
+        val => passingEvent.reading;
+        passingEvent.signal();
     }
 
     fun void parseOsc(OscMsg msg) {
@@ -106,6 +113,8 @@ public class UltrasonicHandler {
             for (0 => int i; i < NUM_PIS; i++) {
                 if ((msg.getString(0) + ".local") == hostnames[i]) {
                     msg.getFloat(1) => float reading;
+
+                    // filters out strange readings
                     if (reading < 1000.0 && reading > 0.0) {
                         updateValues(reading, values[i]);
                         schmidtTrigger(std(values[i]), i);
