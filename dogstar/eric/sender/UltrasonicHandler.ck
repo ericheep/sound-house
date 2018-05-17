@@ -15,9 +15,13 @@ public class UltrasonicHandler {
     0 => int NUM_PIS;
     10 => int filterSize;
     100::ms => dur pingCycle;
+
     int schmidtLatch[0];
     30.0 => float schmidtMax;
     10.0 => float schmidtMin;
+
+    300.0 => float maxDistance;
+    10.0 => float minDistance;
 
     class PassingEvent extends Event {
         int value;
@@ -116,6 +120,7 @@ public class UltrasonicHandler {
 
                     // filters out strange readings
                     if (reading < 1000.0 && reading > 0.0) {
+                        Std.clampf(reading, maxDistance, minDistance) => reading;
                         updateValues(reading, values[i]);
                         schmidtTrigger(std(values[i]), i);
                     }
