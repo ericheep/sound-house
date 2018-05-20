@@ -33,8 +33,8 @@ master.gain(targetMasterGain);
 
 SndBuf textures[4];
 ["fireplace.wav",
- "coffee.wav",
- "coffee.wav",
+ "texture-1.wav",
+ "texture-2.wav",
  "sheep.wav"]
  @=> string wavs[];
 
