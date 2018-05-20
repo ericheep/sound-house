@@ -6,32 +6,65 @@
 
 public class Fades {
     CNoise p => TriOsc t => Dyno d => LPF lpf => WinFuncEnv win => PowerADSR env => dac;
-    SinOsc s => blackhole;
+    SinOsc s => t;
 
     fun void test() {
-        p.gain(1500);
+        p.gain(50);
+        s.gain(15000);
         t.sync(2);
-        lpf.freq(4000);
-        t.freq(9000);
+
+        Math.random2f(950.0, 1150.0) => float freq;
+
+        s.freq(freq * 2);
+        t.freq(freq);
+        lpf.freq(freq/2.0);
 
         spork ~ windowModulate();
 
-        envelopePath(
-            [1.0, 2.0, 3.0, 2.0, 4.0, 4.0]
-        );
+        float envelope[10];
+        for (0 => int i; i < envelope.size(); i++) {
+            Math.random2f(1.5, 3.0) => envelope[i];
+        }
+
+        envelopePath(envelope);
     }
 
-    // TODO: change window modulate durations to drift independently
+    fun dur drunkMovement(dur drunk, dur min, dur max) {
+        Math.random2f(0.2, 0.3)::ms => dur distance;
+        if (drunk < min) {
+            distance +=> drunk;
+        } else if (drunk > max) {
+            distance -=> drunk;
+        } else {
+            if (maybe) {
+                distance +=> drunk;
+            } else {
+                distance -=> drunk;
+            }
+        }
+
+        return drunk;
+    }
 
     fun void windowModulate() {
+        10::ms => dur min;
+        20::ms => dur max;
+        Math.random2f(0.0, 1.0) * max + min => dur attackSpace;
+        Math.random2f(0.0, 1.0) * max + min => dur releaseSpace;
+
         while (true) {
+            attackSpace;
             win.setParzen();
             win.keyOn();
             win.attackTime(5::ms);
-            20::ms => now;
+            attackSpace => now;
             win.keyOff();
             win.releaseTime(5::ms);
-            20::ms => now;
+            releaseSpace => now;
+
+            drunkMovement(attackSpace, min, max) => attackSpace;
+            drunkMovement(releaseSpace, min, max) => releaseSpace;
+            <<< attackSpace/ms, releaseSpace/ms >>>;
         }
     }
 
