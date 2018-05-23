@@ -19,22 +19,25 @@ in.listenAll();
 
 0.08 => float sineToneGain;
 0.1 => float pinkNoiseGain;
-0.03 => float whiteNoiseGain;
+0.1 => float greyNoiseGain;
 0.7 => float textureGain;
 0.3 => float whiteNoiseFadeOutGain;
 
 SinOsc sineTone => Gain master => dac;
-Noise whiteNoise => master => dac;
+SndBuf greyNoise => master => dac;
 CNoise pinkNoise => master => dac;
 Noise whiteNoiseFadeOut => ADSR env => master => dac;
 
 0.0 => float targetMasterGain;
 master.gain(targetMasterGain);
 
+greyNoise.read(me.dir() + "grey-noise.wav");
+greyNoise.gain(greyNoiseGain);
+
 SndBuf textures[4];
 ["fireplace.wav",
- "coffee.wav",
- "coffee.wav",
+ "texture-1.wav",
+ "texture-2.wav",
  "sheep.wav"]
  @=> string wavs[];
 
@@ -47,7 +50,7 @@ for (0 => int i; i < 4; i++) {
 fun void clearAllSound() {
     sineTone.gain(0.0);
     pinkNoise.gain(0.0);
-    whiteNoise.gain(0.0);
+    greyNoise.gain(0.0);
     whiteNoiseFadeOut.gain(0.0);
     for (0 => int i; i < 4; i++) {
         textures[i].gain(0.0);
@@ -82,9 +85,11 @@ fun void oscReceive() {
                 sineTone.freq(f);
                 sineTone.gain(sineToneGain);
             }
-            if (msg.address == "/whiteNoise") {
+            if (msg.address == "/greyNoise") {
                 clearAllSound();
-                whiteNoise.gain(whiteNoiseGain);
+                greyNoise.pos(Math.random2(0, greyNoise.samples() -1));
+                greyNoise.loop(1);
+                greyNoise.gain(greyNoiseGain);
             }
             if (msg.address == "/pinkNoise") {
                 clearAllSound();
