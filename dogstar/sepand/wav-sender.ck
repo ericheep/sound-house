@@ -1,15 +1,15 @@
 [
     "vera.local",
-    "liafd.local",
+    "ethel.local"
 ] @=> string IPS[];
 
-IPS.size() => NUM_IPS;
+IPS.size() => int NUM_IPS;
 
 OscOut out[NUM_IPS];
 OscMsg msg;
 
 for (0 => int i; i < NUM_IPS; i++) {
-    out[i].dest(IPS[i], OUT_PORT);
+    out[i].dest(IPS[i], 10001);
 }
 
 5::second => now;
