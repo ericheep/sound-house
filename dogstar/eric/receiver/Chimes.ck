@@ -8,7 +8,6 @@ public class Chimes {
     CNoise p => TriOsc t => Dyno d => LPF lpf => ADSR env => dac;
     SinOsc s => blackhole;
 
-
     fun void playMaj3() {
         s.freq(150);
         t.sync(2);
@@ -69,6 +68,6 @@ public class Chimes {
 }
 
 Chimes c;
-// c.playMaj6();
+c.playMaj6();
 // c.playMaj3();
- c.playBeeps();
+//c.playBeeps();
