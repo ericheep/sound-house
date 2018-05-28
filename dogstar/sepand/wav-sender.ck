@@ -12,7 +12,7 @@ for (0 => int i; i < NUM_IPS; i++) {
     out[i].dest(IPS[i], 10001);
 }
 
-5::second => now;
+1::second => now;
 
 out[0].start("/left-channel");
 out[0].send();

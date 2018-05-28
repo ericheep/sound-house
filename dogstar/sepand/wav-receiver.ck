@@ -9,11 +9,11 @@ SndBuf leftChannel => dac;
 SndBuf rightChannel => dac;
 
 leftChannel.read(me.dir() + "left-channel.wav");
-leftChannel.gain(0.5);
+leftChannel.gain(0.8);
 leftChannel.pos(leftChannel.samples() - 1);
 
 rightChannel.read(me.dir() + "right-channel.wav");
-rightChannel.gain(0.5);
+rightChannel.gain(0.8);
 rightChannel.pos(rightChannel.samples() - 1);
 
 fun void oscReceive() {
