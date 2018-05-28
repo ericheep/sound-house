@@ -14,7 +14,7 @@ public class Skateboards {
     Math.random2f(100.0, 250.0) => float root;
 
     for (0 => int i; i < sin.size(); i++) {
-        sin[i].gain(0.05);
+        sin[i].gain(0.10);
         sin[i] => sinGain;
         sin[i].freq(root * Math.random2(1, 16));
     }

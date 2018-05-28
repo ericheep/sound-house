@@ -1,21 +1,28 @@
-// Pads
+// Traffic
 // written by Eric heep
 
 // Dog Star 2018
 // ~-~-
 
-public class Pads {
+public class Traffic {
     CNoise p => LPF lpf => HPF hpf => Gain g => dac;
-    SinOsc sin => blackhole;
     SinOsc mod => blackhole;
 
-    400.0 => float root;
-
-    // sin.sync(2);
-    mod.freq(root/(4.0 * 1024.0));
-    sin.freq(root);
+    2030.0 => float root;
 
     spork ~ modulate();
+    spork ~ falling();
+
+    fun void falling() {
+        while (true) {
+            if (root > 20) {
+                0.01 -=> root;
+                <<< root >>>;
+            }
+            mod.freq(root/(4.0 * 1024.0));
+            ms => now;
+        }
+    }
 
     fun void modulate() {
         while (true) {
@@ -29,5 +36,5 @@ public class Pads {
     }
 }
 
-Pads p;
+Traffic t;
 hour => now;

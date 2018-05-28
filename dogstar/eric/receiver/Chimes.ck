@@ -68,6 +68,6 @@ public class Chimes {
 }
 
 Chimes c;
-// c.playMaj6();
+c.playMaj6();
 // c.playMaj3();
- c.playBeeps();
+//c.playBeeps();
