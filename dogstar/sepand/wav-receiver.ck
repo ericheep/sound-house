@@ -5,29 +5,33 @@ OscMsg msg;
 10001 => in.port;
 in.listenAll();
 
-SndBuf leftChannel => dac;
-SndBuf rightChannel => dac;
+SndBuf wall => dac;
 
-leftChannel.read(me.dir() + "left-channel.wav");
-leftChannel.gain(0.8);
-leftChannel.pos(leftChannel.samples() - 1);
-
-rightChannel.read(me.dir() + "right-channel.wav");
-rightChannel.gain(0.8);
-rightChannel.pos(rightChannel.samples() - 1);
+wall.gain(0.8);
 
 fun void oscReceive() {
     while (true) {
         in => now;
         while (in.recv(msg)) {
-            if (msg.address == "/left-channel") {
-                leftChannel.pos(0);
-            }
-            if (msg.address == "/right-channel") {
-                rightChannel.pos(0);
+            if (msg.address == "/wall-one") load("wall-one.wav");
+            if (msg.address == "/wall-two") load("wall-two.wav");
+            if (msg.address == "/wall-three") load("wall-three.wav");
+            if (msg.address == "/wall-four") load("wall-four.wav");
+            if (msg.address == "/wall-five") load("wall-five.wav");
+            if (msg.address == "/wall-six") load("wall-six.wav");
+            if (msg.address == "/wall-seven") load("wall-seven.wav");
+            if (msg.address == "/wall-eight") load("wall-eight.wav");
+
+            if (msg.address == "/play") {
+                wall.pos(0);
             }
         }
     }
+}
+
+fun void load(string filename) {
+    wall.read(me.dir() + filename);
+    wall.pos(wall.samples() - 1);
 }
 
 spork ~ oscReceive();

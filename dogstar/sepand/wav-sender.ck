@@ -3,6 +3,17 @@
     "ethel.local"
 ] @=> string IPS[];
 
+[
+    "/wall-one",
+    "/wall-two",
+    "/wall-three",
+    "/wall-four",
+    "/wall-five",
+    "/wall-six",
+    "/wall-seven",
+    "/wall-eight"
+] @=> string addr[];
+
 IPS.size() => int NUM_IPS;
 
 OscOut out[NUM_IPS];
@@ -12,11 +23,16 @@ for (0 => int i; i < NUM_IPS; i++) {
     out[i].dest(IPS[i], 10001);
 }
 
-1::second => now;
+second => now;
 
-out[0].start("/left-channel");
-out[0].send();
-out[1].start("/right-channel");
-out[1].send();
+for (0 => int i; i < NUM_IPS; i++) {
+    out[i].start(addr[i]);
+    out[i].send();
+}
 
-1::second => now;
+second => now;
+
+for (0 => int i; i < NUM_IPS; i++) {
+    out[i].start("/play");
+    out[i].send();
+}
