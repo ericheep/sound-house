@@ -1,4 +1,4 @@
-// let it wash over you like waves
+// desert lines
 // receiver script
 
 // written by Eric Heep

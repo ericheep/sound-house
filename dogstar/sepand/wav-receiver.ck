@@ -30,7 +30,7 @@ fun void oscReceive() {
 }
 
 fun void load(string filename) {
-    wall.read(me.dir() + filename);
+    wall.read(me.dir() + "/wavs/" + filename);
     wall.pos(wall.samples() - 1);
 }
 
