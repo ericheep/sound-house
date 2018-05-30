@@ -1,4 +1,4 @@
-// let it
+// desert lines
 // sender script
 
 // written by Eric Heep
