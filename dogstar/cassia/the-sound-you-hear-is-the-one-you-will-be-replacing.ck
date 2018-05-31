@@ -109,14 +109,14 @@ pieceDuration + whiteNoiseDuration => dur totalDuration;
 
 2 => int maxSilences;
 6 => int maxSineTones;
-1 => int maxWhiteNoises;
+1 => int maxGreyNoises;
 2 => int maxPinkNoises;
 2 => int maxTextures;
 1 => int minTextures;
 
 0 => int silenceCount;
 0 => int sineToneCount;
-0 => int whiteNoiseCount;
+0 => int greyNoiseCount;
 0 => int pinkNoiseCount;
 0 => int textureCount;
 
@@ -153,7 +153,7 @@ fun void playCell(int index, dur duration) {
         } else if (choice == 1 && sineToneCount < maxSineTones) {
             playSineTone(index, duration);
             return;
-        } else if (choice == 2 && whiteNoiseCount < maxWhiteNoises) {
+        } else if (choice == 2 && greyNoiseCount < maxGreyNoises) {
             playWhiteNoise(index, duration);
             return;
         } else if (choice == 3 && pinkNoiseCount < maxPinkNoises) {
@@ -189,12 +189,12 @@ fun void playSineTone(int index, dur duration) {
 }
 
 fun void playWhiteNoise(int index, dur duration) {
-    <<< index, "white noise \t", duration/second >>>;
-    whiteNoiseCount++;
-    out[index].start("/whiteNoise");
+    <<< index, "grey noise \t", duration/second >>>;
+    greyNoiseCount++;
+    out[index].start("/greyNoise");
     out[index].send();
     duration => now;
-    whiteNoiseCount--;
+    greyNoiseCount--;
 }
 
 fun void playPinkNoise(int index, dur duration) {
