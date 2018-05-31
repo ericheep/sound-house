@@ -19,7 +19,8 @@ class Settings():
         self.portVideo = 1234 # to video
 
         #IPs
-        self.localIP = '192.168.0.7' # local IP
+        self.myIP = '192.168.0.7' # John MBP
+        self.localIP = '127.0.0.1'
         self.wallIPs = ['pione.local', 'pitwo.local', 'pithree.local',
                         'pifour.local', 'pifive.local', 'pisix.local',
                         'piseven.local', 'pieight.local']
@@ -95,9 +96,20 @@ class Settings():
         self.wall_speed_factor = 1
 
         # testing server
+        self.sending = ''
         self.save_this = 0
         self.server_thread = 0
 
+
+    def parse_sensors(self, address, hostname, val): # do i need to remove self?
+        wall_names = ["pione", "pitwo", "pithree", "pifour", "pifive", "pisix",
+                      "piseven", "pieight"]
+        print("pi: ", hostname, "val: ", val)
+        if hostname in wall_names:
+            wall_index = wall_names.index(hostname)
+            self.wall_sensors[wall_index] = val
+            print(self.wall_sensors)
+"""
     def update_wall_sensors(self, address, wall_string, val):
         # gets OSC messages and converts to wall/amp info
         walls = ['pione', 'pitwo', 'pithree', 'pifour', 'pifive', 'pisix',
@@ -116,3 +128,4 @@ class Settings():
         elif val <= self.distance_threshold:
             self.wall_amps[wall_index] = self.amp_low
         print(self.wall_amps) # network function call goes here
+"""

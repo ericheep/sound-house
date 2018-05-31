@@ -32,12 +32,26 @@ import panel
 
 ctl_settings = Settings()
 
+
+### Initialize program
+# select runtime mode or dev mode
+ui = input("1. Run Program (networked) 2. Dev. Mode (local): ")
+
+if ui == "1":
+    IP = ctl_settings.myIP #"192.168.0.7"
+    ctl_settings.sending = "pis"
+elif ui == "2":
+    IP = ctl_settings.localIP #"127.0.0.1"
+    ctl_settings.sending = "local"
+
 # initialize port connections
-nf.initialize_audioControl_port(ctl_settings)
-nf.initialize_OscControl_ports(ctl_settings)
 nf.initialize_sensorPing_ports(ctl_settings)
-nf.initialize_sensorReceiver_port(ctl_settings)
-nf.initialize_video_port(ctl_settings)
+nf.initialize_OscControl_ports(ctl_settings)
+
+server = nf.make_server(ctl_settings, IP, ctl_settings.portGetSensorData, "/w")
+
+#nf.initialize_audioControl_port(ctl_settings)
+#nf.initialize_video_port(ctl_settings)
 
 pygame.init()
 pygame.midi.init()
