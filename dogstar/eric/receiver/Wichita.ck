@@ -9,9 +9,11 @@ public class Wichita extends Chubgraph {
     lpf.freq(2000);
     w.gain(0.5);
 
+    int running;
+
     fun void fallingRate(float initialRate) {
         float inc;
-        while (initialRate - inc > 0) {
+        while (initialRate - inc > 0 && running) {
             -0.00005 -=> inc;
             w.rate(initialRate - inc);
             5::ms => now;
@@ -23,6 +25,7 @@ public class Wichita extends Chubgraph {
         progress * 0.4 + 0.6 => float initialRate;
         w.rate(initialRate);
 
+        1 => running;
         spork ~ fallingRate(initialRate);
 
         w.pos(0);
@@ -34,5 +37,7 @@ public class Wichita extends Chubgraph {
         env.releaseTime(7::second);
         env.keyOff();
         7::second => now;
+
+        0 => running;
     }
 }

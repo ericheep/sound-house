@@ -16,4 +16,10 @@ public class PiHandler {
             piOut[i].dest(hostnames[i], port);
         }
     }
+
+    fun void send(string addr, float progress) {
+        out.start(addr);
+        out.add(progress);
+        out.send();
+    }
 }

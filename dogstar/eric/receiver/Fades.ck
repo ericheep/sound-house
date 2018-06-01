@@ -15,7 +15,7 @@ public class Fades {
 
         Math.random2f(950.0, 1150.0) => float freq;
 
-        s.freq(freq * 2);
+        s.freq(freq * 0.5);
         t.freq(freq);
         lpf.freq(freq/2.0);
 

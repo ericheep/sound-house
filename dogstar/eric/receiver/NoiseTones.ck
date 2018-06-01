@@ -24,16 +24,15 @@ public class NoiseTones extends Chubgraph {
         env.sustainLevel(1.0);
         env.keyOn();
 
-        100.0 + 150.0 * progress => float root;
+        100.0 + 100.0 * Math.pow(progress, 3) => float root;
 
         for (0 => int i; i < sin.size(); i++) {
-            sin[i].gain(0.60);
+            sin[i].gain(0.30);
             sin[i].freq(root * Math.random2(1, 16));
         }
 
-        mod.freq(0.2 + progress * 0.4);
+        mod.freq(0.01 + Math.pow(progress, 4) * 0.09);
         spork ~ modulate(root, progress);
-
         40::second => now;
 
         env.releaseTime(10::second);
@@ -46,7 +45,6 @@ public class NoiseTones extends Chubgraph {
     fun void modulate(float root, float progress) {
         while (running) {
             p.gain((mod.last() + 1.0) * 0.5 * 750 + 250 * progress);
-            (mod.last() + 1.0) * 0.5 * 750 + 250 * progress
 
             (mod.last() + 1.0) * 0.5 * 20.0 => float range;
             lpf.freq(root + range/2.0);
@@ -57,6 +55,3 @@ public class NoiseTones extends Chubgraph {
         }
     }
 }
-
-NoiseTones s => dac;
-s.trigger(0.0);
