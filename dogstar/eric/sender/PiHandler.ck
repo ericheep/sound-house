@@ -17,9 +17,9 @@ public class PiHandler {
         }
     }
 
-    fun void send(string addr, float progress) {
-        out.start(addr);
-        out.add(progress);
-        out.send();
+    fun void send(int index, string addr, float progress) {
+        piOut[index].start(addr);
+        piOut[index].add(progress);
+        piOut[index].send();
     }
 }

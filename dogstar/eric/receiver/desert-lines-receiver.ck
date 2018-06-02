@@ -18,12 +18,14 @@ Wichita wichita;
 Bumps bumps;
 NoiseTones noiseTones;
 GasStation gasStation;
+Freezer freezer;
 
 int flrConnected;
 int wichitaConnected;
 int bumpsConnected;
 int noiseTonesConnected;
 int gasStationConnected;
+int freezerConnected;
 
 Gain g => dac;
 
@@ -96,7 +98,18 @@ fun void oscReceive() {
                     1 => gasStationConnected;
                 }
             }
-
+            if (msg.address == "/freezer") {
+                <<< "/freezer", msg.getFloat(0) >>>;
+                if (freezerConnected == 0) {
+                    freezer => g;
+                    0 => freezerConnected;
+                }
+                freezer.trigger(msg.getFloat(0));
+                if (freezerConnected == 1) {
+                    freezer =< g;
+                    1 => freezerConnected;
+                }
+            }
         }
     }
 }

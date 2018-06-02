@@ -14,6 +14,6 @@ out.dest(hostname, 10001);
 
 0.25::second => now;
 
-out.start("/gasStation");
+out.start("/freezer");
 out.add(1.0);
 out.send();
