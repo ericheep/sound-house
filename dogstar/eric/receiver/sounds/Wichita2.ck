@@ -35,7 +35,7 @@ public class Wichita2 extends Chubgraph {
 
         (progress - 1.0) * 1.0 => float reverse;
 
-        w.read("wichita2.wav");
+        w.read(me.dir() + "wichita2.wav");
         reverse  * 0.4 + 0.6 => float initialRate;
         w.rate(initialRate);
 

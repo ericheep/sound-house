@@ -35,7 +35,7 @@ public class Stone2 extends Chubgraph {
 
         (progress - 1.0) * 1.0 => float reverse;
 
-        w.read("stone-2.wav");
+        w.read(me.dir() + "stone2.wav");
         reverse  * 0.4 + 0.6 => float initialRate;
         w.rate(initialRate);
 
