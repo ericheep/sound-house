@@ -33,7 +33,7 @@ public class Stone1 extends Chubgraph {
     fun void trigger(float progress) {
         connect();
 
-        (progress - 1.0) * 1.0 => float reverse;
+        (progress - 1.0) * -1.0 => float reverse;
 
         w.read(me.dir() + "stone1.wav");
         reverse  * 0.4 + 0.6 => float initialRate;

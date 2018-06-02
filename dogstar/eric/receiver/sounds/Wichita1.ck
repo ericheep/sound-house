@@ -24,7 +24,7 @@ public class Wichita1 extends Chubgraph {
     fun void fallingRate(float initialRate) {
         float inc;
         while (initialRate - inc > 0 && running) {
-            -0.00005 -=> inc;
+            -0.00002 -=> inc;
             w.rate(initialRate - inc);
             5::ms => now;
         }
@@ -33,7 +33,7 @@ public class Wichita1 extends Chubgraph {
     fun void trigger(float progress) {
         connect();
 
-        (progress - 1.0) * 1.0 => float reverse;
+        (progress - 1.0) * -1.0 => float reverse;
 
         w.read(me.dir() + "wichita1.wav");
         reverse  * 0.4 + 0.6 => float initialRate;
@@ -59,3 +59,6 @@ public class Wichita1 extends Chubgraph {
         return running;
     }
 }
+
+Wichita1 w => dac;
+w.trigger(0.0);
