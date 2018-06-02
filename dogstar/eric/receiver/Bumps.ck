@@ -23,12 +23,12 @@ public class Bumps extends Chubgraph {
         (progress - 1.0) * -1.0 => float reverse;
         // noise.gain(reverse * 0.7 - 1.0);
 
-        lpf.freq(200 + 700 * reverse);
+        lpf.freq(200 + 400 * reverse);
         Math.pow(reverse, 6) => float revExp;
 
         0.75::second => dur range;
         100::ms => dur min;
-        10::ms + 200::ms * revExp => dur attackTime;
+        10::ms + 100::ms * revExp => dur attackTime;
 
         revExp * range + min => dur bumpDur;
 

@@ -30,9 +30,9 @@ fun void addSound(string addr, dur start, dur end) {
     sounds << sound;
 }
 
-addSound("/floor", 0.0::minute, 0.5::minute);
-addSound("/bumps", 0.25::minute, 2.5::minute);
-addSound("/noiseTones", 2.5::minute, 5.0::minute);
+addSound("/floor", 0.0::minute, 1.5::minute);
+addSound("/bumps", 0.5::minute, 2.5::minute);
+addSound("/noiseTones", 0.0::minute, 4.0::minute);
 
 UltrasonicHandler uh;
 uh.setEmulation();

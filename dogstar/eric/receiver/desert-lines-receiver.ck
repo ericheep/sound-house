@@ -16,8 +16,13 @@ in.listenAll();
 Gain g => dac;
 
 Floors floor => g;
+floor.gain(1.0);
+
 Bumps bumps => g;
+bumps.gain(1.0);
+
 NoiseTones noiseTones => g;
+noiseTones.gain(0.50);
 // Wichita wichita => g;
 // GasStation gasStation => g;
 // Freezer freezer => g;
