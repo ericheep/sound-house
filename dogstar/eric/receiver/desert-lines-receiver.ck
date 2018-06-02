@@ -28,7 +28,7 @@ GasStation gasStation => g;
 gasStation.gain(0.3);
 
 Freezer freezer => g;
-freezer.gain(0.25);
+freezer.gain(0.1);
 
 Wichita wichita => g;
 wichita.gain(1.0);
