@@ -39,6 +39,8 @@ public class Wichita1 extends Chubgraph {
         reverse  * 0.4 + 0.6 => float initialRate;
         w.rate(initialRate);
 
+        env.gain(0.2 + 0.8 * reverse);
+
         1 => running;
         spork ~ fallingRate(initialRate);
 
