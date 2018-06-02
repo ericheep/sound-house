@@ -10,10 +10,12 @@
 // floor        1:00 - 3:00
 // bumps        2:30 - 5:00
 // noiseTones   3:00 - 5:30
-// fades        3:30 - 5:00
 // gasStation   5:00 - 7:00
-// freezer      5:30 - 8:15
-// wichita      7:00 - 7:30
+// freezer      5:30 - 8:45
+// wichita      7:00 - 8:00
+// stoned       7:45 - 8:45
+// sun          8:15 - 9:15
+// traffic      9:00 - 13:00
 
 /* [ */
 /*     "pione.local", "pitwo.local", "pithree.local", "pifour.local", */

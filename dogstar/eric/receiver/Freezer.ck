@@ -8,8 +8,9 @@ public class Freezer extends Chubgraph {
 
     class Distortion extends Chugen {
         fun float tick(float in) {
-            2.5 *=> in;
-            while (in > 1.0 && in < -1.0) {
+            Math.pow(in, 0.95) => in;
+
+            while (in > 1.0 || in < -1.0) {
                 if (in > 1.0) {
                     1.0 - (in - 1.0) => in;
                 }
@@ -21,11 +22,10 @@ public class Freezer extends Chubgraph {
         }
     }
 
-    SinOsc mod => SinOsc sin => ADSR env => LPF lpf => Distortion dist => HPF hpf => outlet;
-
-    SinOsc sin2 => env;
+    SinOsc mod => SinOsc sin => ADSR env => LPF lpf => HPF hpf => outlet;
     sin.sync(2);
 
+    TriOsc sin2 => env;
     SinOsc am;
     SinOsc ring;
 
@@ -46,38 +46,39 @@ public class Freezer extends Chubgraph {
     }
 
     fun void trigger(float progress) {
-        (progress - 1.0) * -1.0 => progress;
+        connect();
 
         spork ~ modulate();
+        (progress - 1.0) * -1.0 => float reverse;
 
-        Math.pow(progress, 3) * 40 + 62 => float root;
+        Math.pow(reverse, 3) * 40 + 62 => float root;
 
-        ring.freq(40 * progress + 10);
+        ring.freq(40 * reverse + 10);
         sin.freq(root);
-        sin2.freq(root * 3);
-        lpf.freq(2200);
-        hpf.freq(root + root * 3 * progress);
+        sin2.freq(root * 2.5);
+        lpf.freq(root * 6);
+        hpf.freq(root + root * 2 * reverse);
         lpf.Q(0.5);
         hpf.Q(0.75);
-        hpf.gain(0.2 + progress * 0.8);
+        hpf.gain(1.0);
 
         spork ~ slide(root);
 
-        am.freq(0.4 + 1.6 * progress);
+        am.freq(1.2 - 1.0 * progress);
 
-        (progress - 1.0) * -1.0 => float reverse;
-        sin.gain(Math.pow(progress, 4) * 0.6 + 0.4);
+        sin.gain(Math.pow(reverse, 4) * 0.2 + 0.8);
 
-        mod.freq(root * 16.0);
+        mod.freq(root * 8.0);
         mod.gain(150);
         sin.sync(2);
 
         env.set(5::second, 0::ms, 1.0, 5::second);
         env.keyOn();
-        25::second => now;
+        35::second => now;
 
         env.keyOff();
         5::second => now;
+        disconnect();
     }
 
     fun void slide(float freq) {
@@ -91,7 +92,7 @@ public class Freezer extends Chubgraph {
     fun void modulate() {
         while (running) {
             sin.gain(Math.pow((am.last() + 1.0) * 0.5 * 0.8, 3) + 0.2);
-            sin2.gain((((am.last() + 1.0) * 0.5 * - 1.0 * -1.0) * 0.05) + 0.001);
+            sin2.gain((((am.last() + 1.0) * 0.5 * - 1.0 * -1.0) * 0.2) + 0.4);
             ms => now;
         }
     }
@@ -100,3 +101,7 @@ public class Freezer extends Chubgraph {
         return running;
     }
 }
+
+Freezer f => dac;
+f.gain(0.1);
+f.trigger(1.0);
