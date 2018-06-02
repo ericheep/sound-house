@@ -1,10 +1,10 @@
-// Wichita
+// Stone2
 // written by Eric heep
 
 // Dog Star 2018
 // ~-~-
 
-public class Wichita extends Chubgraph {
+public class Stone2 extends Chubgraph {
     SndBuf w => LPF lpf => ADSR env;
     lpf.freq(2000);
     w.gain(0.5);
@@ -35,7 +35,7 @@ public class Wichita extends Chubgraph {
 
         (progress - 1.0) * 1.0 => float reverse;
 
-        w.read("wichita-line.wav");
+        w.read("stone-2.wav");
         reverse  * 0.4 + 0.6 => float initialRate;
         w.rate(initialRate);
 
@@ -48,9 +48,9 @@ public class Wichita extends Chubgraph {
         env.keyOn();
         20::ms => now;
 
-        env.releaseTime(7::second);
+        env.releaseTime(5::second);
         env.keyOff();
-        7::second => now;
+        5::second => now;
 
         disconnect();
     }

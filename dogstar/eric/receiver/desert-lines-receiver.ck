@@ -30,8 +30,17 @@ gasStation.gain(0.3);
 Freezer freezer => g;
 freezer.gain(0.1);
 
-Wichita wichita => g;
-wichita.gain(1.0);
+Wichita1 wichita1 => g;
+wichita1.gain(1.0);
+
+Wichita2 wichita2 => g;
+wichita2.gain(1.0);
+
+Stone1 stone1 => g;
+stone1.gain(1.0);
+
+Stone2 stone2 => g;
+stone2.gain(1.0);
 
 fun void oscReceive() {
     while (true) {
@@ -63,9 +72,24 @@ fun void oscReceive() {
                     spork ~ freezer.trigger(msg.getFloat(0));
                 }
             }
-            if (msg.address == "/wichita") {
-                if (!wichita.isRunning()) {
-                    spork ~ wichita.trigger(msg.getFloat(0));
+            if (msg.address == "/wichita1") {
+                if (!wichita1.isRunning()) {
+                    spork ~ wichita1.trigger(msg.getFloat(0));
+                }
+            }
+            if (msg.address == "/wichita2") {
+                if (!wichita2.isRunning()) {
+                    spork ~ wichita2.trigger(msg.getFloat(0));
+                }
+            }
+            if (msg.address == "/stone1") {
+                if (!stone1.isRunning()) {
+                    spork ~ stone1.trigger(msg.getFloat(0));
+                }
+            }
+            if (msg.address == "/stone2") {
+                if (!stone2.isRunning()) {
+                    spork ~ stone2.trigger(msg.getFloat(0));
                 }
             }
             /*

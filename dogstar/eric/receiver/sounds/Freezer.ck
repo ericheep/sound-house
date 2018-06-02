@@ -101,7 +101,3 @@ public class Freezer extends Chubgraph {
         return running;
     }
 }
-
-Freezer f => dac;
-f.gain(0.1);
-f.trigger(1.0);
