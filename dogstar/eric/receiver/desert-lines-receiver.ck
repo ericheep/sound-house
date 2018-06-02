@@ -29,6 +29,7 @@ fun void oscReceive() {
             <<< msg.address, msg.getFloat(0) >>>;
             if (msg.address == "/floor") {
                 if (!floor.isRunning()) {
+                    <<< "uh" >>>;
                     spork ~ floor.trigger(msg.getFloat(0));
                 }
             }
