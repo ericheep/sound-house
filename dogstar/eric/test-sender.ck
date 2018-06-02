@@ -14,6 +14,6 @@ out.dest(hostname, 10001);
 
 0.25::second => now;
 
-out.start("/freezer");
+out.start("/noiseTones");
 out.add(1.0);
 out.send();

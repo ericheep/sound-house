@@ -5,14 +5,37 @@
 // Dog Star 2018
 // ~-~-
 
+// order ~-~-
+
+// floor        1:00 - 3:30
+// bumps        2:00 - 4:00
+// fades        3:30 - 5:00
+// noiseTones   3:00 - 5:30
+// gasStation   5:00 - 7:00
+// freezer      5:30 - 8:15
+// wichita      7:00 - 7:30
+
 /* [ */
 /*     "pione.local", "pitwo.local", "pithree.local", "pifour.local", */
 /*     "pifive.local", "pisix.local", "piseven.local", "pieight.local" */
 /* ] @=> string hostnames[]; */
 
-[ "liafd.local" ] @=> string hostnames[];
+[ "ethel.local", "vera.local" ] @=> string hostnames[];
+
+Sound sounds[0];
+
+fun void addSound(string addr, dur start, dur end) {
+    Sound sound;
+    sound.set(addr, start, end);
+    sounds << sound;
+}
+
+addSound("/floor", 0.0::minute, 0.5::minute);
+addSound("/bumps", 0.25::minute, 2.5::minute);
+addSound("/noiseTones", 2.5::minute, 5.0::minute);
 
 UltrasonicHandler uh;
+uh.setEmulation();
 uh.init(hostnames, 5000, 12345);
 
 PiHandler ph;
@@ -20,5 +43,11 @@ ph.init(hostnames, 10001);
 
 while (true) {
     uh.passingEvent => now;
-    <<< uh.passingEvent.value, uh.passingEvent.reading >>>;
+    uh.passingEvent.value => int index;
+    for (0 => int i; i < sounds.size(); i++) {
+        sounds[i].getProgress(now) => float progress;
+        if (progress >= 0.0) {
+            ph.send(index, sounds[i].getAddress(), progress);
+        }
+    }
 }

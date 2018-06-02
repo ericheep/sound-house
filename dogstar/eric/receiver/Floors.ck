@@ -5,37 +5,50 @@
 // ~-~-
 
 public class Floors extends Chubgraph {
-    CNoise p => LPF lpf => ADSR env => outlet;
-    SinOsc s => blackhole;
+    CNoise p => LPF lpf => ADSR env;
+    SinOsc s;
 
-    4::second => dur envDur;
-    600 => float root;
+    int running;
 
-    fun void init(float progress) {
-        progress * 4.0::second + 4::second => envDur;
+    fun void connect() {
+        1 => running;
+        s => blackhole;
+        env => outlet;
+    }
+
+    fun void disconnect() {
+        0 => running;
+        s =< blackhole;
+        env =< outlet;
+    }
+
+    fun void trigger(float progress) {
+        connect();
+
+        Math.pow(progress, 3) * 30.0::second + 15::second => dur envDur;
         (progress * -1.0) + 1.0 => float reverse;
-        500 * progress + 400 => root;
+        500 * progress + 400 => float root;
+        spork ~ modulate(root);
         lpf.freq(root);
         s.freq(reverse * 5.0 + 2.0);
-    }
 
-    fun void keyOn() {
-        env.attackTime(envDur);
+        env.set(envDur, 0::ms, 1.0, envDur);
         env.sustainLevel(1.0);
         env.keyOn();
-        envDur => now;
-    }
 
-    fun void keyOff() {
-        env.releaseTime(envDur);
+        envDur => now;
         env.keyOff();
         envDur => now;
+
+        disconnect();
     }
 
-    spork ~ modulate();
+    fun int isRunning() {
+        return running;
+    }
 
-    fun void modulate() {
-        while (true) {
+    fun void modulate(float root) {
+        while (running) {
             (s.last() + 1.0) * 0.5 => float scaled;
             lpf.freq(root + 40 * scaled);
             ms => now;

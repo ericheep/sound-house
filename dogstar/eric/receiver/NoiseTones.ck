@@ -5,41 +5,55 @@
 // ~-~-
 
 public class NoiseTones extends Chubgraph {
-    CNoise p => LPF lpf => HPF hpf => Gain g => ADSR env => Gain master => outlet;
-    Gain sinGain => master;
+    CNoise p => LPF lpf => HPF hpf => Gain g => ADSR env => Gain master;
+    Gain sinGain => env;
 
     SinOsc sin[4];
     SinOsc mod;
-
-    int running;
 
     for (0 => int i; i < sin.size(); i++) {
         sin[i] => sinGain;
     }
 
-    fun void trigger(float progress) {
-        1 => running;
+    int running;
+
+    fun void connect() {
+        master => outlet;
         mod => blackhole;
+        1 => running;
+    }
+
+    fun void disconnect() {
+        master =< outlet;
+        mod =< blackhole;
+        0 => running;
+    }
+
+    fun void trigger(float progress) {
+        connect();
+
+        (progress - 1.0) * -1.0 => float reverse;
+
         env.attackTime(10::second);
         env.sustainLevel(1.0);
         env.keyOn();
 
-        100.0 + 100.0 * Math.pow(progress, 3) => float root;
+        100.0 + 100.0 * Math.pow(reverse, 3) => float root;
 
         for (0 => int i; i < sin.size(); i++) {
-            sin[i].gain(0.30);
+            sin[i].gain(0.30 * progress + 0.02);
             sin[i].freq(root * Math.random2(1, 16));
         }
 
-        mod.freq(0.01 + Math.pow(progress, 4) * 0.09);
-        spork ~ modulate(root, progress);
-        40::second => now;
+        mod.freq(0.01 + Math.pow(reverse, 4) * 0.09);
+        spork ~ modulate(root, reverse);
+        35::second => now;
 
         env.releaseTime(10::second);
         env.keyOff();
         10::second => now;
-        mod =< blackhole;
-        0 => running;
+
+        disconnect();
     }
 
     fun void modulate(float root, float progress) {
@@ -53,5 +67,9 @@ public class NoiseTones extends Chubgraph {
             sinGain.gain((mod.last() + 1.0) * 0.5 * -1.0 + 1.0);
             ms => now;
         }
+    }
+
+    fun int isRunning() {
+        return running;
     }
 }

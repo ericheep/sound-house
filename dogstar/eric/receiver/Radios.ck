@@ -44,3 +44,7 @@ public class Radios extends Chubgraph {
 
     p.gain(0.5);
 }
+
+Radios r => dac;
+r.init(1.0);
+r.keyOn();

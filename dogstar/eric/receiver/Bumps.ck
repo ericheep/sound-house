@@ -7,9 +7,21 @@
 public class Bumps extends Chubgraph {
     Noise noise => LPF lpf => Dyno d => ADSR env => outlet;
 
+    int running;
+
+    fun void connect() {
+        1 => running;
+        env => outlet;
+    }
+
+    fun void disconnect() {
+        0 => running;
+        env =< outlet;
+    }
+
     fun void trigger(float progress) {
         (progress - 1.0) * -1.0 => float reverse;
-        noise.gain(reverse * 0.7 - 1.0);
+        // noise.gain(reverse * 0.7 - 1.0);
 
         lpf.freq(200 + 700 * reverse);
         Math.pow(reverse, 6) => float revExp;
@@ -29,5 +41,9 @@ public class Bumps extends Chubgraph {
             env.keyOff();
             bumpDur => now;
         }
+    }
+
+    fun int isRunning() {
+        return running;
     }
 }

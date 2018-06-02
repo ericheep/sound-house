@@ -22,6 +22,7 @@ public class UltrasonicHandler {
 
     300.0 => float maxDistance;
     10.0 => float minDistance;
+    0 => int emulation;
 
     class PassingEvent extends Event {
         int value;
@@ -46,8 +47,16 @@ public class UltrasonicHandler {
             filterArray @=> values[i];
         }
 
-        spork ~ ping();
-        spork ~ listen();
+        if (emulation) {
+            randomEvents(NUM_PIS);
+        } else {
+            spork ~ ping();
+            spork ~ listen();
+        }
+    }
+
+    fun void setEmulation() {
+        1 => emulation;
     }
 
     fun void setPing(dur p) {
@@ -103,6 +112,20 @@ public class UltrasonicHandler {
         }
         if (val < schmidtMin) {
             1 => schmidtLatch[index];
+        }
+    }
+
+    fun void randomEvents(int num) {
+        for (0 => int i; i < num; i++) {
+            spork ~ randomEvent(i);
+        }
+    }
+
+    fun void randomEvent(int index){
+        while (true) {
+            index => passingEvent.value;
+            passingEvent.signal();
+            Math.random2f(0.5, 2.0) * second => now;
         }
     }
 
