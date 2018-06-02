@@ -22,20 +22,31 @@ public class Freezer extends Chubgraph {
     }
 
     SinOsc mod => SinOsc sin => ADSR env => LPF lpf => Distortion dist => HPF hpf => outlet;
+
     SinOsc sin2 => env;
+    sin.sync(2);
+
     SinOsc am;
     SinOsc ring;
-    sin.sync(2);
 
     int running;
 
-    fun void trigger(float progress) {
-        1 => running;
-
-        (progress - 1.0) * -1.0 => progress;
-
-        ring => blackhole;
+    fun void connect() {
+        hpf => outlet;
         am => blackhole;
+        ring => blackhole;
+        1 => running;
+    }
+
+    fun void disconnect() {
+        hpf =< outlet;
+        am =< blackhole;
+        ring =< blackhole;
+        0 => running;
+    }
+
+    fun void trigger(float progress) {
+        (progress - 1.0) * -1.0 => progress;
 
         spork ~ modulate();
 
@@ -67,10 +78,6 @@ public class Freezer extends Chubgraph {
 
         env.keyOff();
         5::second => now;
-
-        ring =< blackhole;
-        am  =< blackhole;
-        0 => running;
     }
 
     fun void slide(float freq) {
@@ -87,5 +94,9 @@ public class Freezer extends Chubgraph {
             sin2.gain((((am.last() + 1.0) * 0.5 * - 1.0 * -1.0) * 0.2) + 0.2);
             ms => now;
         }
+    }
+
+    fun int isRunning() {
+        return running;
     }
 }

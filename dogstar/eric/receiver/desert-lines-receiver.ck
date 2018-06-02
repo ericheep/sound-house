@@ -25,10 +25,13 @@ NoiseTones noiseTones => g;
 noiseTones.gain(0.02);
 
 GasStation gasStation => g;
-gasStation.gain(0.5);
+gasStation.gain(0.3);
 
-// Wichita wichita => g;
-// Freezer freezer => g;
+Freezer freezer => g;
+freezer.gain(0.5);
+
+Wichita wichita => g;
+wichita.gain(1.0);
 
 fun void oscReceive() {
     while (true) {
@@ -37,7 +40,6 @@ fun void oscReceive() {
             <<< msg.address, msg.getFloat(0) >>>;
             if (msg.address == "/floor") {
                 if (!floor.isRunning()) {
-                    <<< "uh" >>>;
                     spork ~ floor.trigger(msg.getFloat(0));
                 }
             }
@@ -54,6 +56,16 @@ fun void oscReceive() {
             if (msg.address == "/gasStation") {
                 if (!gasStation.isRunning()) {
                     spork ~ gasStation.trigger(msg.getFloat(0));
+                }
+            }
+            if (msg.address == "/freezer") {
+                if (!gasStation.isRunning()) {
+                    spork ~ gasStation.trigger(msg.getFloat(0));
+                }
+            }
+            if (msg.address == "/wichita") {
+                if (!wichita.isRunning()) {
+                    spork ~ wichita.trigger(msg.getFloat(0));
                 }
             }
             /*

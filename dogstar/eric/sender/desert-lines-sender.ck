@@ -33,6 +33,9 @@ fun void addSound(string addr, dur start, dur end) {
 addSound("/floor", 0.0::minute, 1.5::minute);
 addSound("/bumps", 0.5::minute, 2.5::minute);
 addSound("/noiseTones", 0.0::minute, 4.0::minute);
+addSound("/gasStation", 0.0::minute, 4.0::minute);
+addSound("/freezer", 0.0::minute, 4.0::minute);
+addSound("/wichita", 0.0::minute, 1.0::minute);
 
 UltrasonicHandler uh;
 uh.setEmulation();

@@ -5,11 +5,21 @@
 // ~-~-
 
 public class Wichita extends Chubgraph {
-    SndBuf w => LPF lpf => ADSR env => outlet;
+    SndBuf w => LPF lpf => ADSR env;
     lpf.freq(2000);
     w.gain(0.5);
 
     int running;
+
+    fun void connect() {
+        env => outlet;
+        1 => running;
+    }
+
+    fun void disconnect() {
+        env =< outlet;
+        0 => running;
+    }
 
     fun void fallingRate(float initialRate) {
         float inc;
@@ -21,6 +31,7 @@ public class Wichita extends Chubgraph {
     }
 
     fun void trigger(float progress) {
+        connect();
         w.read("wichita-line.wav");
         progress * 0.4 + 0.6 => float initialRate;
         w.rate(initialRate);
@@ -38,6 +49,10 @@ public class Wichita extends Chubgraph {
         env.keyOff();
         7::second => now;
 
-        0 => running;
+        disconnect();
+    }
+
+    fun int isRunning() {
+        return running;
     }
 }
