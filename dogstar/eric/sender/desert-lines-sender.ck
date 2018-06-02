@@ -7,10 +7,10 @@
 
 // order ~-~-
 
-// floor        1:00 - 3:30
-// bumps        2:00 - 4:00
-// fades        3:30 - 5:00
+// floor        1:00 - 3:00
+// bumps        2:30 - 5:00
 // noiseTones   3:00 - 5:30
+// fades        3:30 - 5:00
 // gasStation   5:00 - 7:00
 // freezer      5:30 - 8:15
 // wichita      7:00 - 7:30

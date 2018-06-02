@@ -5,16 +5,26 @@
 // ~-~-
 
 public class GasStation extends Chubgraph {
-    CNoise p => TriOsc t => Dyno d => LPF lpf => ADSR env => outlet;
+    CNoise p => TriOsc t => Dyno d => LPF lpf => ADSR env;
     SinOsc s;
 
     int running;
 
+    fun void connect() {
+        1 => running;
+        env => outlet;
+    }
+
+    fun void disconnect() {
+        0 => running;
+        env =< outlet;
+    }
+
     fun void trigger(float progress) {
+        connect();
         spork ~ modulate();
         spork ~ falling();
-        1 => running;
-        s => blackhole;
+
         (progress - 1.0) * -1.0 => float reverse;
 
         t.gain(reverse * 0.6 + 0.4);
@@ -30,13 +40,12 @@ public class GasStation extends Chubgraph {
         second - 40::ms => now;
         env.keyOff();
         40::ms => now;
-        s =< blackhole;
-        0 => running;
+        disconnect();
     }
 
     fun void falling() {
         while (running) {
-            t.freq(t.freq() - 0.02);
+            t.freq(t.freq() - 0.01);
             t.gain(t.gain() - 0.0002);
             ms => now;
         }
@@ -47,5 +56,9 @@ public class GasStation extends Chubgraph {
             p.gain((s.last() + 1.0) * 0.5 * 30);
             ms => now;
         }
+    }
+
+    fun int isRunning() {
+        return running;
     }
 }

@@ -22,9 +22,12 @@ Bumps bumps => g;
 bumps.gain(1.0);
 
 NoiseTones noiseTones => g;
-noiseTones.gain(0.10);
+noiseTones.gain(0.1);
+
+GasStation gasStation => g;
+gasStation.gain(0.5);
+
 // Wichita wichita => g;
-// GasStation gasStation => g;
 // Freezer freezer => g;
 
 fun void oscReceive() {
@@ -46,6 +49,11 @@ fun void oscReceive() {
             if (msg.address == "/noiseTones") {
                 if (!noiseTones.isRunning()) {
                     spork ~ noiseTones.trigger(msg.getFloat(0));
+                }
+            }
+            if (msg.address == "/gasStation") {
+                if (!gasStation.isRunning()) {
+                    spork ~ gasStation.trigger(msg.getFloat(0));
                 }
             }
             /*
