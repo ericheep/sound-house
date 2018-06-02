@@ -22,7 +22,7 @@ Bumps bumps => g;
 bumps.gain(1.0);
 
 NoiseTones noiseTones => g;
-noiseTones.gain(0.50);
+noiseTones.gain(0.10);
 // Wichita wichita => g;
 // GasStation gasStation => g;
 // Freezer freezer => g;
