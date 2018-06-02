@@ -59,8 +59,8 @@ fun void oscReceive() {
                 }
             }
             if (msg.address == "/freezer") {
-                if (!gasStation.isRunning()) {
-                    spork ~ gasStation.trigger(msg.getFloat(0));
+                if (!freezer.isRunning()) {
+                    spork ~ freezer.trigger(msg.getFloat(0));
                 }
             }
             if (msg.address == "/wichita") {

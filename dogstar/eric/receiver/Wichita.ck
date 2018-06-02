@@ -32,8 +32,11 @@ public class Wichita extends Chubgraph {
 
     fun void trigger(float progress) {
         connect();
+
+        (progress - 1.0) * 1.0 => float reverse;
+
         w.read("wichita-line.wav");
-        progress * 0.4 + 0.6 => float initialRate;
+        reverse  * 0.4 + 0.6 => float initialRate;
         w.rate(initialRate);
 
         1 => running;
