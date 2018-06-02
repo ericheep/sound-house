@@ -22,7 +22,7 @@ Bumps bumps => g;
 bumps.gain(1.0);
 
 NoiseTones noiseTones => g;
-noiseTones.gain(0.1);
+noiseTones.gain(0.02);
 
 GasStation gasStation => g;
 gasStation.gain(0.5);
