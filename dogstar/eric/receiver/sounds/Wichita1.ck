@@ -24,7 +24,7 @@ public class Wichita1 extends Chubgraph {
     fun void fallingRate(float initialRate) {
         float inc;
         while (initialRate - inc > 0 && running) {
-            -0.00002 -=> inc;
+            -0.00003 -=> inc;
             w.rate(initialRate - inc);
             5::ms => now;
         }
@@ -59,6 +59,3 @@ public class Wichita1 extends Chubgraph {
         return running;
     }
 }
-
-Wichita1 w => dac;
-w.trigger(0.0);

@@ -24,7 +24,7 @@ public class Stone2 extends Chubgraph {
     fun void fallingRate(float initialRate) {
         float inc;
         while (initialRate - inc > 0 && running) {
-            -0.00005 -=> inc;
+            -0.00004 -=> inc;
             w.rate(initialRate - inc);
             5::ms => now;
         }
