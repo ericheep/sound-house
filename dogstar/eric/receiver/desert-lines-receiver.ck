@@ -31,10 +31,10 @@ Freezer freezer => g;
 freezer.gain(0.1);
 
 Wichita1 wichita1 => g;
-wichita1.gain(1.0);
+wichita1.gain(0.4);
 
 Wichita2 wichita2 => g;
-wichita2.gain(1.0);
+wichita2.gain(0.4);
 
 Stone1 stone1 => g;
 stone1.gain(1.0);
