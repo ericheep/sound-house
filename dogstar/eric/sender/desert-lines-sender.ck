@@ -35,26 +35,27 @@ fun void addSound(string addr, dur start, dur end, float gain) {
 }
 
 // section one
-addSound("/floor",       1.00::minute,  4.00::minute,   1.00);
+addSound("/floor",       1.00::minute,  5.00::minute,   1.00);
 
 // section two
-addSound("/noiseTones",  4.50::minute,  8.50::minute,   0.03);
+addSound("/noiseTones",  4.50::minute,  8.50::minute,   0.20);
 addSound("/bumps",       5.00::minute,  8.00::minute,   1.00);
-addSound("/fades",       7.75::minute,  12.00::minute,  0.70);
-addSound("/beeps",       9.50::minute,  11.00::minute,  0.45);
+addSound("/fades",       7.75::minute,  12.00::minute,  0.75);
+addSound("/beeps",       9.50::minute,  11.25::minute,  0.45);
 
 // section three
-addSound("/freezer",     11.75::minute, 15.50::minute,  0.15);
-addSound("/gasStation",  11.75::minute, 13.00::minute,  0.30);
-addSound("/wichita2",    12.50::minute, 13.50::minute,  0.40);
-addSound("/stone2",      13.25::minute, 14.50::minute,  0.50);
-addSound("/microwave",   13.50::minute, 14.00::minute,  0.002);
-addSound("/stone1",      14.00::minute, 15.00::minute,  0.50);
-addSound("/wichita1",    14.50::minute, 15.50::minute,  0.40);
+addSound("/freezer",     11.75::minute, 16.50::minute,  0.15);
+addSound("/gasStation",  12.25::minute, 13.50::minute,  0.30);
+addSound("/wichita2",    12.50::minute, 13.50::minute,  0.20);
+addSound("/stone2",      13.25::minute, 14.50::minute,  0.30);
+addSound("/microwave",   13.50::minute, 14.50::minute,  0.004);
+addSound("/stone1",      14.00::minute, 15.00::minute,  0.30);
+addSound("/wichita1",    14.50::minute, 15.50::minute,  0.20);
 
 // section four
-addSound("/traffic",     15.25::minute, 18.00::minute,  1.00);
-addSound("/end",         18.50::minute, 20.00::minute,  0.00);
+addSound("/traffic",     14.75::minute, 18.00::minute,  1.00);
+addSound("/bumps",       17.00::minute, 18.00::minute,  0.50);
+addSound("/end",         18.00::minute, 20.00::minute,  0.00);
 
 UltrasonicHandler uh;
 uh.setEmulation();
@@ -67,7 +68,7 @@ while (true) {
     uh.passingEvent => now;
     uh.passingEvent.value => int index;
     for (0 => int i; i < sounds.size(); i++) {
-        sounds[i].getProgress(now) => float progress;
+        sounds[i].getProgress(now + 14::minute) => float progress;
         sounds[i].getGain() => float gain;
         if (progress >= 0.0) {
             ph.send(index, sounds[i].getAddress(), progress, gain);

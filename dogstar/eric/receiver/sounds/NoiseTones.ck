@@ -41,7 +41,7 @@ public class NoiseTones extends Chubgraph {
         100.0 + 100.0 * Math.pow(reverse, 3) => float root;
 
         for (0 => int i; i < sin.size(); i++) {
-            sin[i].gain(0.30 * progress + 0.02);
+            sin[i].gain(0.40 * progress + 0.02);
             sin[i].freq(root * Math.random2(1, 16));
         }
 
