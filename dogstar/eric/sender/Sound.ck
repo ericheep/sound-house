@@ -9,11 +9,13 @@ public class Sound {
    dur end;
    string address;
    float progress;
+   float gain;
 
-   fun void set(string addr, dur s, dur e) {
+   fun void set(string addr, dur s, dur e, float g) {
         addr => address;
         s => start;
         e => end;
+        g => gain;
    }
 
    fun float getProgress(time currentTime) {
@@ -28,5 +30,9 @@ public class Sound {
 
    fun string getAddress() {
         return address;
+   }
+
+   fun float getGain() {
+        return gain;
    }
 }
