@@ -42,10 +42,10 @@ public class Microwave extends Chubgraph {
         hpf.freq(1800);
         lpf.freq(1100);
         tri.sync(2);
-        tri.freq(500 * reverse + 1500);
+        tri.freq(1500 * reverse + 500);
         env.set(20::ms, 0::ms, 1.0, 20::ms);
 
-        0.8::second + reverse * 0.8::second => dur duration;
+        0.1::second + reverse * 0.3::second => dur duration;
 
         repeat(2) {
             env.keyOn();
@@ -69,3 +69,6 @@ public class Microwave extends Chubgraph {
         return running;
     }
 }
+
+Microwave m => dac;
+m.trigger(1.0);

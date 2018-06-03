@@ -16,43 +16,18 @@ in.listenAll();
 Gain g => dac;
 
 Floors floor => g;
-floor.gain(1.0);
-
 Bumps bumps => g;
-bumps.gain(1.0);
-
 NoiseTones noiseTones => g;
-noiseTones.gain(0.02);
-
 GasStation gasStation => g;
-gasStation.gain(0.2);
-
 Microwave microwave => g;
-microwave.gain(0.1);
-
 Freezer freezer => g;
-freezer.gain(0.1);
-
 Wichita1 wichita1 => g;
-wichita1.gain(0.2);
-
 Wichita2 wichita2 => g;
-wichita2.gain(0.2);
-
 Stone1 stone1 => g;
-stone1.gain(1.0);
-
 Stone2 stone2 => g;
-stone2.gain(1.0);
-
 Traffic traffic => g;
-traffic.gain(1.0);
-
 Fades fades => g;
-fades.gain(0.5);
-
 Beeps beeps => g;
-beeps.gain(0.3);
 
 fun void oscReceive() {
     while (true) {
