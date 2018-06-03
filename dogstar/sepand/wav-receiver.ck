@@ -16,6 +16,7 @@ fun void changeVolume(float v) {
     if (g.gain() < 0.0) {
         g.gain(0.0);
     }
+    <<< g.gain(), "" >>>;
 }
 
 fun void oscReceive() {
@@ -24,10 +25,10 @@ fun void oscReceive() {
         while (in.recv(msg)) {
             <<< msg.address >>>;
             if (msg.address == "/up") {
-                changeVolume(0.05);
+                changeVolume(0.025);
             }
             if (msg.address == "/down") {
-                changeVolume(-0.05);
+                changeVolume(-0.025);
             }
 
             if (msg.address == "/wall-one") {
