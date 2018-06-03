@@ -65,6 +65,3 @@ public class Traffic extends Chubgraph {
         return running;
     }
 }
-
-Traffic t => dac;
-t.trigger(0.6);
