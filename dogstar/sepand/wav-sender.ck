@@ -34,10 +34,10 @@ for (0 => int i; i < NUM_IPS; i++) {
 Hid hi;
 HidMsg hidMsg;
 
-["49", "50", "51", "52", "53", "54", "55", "56"] @=> string topRow[];
-["81", "87", "69", "82", "84", "89", "85", "73"] @=> string bottomRow[];
+[49, 50, 51, 52, 53, 54, 55, 56] @=> int topRow[];
+[81, 87, 69, 82, 84, 89, 85, 73] @=> int bottomRow[];
 
-"80" => string play;
+80 => int play;
 
 // which keyboard
 0 => int device;
@@ -54,17 +54,17 @@ while( true ) {
     while( hi.recv( hidMsg ) ) {
         if( hidMsg.isButtonDown() ) {
             for (0 => int i; i < topRow.size(); i++) {
-                if (msg.ascii == topRow[i]) {
+                if (hidMsg.ascii == topRow[i]) {
                     out[i].start("/up");
                     out[i].send();
                 }
-                if (msg.ascii == bottomRow[i]) {
+                if (hidMsg.ascii == bottomRow[i]) {
                     out[i].start("/down");
                     out[i].send();
                 }
             }
 
-            if (msg.ascii == play) {
+            if (hidMsg.ascii == play) {
                 for (0 => int i; i < NUM_IPS; i++) {
                     out[i].start("/play");
                     out[i].send();

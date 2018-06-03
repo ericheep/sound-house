@@ -22,6 +22,7 @@ fun void oscReceive() {
     while (true) {
         in => now;
         while (in.recv(msg)) {
+            <<< msg.address >>>;
             if (msg.address == "/up") {
                 changeVolume(0.05);
             }
