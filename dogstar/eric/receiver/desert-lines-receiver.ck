@@ -42,8 +42,11 @@ stone1.gain(1.0);
 Stone2 stone2 => g;
 stone2.gain(1.0);
 
-Traffic.traffic => g;
+Traffic traffic => g;
 traffic.gain(1.0);
+
+Fades fades => g;
+fades.gain(1.0);
 
 fun void oscReceive() {
 
@@ -69,6 +72,11 @@ fun void oscReceive() {
             if (msg.address == "/gasStation") {
                 if (!gasStation.isRunning()) {
                     spork ~ gasStation.trigger(msg.getFloat(0));
+                }
+            }
+            if (msg.address == "/fades") {
+                if (!fades.isRunning()) {
+                    spork ~ fades.trigger(msg.getFloat(0));
                 }
             }
             if (msg.address == "/freezer") {

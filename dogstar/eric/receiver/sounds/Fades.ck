@@ -4,22 +4,37 @@
 // Dog Star 2018
 // ~-~-
 
-public class Fades {
-    CNoise p => TriOsc t => Dyno d => LPF lpf => WinFuncEnv win => PowerADSR env => dac;
+public class Fades extends Chubgraph {
+    CNoise p => TriOsc t => Dyno d => LPF lpf => ADSR win => ADSR env;
     SinOsc s => t;
 
-    fun void test() {
+    int running;
+
+    fun void connect() {
+        env => outlet;
+        1 => running;
+    }
+
+    fun void disconnect() {
+        env =< outlet;
+        0 => running;
+    }
+
+    fun void trigger(float progress) {
+        connect();
+
         p.gain(50);
         s.gain(15000);
         t.sync(2);
 
-        Math.random2f(950.0, 1150.0) => float freq;
+        (progress - 1.0) * -1.0 => float reverse;
+        950.0 + 1150.0 * reverse => float freq;
 
         s.freq(freq * 0.5);
         t.freq(freq);
         lpf.freq(freq/2.0);
 
-        spork ~ windowModulate();
+        spork ~ windowModulate(progress);
 
         float envelope[10];
         for (0 => int i; i < envelope.size(); i++) {
@@ -27,10 +42,12 @@ public class Fades {
         }
 
         envelopePath(envelope);
+
+        disconnect();
     }
 
-    fun dur drunkMovement(dur drunk, dur min, dur max) {
-        Math.random2f(0.2, 0.3)::ms => dur distance;
+    fun dur drunkMovement(dur drunk, dur min, dur max, float progress) {
+        Math.random2f(0.2, 0.3 + 0.7 * progress)::ms => dur distance;
         if (drunk < min) {
             distance +=> drunk;
         } else if (drunk > max) {
@@ -46,7 +63,7 @@ public class Fades {
         return drunk;
     }
 
-    fun void windowModulate() {
+    fun void windowModulate(float progress) {
         10::ms => dur min;
         20::ms => dur max;
         Math.random2f(0.0, 1.0) * max + min => dur attackSpace;
@@ -54,17 +71,15 @@ public class Fades {
 
         while (true) {
             attackSpace;
-            win.setParzen();
-            win.keyOn();
             win.attackTime(5::ms);
+            win.keyOn();
             attackSpace => now;
             win.keyOff();
             win.releaseTime(5::ms);
             releaseSpace => now;
 
-            drunkMovement(attackSpace, min, max) => attackSpace;
-            drunkMovement(releaseSpace, min, max) => releaseSpace;
-            <<< attackSpace/ms, releaseSpace/ms >>>;
+            drunkMovement(attackSpace, min, max, progress) => attackSpace;
+            drunkMovement(releaseSpace, min, max, progress) => releaseSpace;
         }
     }
 
@@ -73,12 +88,10 @@ public class Fades {
         for (0 => int i; i < N; i++) {
             seconds[i]::second => dur duration;
             if (i % 2 == 0) {
-                env.attackCurve(Math.random2f(1.5, 2.5));
-                env.attack(duration);
+                env.attackTime(duration);
                 env.keyOn();
             } else {
-                env.releaseCurve(Math.random2f(0.25, 0.75));
-                env.release(duration + Math.random2f(0.1, 0.25) * duration);
+                env.releaseTime(duration + Math.random2f(0.5, 1.0) * duration);
                 env.keyOff();
             }
             duration => now;
@@ -88,5 +101,5 @@ public class Fades {
     }
 }
 
-Fades f;
-f.test();
+Fades f => dac;
+f.trigger(1.0);

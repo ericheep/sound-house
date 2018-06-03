@@ -23,7 +23,7 @@ public class Microwave {
         }
     }
 
-    repeat(3) {
+    repeat(2) {
         env.keyOn();
         1.4::second => now;
         env.keyOff();
