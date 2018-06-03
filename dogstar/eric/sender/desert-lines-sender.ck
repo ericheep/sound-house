@@ -46,7 +46,7 @@ addSound("/fades",       7.75::minute,  12.00::minute,  0.75);
 addSound("/beeps",       9.50::minute,  11.25::minute,  0.45);
 
 // section three
-addSound("/freezer",     11.75::minute, 16.50::minute,  0.15);
+addSound("/freezer",     11.75::minute, 16.00::minute,  0.15);
 addSound("/gasStation",  12.25::minute, 13.50::minute,  0.30);
 addSound("/wichita2",    12.50::minute, 13.50::minute,  0.20);
 addSound("/stone2",      13.00::minute, 14.50::minute,  0.30);
@@ -55,11 +55,12 @@ addSound("/stone1",      14.00::minute, 15.15::minute,  0.30);
 addSound("/wichita1",    14.50::minute, 15.50::minute,  0.20);
 
 // section four
-addSound("/traffic",     14.75::minute, 17.00::minute,  1.00);
+addSound("/floor",       15.75::minute, 17.50::minute,  1.00);
+addSound("/traffic",     14.75::minute, 16.75::minute,  1.00);
 addSound("/end",         17.50::minute, 20.00::minute,  0.00);
 
 UltrasonicHandler uh;
-// uh.setEmulation();
+uh.setEmulation();
 uh.init(hostnames, 5000, 12345);
 
 PiHandler ph;
@@ -69,7 +70,7 @@ while (true) {
     uh.passingEvent => now;
     uh.passingEvent.value => int index;
     for (0 => int i; i < sounds.size(); i++) {
-        sounds[i].getProgress(now + 14::minute) => float progress;
+        sounds[i].getProgress(now + 14.00::minute) => float progress;
         sounds[i].getGain() => float gain;
         if (progress >= 0.0) {
             ph.send(index, sounds[i].getAddress(), progress, gain);

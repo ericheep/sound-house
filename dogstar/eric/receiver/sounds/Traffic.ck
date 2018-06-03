@@ -23,11 +23,7 @@ public class Traffic extends Chubgraph {
     fun void trigger(float progress) {
         connect();
 
-        if (progress > 0.5) {
-            1.0 => progress;
-        }
-
-        1030.0 * progress + 1000.0 => float root;
+        1530.0 * progress + 500.0 => float root;
 
         (progress - 1.0) * -1.0 => float reverse;
 
@@ -69,3 +65,6 @@ public class Traffic extends Chubgraph {
         return running;
     }
 }
+
+Traffic t => dac;
+t.trigger(0.6);
