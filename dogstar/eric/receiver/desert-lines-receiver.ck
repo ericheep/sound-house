@@ -27,6 +27,9 @@ noiseTones.gain(0.02);
 GasStation gasStation => g;
 gasStation.gain(0.3);
 
+Microwave microwave => g;
+microwave.gain(0.4);
+
 Freezer freezer => g;
 freezer.gain(0.1);
 
@@ -46,10 +49,12 @@ Traffic traffic => g;
 traffic.gain(1.0);
 
 Fades fades => g;
-fades.gain(1.0);
+fades.gain(0.5);
+
+Beeps beeps => g;
+beeps.gain(0.7);
 
 fun void oscReceive() {
-
     while (true) {
         in => now;
         while (in.recv(msg)) {
@@ -72,6 +77,16 @@ fun void oscReceive() {
             if (msg.address == "/gasStation") {
                 if (!gasStation.isRunning()) {
                     spork ~ gasStation.trigger(msg.getFloat(0));
+                }
+            }
+            if (msg.address == "/microwave") {
+                if (!microwave.isRunning()) {
+                    spork ~ microwave.trigger(msg.getFloat(0));
+                }
+            }
+            if (msg.address == "/beeps") {
+                if (!beeps.isRunning()) {
+                    spork ~ beeps.trigger(msg.getFloat(0));
                 }
             }
             if (msg.address == "/fades") {
@@ -108,6 +123,9 @@ fun void oscReceive() {
                 if (!traffic.isRunning()) {
                     spork ~ traffic.trigger(msg.getFloat(0));
                 }
+            }
+            if (msg.address == "/end") {
+                g.gain(0.0);
             }
         }
     }

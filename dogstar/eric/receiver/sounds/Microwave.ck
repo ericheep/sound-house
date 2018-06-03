@@ -4,15 +4,23 @@
 // Dog Star 2018
 // ~-~-
 
-public class Microwave {
-    CNoise p => TriOsc tri => HPF hpf => LPF lpf => ADSR env => dac;
-    SinOsc s => blackhole;
-    s.freq(8);
+public class Microwave extends Chubgraph {
+    CNoise p => TriOsc tri => HPF hpf => LPF lpf => ADSR env;
+    SinOsc s;
 
-    hpf.freq(1800);
-    lpf.freq(1100);
-    tri.sync(2);
-    tri.freq(2000);
+    int running;
+
+    fun void connect() {
+        env => outlet;
+        s => blackhole;
+        1 => running;
+    }
+
+    fun void disconnect() {
+        env =< outlet;
+        s =< blackhole;
+        0 => running;
+    }
 
     spork ~ modulate();
 
@@ -23,13 +31,41 @@ public class Microwave {
         }
     }
 
-    repeat(2) {
-        env.keyOn();
-        1.4::second => now;
-        env.keyOff();
-        1.4::second => now;
+    fun void trigger(float progress) {
+        connect();
+
+        (progress - 1.0) * -1.0 => float reverse;
+
+        spork ~ falling();
+
+        s.freq(8);
+        hpf.freq(1800);
+        lpf.freq(1100);
+        tri.sync(2);
+        tri.freq(500 * reverse + 1500);
+        env.set(20::ms, 0::ms, 1.0, 20::ms);
+
+        0.8::second + reverse * 0.8::second => dur duration;
+
+        repeat(2) {
+            env.keyOn();
+            duration => now;
+            env.keyOff();
+            duration => now;
+        }
+
+        disconnect();
+    }
+
+    fun void falling() {
+        while (running) {
+            tri.freq(tri.freq() - 0.02);
+            env.gain(env.gain() - 0.0002);
+            ms => now;
+        }
+    }
+
+    fun int isRunning() {
+        return running;
     }
 }
-
-Microwave s;
-hour => now;

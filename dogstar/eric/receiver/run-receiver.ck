@@ -2,6 +2,8 @@ Machine.add(me.dir() + "sounds/Floors.ck");
 Machine.add(me.dir() + "sounds/Bumps.ck");
 Machine.add(me.dir() + "sounds/NoiseTones.ck");
 Machine.add(me.dir() + "sounds/GasStation.ck");
+Machine.add(me.dir() + "sounds/Microwave.ck");
+Machine.add(me.dir() + "sounds/Beeps.ck");
 Machine.add(me.dir() + "sounds/Fades.ck");
 Machine.add(me.dir() + "sounds/Freezer.ck");
 Machine.add(me.dir() + "sounds/Wichita1.ck");

@@ -23,22 +23,24 @@ public class Fades extends Chubgraph {
     fun void trigger(float progress) {
         connect();
 
-        p.gain(50);
+        p.gain(150);
         s.gain(15000);
         t.sync(2);
 
         (progress - 1.0) * -1.0 => float reverse;
-        950.0 + 1150.0 * reverse => float freq;
+        450.0 + 2150.0 * progress => float freq;
 
         s.freq(freq * 0.5);
         t.freq(freq);
         lpf.freq(freq/2.0);
 
-        spork ~ windowModulate(progress);
+        env.gain(1.0 - progress * 0.95);
+
+        spork ~ windowModulate(reverse);
 
         float envelope[10];
         for (0 => int i; i < envelope.size(); i++) {
-            Math.random2f(1.5, 3.0) => envelope[i];
+            Math.random2f(1.0, 2.0 * progress + 2.0) => envelope[i];
         }
 
         envelopePath(envelope);
@@ -99,7 +101,8 @@ public class Fades extends Chubgraph {
 
         seconds[seconds.size() - 1]::second => now;
     }
-}
 
-Fades f => dac;
-f.trigger(1.0);
+    fun int isRunning() {
+        return running;
+    }
+}
