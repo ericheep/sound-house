@@ -13,14 +13,38 @@ fun void oscReceive() {
     while (true) {
         in => now;
         while (in.recv(msg)) {
-            if (msg.address == "/wall-one") load("wall-one.wav");
-            if (msg.address == "/wall-two") load("wall-two.wav");
-            if (msg.address == "/wall-three") load("wall-three.wav");
-            if (msg.address == "/wall-four") load("wall-four.wav");
-            if (msg.address == "/wall-five") load("wall-five.wav");
-            if (msg.address == "/wall-six") load("wall-six.wav");
-            if (msg.address == "/wall-seven") load("wall-seven.wav");
-            if (msg.address == "/wall-eight") load("wall-eight.wav");
+            if (msg.address == "/wall-one") {
+                load("FirstPairLeft.wav");
+                <<< "loaded" >>>;
+            }
+            if (msg.address == "/wall-two") {
+                load("FirstPairRight.wav");
+                <<< "loaded" >>>;
+            }
+            if (msg.address == "/wall-three") {
+                load("SecondPairLeft.wav");
+                <<< "loaded" >>>;
+            }
+            if (msg.address == "/wall-four") {
+                load("SecondPairRight.wav");
+                <<< "loaded" >>>;
+            }
+            if (msg.address == "/wall-five") {
+                load("ThirdPairLeft.wav");
+                <<< "loaded" >>>;
+            }
+            if (msg.address == "/wall-six") {
+                load("ThirdPairRight.wav");
+                <<< "loaded" >>>;
+            }
+            if (msg.address == "/wall-seven") {
+                load("FourthPairLeft.wav");
+                <<< "loaded" >>>;
+            }
+            if (msg.address == "/wall-eight") {
+                load("FourthPairRight.wav");
+                <<< "loaded" >>>;
+            }
 
             if (msg.address == "/play") {
                 wall.pos(0);

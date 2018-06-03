@@ -7,5 +7,6 @@ Machine.add(me.dir() + "sounds/Wichita1.ck");
 Machine.add(me.dir() + "sounds/Wichita2.ck");
 Machine.add(me.dir() + "sounds/Stone1.ck");
 Machine.add(me.dir() + "sounds/Stone2.ck");
+Machine.add(me.dir() + "sounds/Traffic.ck");
 
 Machine.add(me.dir() + "desert-lines-receiver.ck");

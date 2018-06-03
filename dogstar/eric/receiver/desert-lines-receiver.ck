@@ -31,10 +31,10 @@ Freezer freezer => g;
 freezer.gain(0.1);
 
 Wichita1 wichita1 => g;
-wichita1.gain(0.4);
+wichita1.gain(0.2);
 
 Wichita2 wichita2 => g;
-wichita2.gain(0.4);
+wichita2.gain(0.2);
 
 Stone1 stone1 => g;
 stone1.gain(1.0);
@@ -42,7 +42,11 @@ stone1.gain(1.0);
 Stone2 stone2 => g;
 stone2.gain(1.0);
 
+Traffic.traffic => g;
+traffic.gain(1.0);
+
 fun void oscReceive() {
+
     while (true) {
         in => now;
         while (in.recv(msg)) {
@@ -92,43 +96,11 @@ fun void oscReceive() {
                     spork ~ stone2.trigger(msg.getFloat(0));
                 }
             }
-            /*
-            if (msg.address == "/wichita") {
-                <<< "/wichita", msg.getFloat(0) >>>;
-                if (wichitaConnected == 0) {
-                    wichita => g;
-                    1 => wichitaConnected;
-                    spork ~ wichita.trigger(msg.getFloat(0));
-                }
-                if (wichitaConnected == 1) {
-                    wichita =< g;
-                    0 => wichitaConnected;
+            if (msg.address == "/traffic") {
+                if (!traffic.isRunning()) {
+                    spork ~ traffic.trigger(msg.getFloat(0));
                 }
             }
-            if (msg.address == "/gasStation") {
-                <<< "/gasStation", msg.getFloat(0) >>>;
-                if (gasStationConnected == 0) {
-                    gasStation => g;
-                    1 => gasStationConnected;
-                    spork ~ gasStation.trigger(msg.getFloat(0));
-                }
-                if (gasStationConnected == 1) {
-                    gasStation =< g;
-                    0 => gasStationConnected;
-                }
-            }
-            if (msg.address == "/freezer") {
-                <<< "/freezer", msg.getFloat(0) >>>;
-                if (freezerConnected == 0) {
-                    1 => freezerConnected;
-                    freezer => g;
-                    spork ~ freezer.trigger(msg.getFloat(0));
-                }
-                if (freezerConnected == 1) {
-                    freezer =< g;
-                    0 => freezerConnected;
-                }
-            }*/
         }
     }
 }
