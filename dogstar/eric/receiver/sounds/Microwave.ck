@@ -69,6 +69,3 @@ public class Microwave extends Chubgraph {
         return running;
     }
 }
-
-Microwave m => dac;
-m.trigger(1.0);
