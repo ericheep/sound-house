@@ -21,14 +21,14 @@ public class Bumps extends Chubgraph {
 
     fun void trigger(float progress) {
         (progress - 1.0) * -1.0 => float reverse;
-        // noise.gain(reverse * 0.7 - 1.0);
+        noise.gain(1.0 - reverse * 0.7);
 
         lpf.freq(200 + 400 * reverse);
         Math.pow(reverse, 6) => float revExp;
 
         0.75::second => dur range;
         100::ms => dur min;
-        10::ms + 100::ms * revExp => dur attackTime;
+        10::ms + 20::ms * revExp => dur attackTime;
 
         revExp * range + min => dur bumpDur;
 
@@ -47,3 +47,6 @@ public class Bumps extends Chubgraph {
         return running;
     }
 }
+
+Bumps b => dac;
+b.trigger(0.0);

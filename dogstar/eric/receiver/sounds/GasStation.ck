@@ -34,9 +34,9 @@ public class GasStation extends Chubgraph {
         lpf.freq(1200);
         env.set(40::ms, 0::ms, 1.0, 30::ms);
         env.keyOn();
-        t.freq(660.0 * 0.4 + 660.0 * 0.6 *  Math.pow(reverse, 4.0));
+        t.freq(660.0 * 0.2 + 660.0 * 0.8 *  Math.pow(reverse, 4.0));
         second => now;
-        t.freq(528.0 * 0.4 + 528.0 * 0.6 * Math.pow(reverse, 4.0));
+        t.freq(528.0 * 0.2 + 528.0 * 0.8 * Math.pow(reverse, 4.0));
         second - 40::ms => now;
         env.keyOff();
         40::ms => now;

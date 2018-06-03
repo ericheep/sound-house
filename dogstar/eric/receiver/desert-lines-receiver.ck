@@ -25,10 +25,10 @@ NoiseTones noiseTones => g;
 noiseTones.gain(0.02);
 
 GasStation gasStation => g;
-gasStation.gain(0.3);
+gasStation.gain(0.2);
 
 Microwave microwave => g;
-microwave.gain(0.4);
+microwave.gain(0.1);
 
 Freezer freezer => g;
 freezer.gain(0.1);
@@ -52,7 +52,7 @@ Fades fades => g;
 fades.gain(0.5);
 
 Beeps beeps => g;
-beeps.gain(0.7);
+beeps.gain(0.3);
 
 fun void oscReceive() {
     while (true) {

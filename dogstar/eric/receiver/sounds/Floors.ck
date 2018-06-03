@@ -55,5 +55,5 @@ public class Floors extends Chubgraph {
         }
     }
 
-    p.gain(0.5);
+    p.gain(0.8);
 }
