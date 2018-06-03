@@ -47,6 +47,3 @@ public class Bumps extends Chubgraph {
         return running;
     }
 }
-
-Bumps b => dac;
-b.trigger(0.0);
