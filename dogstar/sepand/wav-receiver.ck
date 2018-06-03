@@ -6,7 +6,6 @@ OscMsg msg;
 in.listenAll();
 
 SndBuf wall => Gain g => dac;
-wall.loop(1);
 
 fun void changeVolume(float v) {
     g.gain() + v => g.gain;
@@ -65,6 +64,7 @@ fun void oscReceive() {
 
             if (msg.address == "/play") {
                 wall.pos(0);
+                wall.loop(1);
             }
         }
     }
