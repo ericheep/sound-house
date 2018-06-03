@@ -22,10 +22,14 @@ public class Traffic extends Chubgraph {
 
     fun void trigger(float progress) {
         connect();
+
+        if (progress > 0.5) {
+            1.0 => progress;
+        }
+
         1030.0 * progress + 1000.0 => float root;
 
         (progress - 1.0) * -1.0 => float reverse;
-        // g.gain(0.6 + 0.4 * reverse);
 
         spork ~ falling(root);
         spork ~ modulate(root * reverse + 35.0);
