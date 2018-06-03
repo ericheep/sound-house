@@ -30,9 +30,46 @@ for (0 => int i; i < NUM_IPS; i++) {
     out[i].send();
 }
 
-second => now;
 
-for (0 => int i; i < NUM_IPS; i++) {
-    out[i].start("/play");
-    out[i].send();
+Hid hi;
+HidMsg hidMsg;
+
+["49", "50", "51", "52", "53", "54", "55", "56"] @=> string topRow[];
+["81", "87", "69", "82", "84", "89", "85", "73"] @=> string bottomRow[];
+
+"80" => string play;
+
+// which keyboard
+0 => int device;
+// get from command line
+if( me.args() ) me.arg(0) => Std.atoi => device;
+
+// open keyboard (get device number from command line)
+if( !hi.openKeyboard( device ) ) me.exit();
+<<< "keyboard '" + hi.name() + "' ready", "" >>>;
+
+while( true ) {
+    hi => now;
+
+    while( hi.recv( hidMsg ) ) {
+        if( hidMsg.isButtonDown() ) {
+            for (0 => int i; i < topRow.size(); i++) {
+                if (msg.ascii == topRow[i]) {
+                    out[i].start("/up");
+                    out[i].send();
+                }
+                if (msg.ascii == bottomRow[i]) {
+                    out[i].start("/down");
+                    out[i].send();
+                }
+            }
+
+            if (msg.ascii == play) {
+                for (0 => int i; i < NUM_IPS; i++) {
+                    out[i].start("/play");
+                    out[i].send();
+                }
+            }
+        }
+    }
 }

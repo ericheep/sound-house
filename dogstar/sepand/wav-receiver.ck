@@ -5,44 +5,60 @@ OscMsg msg;
 10001 => in.port;
 in.listenAll();
 
-SndBuf wall => dac;
+SndBuf wall => Gain g => dac;
+wall.loop(1);
 
-wall.gain(0.8);
+fun void changeVolume(float v) {
+    g.gain() + v => g.gain;
+    if (g.gain() > 1.0) {
+        g.gain(1.0);
+    }
+    if (g.gain() < 0.0) {
+        g.gain(0.0);
+    }
+}
 
 fun void oscReceive() {
     while (true) {
         in => now;
         while (in.recv(msg)) {
+            if (msg.address == "/up") {
+                changeVolume(0.05);
+            }
+            if (msg.address == "/down") {
+                changeVolume(-0.05);
+            }
+
             if (msg.address == "/wall-one") {
-                load("FirstPairLeft.wav");
+                load("wavs/wall-one.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-two") {
-                load("FirstPairRight.wav");
+                load("wavs/wall-two.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-three") {
-                load("SecondPairLeft.wav");
+                load("wavs/wall-three.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-four") {
-                load("SecondPairRight.wav");
+                load("wavs/wall-four.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-five") {
-                load("ThirdPairLeft.wav");
+                load("wavs/wall-five.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-six") {
-                load("ThirdPairRight.wav");
+                load("wavs/wall-six.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-seven") {
-                load("FourthPairLeft.wav");
+                load("wavs/wall-seven.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-eight") {
-                load("FourthPairRight.wav");
+                load("wavs/wall-eight.wav");
                 <<< "loaded" >>>;
             }
 
