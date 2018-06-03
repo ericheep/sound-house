@@ -31,35 +31,35 @@ fun void oscReceive() {
             }
 
             if (msg.address == "/wall-one") {
-                load("wavs/wall-one.wav");
+                load("wall-one.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-two") {
-                load("wavs/wall-two.wav");
+                load("wall-two.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-three") {
-                load("wavs/wall-three.wav");
+                load("wall-three.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-four") {
-                load("wavs/wall-four.wav");
+                load("wall-four.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-five") {
-                load("wavs/wall-five.wav");
+                load("wall-five.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-six") {
-                load("wavs/wall-six.wav");
+                load("wall-six.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-seven") {
-                load("wavs/wall-seven.wav");
+                load("wall-seven.wav");
                 <<< "loaded" >>>;
             }
             if (msg.address == "/wall-eight") {
-                load("wavs/wall-eight.wav");
+                load("wall-eight.wav");
                 <<< "loaded" >>>;
             }
 
