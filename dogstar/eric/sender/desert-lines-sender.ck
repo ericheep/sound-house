@@ -33,21 +33,28 @@ fun void addSound(string addr, dur start, dur end, float gain) {
     sound.set(addr, start, end, gain);
     sounds << sound;
 }
-addSound("/microwave",   0.00::minute,  0.50::minute,  0.01);
 
-/*addSound("/floor",       1.00::minute,  4.00::minute,   1.00);
-addSound("/noiseTones",  2.50::minute,  6.50::minute,   0.02);
-addSound("/bumps",       3.00::minute,  6.00::minute,   1.00);
-addSound("/fades",       5.75::minute,  8.50::minute,   0.60);
-addSound("/beeps",       6.50::minute,  8.15::minute,   0.30);
-addSound("/gasStation",  8.50::minute,  10.00::minute,  0.20);
-addSound("/freezer",     8.00::minute,  12.50::minute,  0.10);
-addSound("/stoned1",     7.75::minute,  8.75::minute,   1.00);
-addSound("/microwave",   9.00::minute,  10.50::minute,  0.01);
-addSound("/wichita1",    9.50::minute,  11.50::minute,  1.00);
-addSound("/traffic",     11.25::minute, 14.00::minute,  1.00);
-addSound("/end",         14.00::minute, 20.00::minute,  0.00);
-*/
+// section one
+addSound("/floor",       1.00::minute,  4.00::minute,   1.00);
+
+// section two
+addSound("/noiseTones",  4.50::minute,  8.50::minute,   0.03);
+addSound("/bumps",       5.00::minute,  8.00::minute,   1.00);
+addSound("/fades",       7.75::minute,  12.00::minute,  0.70);
+addSound("/beeps",       9.50::minute,  11.00::minute,  0.45);
+
+// section three
+addSound("/freezer",     11.75::minute, 15.50::minute,  0.15);
+addSound("/gasStation",  11.75::minute, 13.00::minute,  0.30);
+addSound("/wichita2",    12.50::minute, 13.50::minute,  0.40);
+addSound("/stone2",      13.25::minute, 14.50::minute,  0.50);
+addSound("/microwave",   13.50::minute, 14.00::minute,  0.002);
+addSound("/stone1",      14.00::minute, 15.00::minute,  0.50);
+addSound("/wichita1",    14.50::minute, 15.50::minute,  0.40);
+
+// section four
+addSound("/traffic",     15.25::minute, 18.00::minute,  1.00);
+addSound("/end",         18.50::minute, 20.00::minute,  0.00);
 
 UltrasonicHandler uh;
 uh.setEmulation();
